@@ -32,7 +32,7 @@ Open <http://localhost:8765>. Use the server rather than opening files directly:
 
 - Change text directly in the HTML file. Keep one `<h1>` per page.
 - Mark anything unconfirmed with `<span class="tbc">To be confirmed</span>` (or the `tbc-box` block). **Never invent venue, speaker, helper, signup or endorsement details.**
-- If you add, rename or remove a page, update the `<nav>` list in **every** page. The check script fails if navigation differs between pages.
+- If you add, rename or remove a page, update the `<nav>` list **and** the mobile `fab-menu` list in **every** page. On phones the header keeps only a "Get ready" link (the `cta` item) and the rest sits in a floating Menu button at the bottom right, as on bonhard.ai. The check script fails if the navigation differs between pages or from the mobile menu.
 - The exact safety sentence is repeated on several pages. Search for `personal learning exercise` and change all copies together.
 - Keep external links to official documentation and re-check them before the event (`--external` below).
 

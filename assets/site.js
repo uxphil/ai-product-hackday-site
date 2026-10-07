@@ -25,6 +25,7 @@
     } catch (e) { return null; }
   }
   var root = document.documentElement;
+  root.classList.add('js');
   var STYLE_KEY = 'hackday-style';
   if (store('localStorage', STYLE_KEY) === 'clean') root.setAttribute('data-style', 'clean');
   if (GATE_HASH && store('sessionStorage', GATE_KEY) !== '1') root.classList.add('locked');
@@ -302,9 +303,26 @@
     document.body.appendChild(btn);
   }
 
+  /* ---------- mobile floating menu ---------- */
+  function initFab() {
+    var fab = document.getElementById('fab');
+    if (!fab) return;
+    var btn = fab.querySelector('.fab-btn'), menu = document.getElementById('fab-menu');
+    function set(open) {
+      btn.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+    }
+    btn.addEventListener('click', function () { set(btn.getAttribute('aria-expanded') !== 'true'); });
+    menu.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+    document.addEventListener('click', function (e) { if (!fab.contains(e.target)) set(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { set(false); btn.focus(); }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (root.classList.contains('locked')) buildGate();
-    initTheme();
+    initTheme(); initFab();
     initChecks(); initCopy(); initOS(); initCountdown(); initReveal();
   });
 })();
