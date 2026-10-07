@@ -367,3 +367,7 @@ table.compare td { min-width: 11rem; }
 .grid > .card { display: flex; flex-direction: column; }
 .grid > .card .actions { margin-top: auto; padding-top: 1rem; margin-bottom: 0; }
 .grid > .card > .badge { align-self: flex-start; margin: -.3rem 0 0; }
+
+table.compare thead th { white-space: nowrap; }
+table.compare thead th .icon { width: 1.35em; height: 1.35em; margin-right: .5rem; vertical-align: -.3em; color: var(--accent); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
