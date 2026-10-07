@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Hello-world warm-up where Codex creates the repository, uploads the page and publishes it.">
+<title>Warm-up: Codex route · AI Enabled Product Hackathon</title>
+<link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css?v=d884775c">
+<script src="assets/site.js?v=97e679f8"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap bar">
+<a class="brand" href="index.html">ai product <span>hackday</span></a>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li><a href="event.html">Event day</a></li><li><a href="get-ready.html">Get ready</a></li><li><a href="hello-world.html">Hello world</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="resources.html">Resources</a></li><li><a href="help.html">Get help</a></li><li><a href="themes.html">Themes</a></li></ul></nav>
+</div></header>
+<main id="main">
+<div class="wrap narrow">
+<section class="block first">
+<p class="eyebrow"><svg class="icon brand" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-b-openai"/></svg> <a href="hello-world.html">Hello-world warm-up</a> · Codex does it for you</p>
+<h1>Let <em>Codex</em> do the setup</h1>
+<p class="lead">You describe what you want. Codex makes the page, creates your GitHub repository, uploads the page and turns on publishing. About 25–45 minutes the first time (an estimate).</p>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</p></div>
+<div class="note"><p><strong>Free or paid ChatGPT plan.</strong> Codex is listed on every plan, with usage limits, so a paid plan gives you more room. You still do four things yourself: create a GitHub account, install the app and sign in, approve its requests, and check the result. There is nothing to save, drag or configure by hand.</p>
+<p>This is also a rehearsal for the day: you’ll build your real product with the same tool. Prefer to do it yourself for free? Use the <a href="hello-world-github.html">manual route</a>.</p></div>
+<ol class="steps">
+<li><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-b-github"/></svg>Create your GitHub account<span class="time-tag">5–10 min</span></h3><p>This is the one thing the tool can’t do for you. Go to <a href="https://github.com/signup" rel="noopener">github.com/signup</a>. GitHub Free needs no card. Use your own personal email and verify it. <strong>Your username becomes part of your web address</strong> and is public. Skip optional questions and paid-plan offers. Already have an account? Move on.</p><label class="done"><input type="checkbox" data-key="cx1"> I’ve done this</label></li>
+<li><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-b-openai"/></svg>Install the ChatGPT desktop app and sign in<span class="time-tag">5–10 min</span></h3><p>Download the ChatGPT desktop app from <a href="https://chatgpt.com/download" rel="noopener">chatgpt.com/download</a>, install it and sign in with your ChatGPT account. OpenAI’s plans page lists Codex on every plan including Free, with usage limits that vary, so a paid plan gives you more room.</p>
+<p>In the app, choose <strong>Codex</strong> from the dropdown.</p><label class="done"><input type="checkbox" data-key="cx2"> I’ve done this</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-folder"/></svg>Give it an empty folder to work in<span class="time-tag">2 min</span></h3><ol><li>Create a new, empty folder on your Desktop called <code>hello-hackday</code> (right-click the Desktop, then New Folder on Mac or New → Folder on Windows).</li>
+<li>In Codex, open that folder as your project.</li></ol><label class="done"><input type="checkbox" data-key="cx3"> I’ve done this</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-sparkles"/></svg>Paste the first prompt and let it work<span class="time-tag">8–15 min</span></h3><p>Paste this into the chat and press Enter.</p>
+<div class="prompt"><p id="cxp1" style="white-space:pre-line">I am doing a small &quot;hello world&quot; warm-up for a hackathon, using only fictional sample content. Please work in this empty folder and do the following, one step at a time, explaining each step in plain language.
+1. Create index.html: a tiny web page with a heading that says &quot;Hello, world&quot;, one friendly sentence, and a button that changes the sentence when clicked. One file, no libraries, no personal or work information.
+2. Check that Git and the GitHub CLI (gh) are installed. If either is missing, tell me what you need to install and ask before you do it.
+3. Help me sign in to GitHub with gh using the browser method. Tell me the one-time code and where to type it. Never ask me for a password or token, and never store one.
+4. Create a new PUBLIC repository called hello-hackday in my own GitHub account from this folder, commit index.html and push it.
+5. Turn on GitHub Pages for that repository, publishing from the main branch and the root folder.
+6. Tell me my web address (it looks like https://USERNAME.github.io/hello-hackday/), check whether it is live yet, and tell me clearly if I need to wait.</p><p><button type="button" class="copy" data-copy="cxp1">Copy</button></p></div>
+<p>The tool now creates the page, sets up GitHub, creates the repository, uploads the page and turns on publishing. You don’t save, drag or click anything in GitHub.</p>
+<p>Codex asks your permission before it uses the network, and the push to GitHub needs the network. <strong>Read each request</strong> and approve the ones about creating the page, <code>git</code>, the GitHub CLI and your <code>hello-hackday</code> repository. If it asks for anything else, say no and ask a helper.</p>
+<p>When it gives you a <strong>one-time code</strong>, a browser page opens (or go to <a href="https://github.com/login/device" rel="noopener">github.com/login/device</a>). Sign in to GitHub, type the code and approve.</p>
+<details><summary>Something went wrong, or it asks for something odd</summary><ul>
+<li><strong>It asks for a password or token:</strong> stop. Say “Don’t ask for a password or token. Use the browser sign-in code instead.”</li>
+<li><strong>A Mac pop-up asks to install developer tools:</strong> choose Install and wait for it. It can take a few minutes.</li>
+<li><strong>On Windows it says it can’t install Git or the GitHub CLI:</strong> ask it to explain the manual download, or ask a helper.</li>
+<li><strong>It stops or runs out of usage:</strong> use the <a href="hello-world-github.html">do-it-yourself route</a> from step 5 instead. Your page may already exist in the folder.</li></ul></details><label class="done"><input type="checkbox" data-key="cx4"> It says my page is published</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-smartphone"/></svg>Open your address on your phone<span class="time-tag">1–10 min</span></h3><p>The tool gives you a web address like <code>https://YOUR-USERNAME.github.io/hello-hackday/</code>. GitHub says <strong>it can take up to 10 minutes</strong> to go live the first time, so be patient. Open it on your phone: that proves someone else can open it too.</p><details><summary>I get “404 – there isn’t a GitHub Pages site here”</summary><p>Wait a few more minutes and refresh. If it’s still missing after 15 minutes, paste this into the chat: “My page shows a 404. Please check that GitHub Pages is on for hello-hackday and tell me what you find.”</p></details><label class="done"><input type="checkbox" data-key="cx5"> It opens on my phone</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-repeat"/></svg>Change it and publish again<span class="time-tag">3–10 min</span></h3><p>Paste the second prompt.</p>
+<div class="prompt"><p id="cxp2">Change the sentence on my page to something different (still just sample text), save it, and publish the change to GitHub. Then tell me when it should be live and how to check it.</p><p><button type="button" class="copy" data-copy="cxp2">Copy</button></p></div>
+<p>Wait a few minutes, then reload your address (hard refresh: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> on Windows, <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> on a Mac). You should see the new sentence.</p><label class="done"><input type="checkbox" data-key="cx6"> I can see my change</label></li>
+</ol>
+<div class="ready" data-ready data-completes="gr3" hidden>
+<svg class="tick" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="22"/><path d="M16 27l7 7 14-15"/></svg>
+<h2 style="margin:.6rem 0 .4rem">You’re <em>ready</em></h2>
+<ul class="checklist"><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>Codex made your page and your GitHub repository.</li><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>It’s published at an address someone else can open.</li><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>You changed it and published again.</li><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>It’s saved in your GitHub account.</li></ul>
+<p>Keep the repository. You’ll make a new one on the day. You may be asked to send your address to Phil on Teams <span class="tbc">To be confirmed</span>.</p>
+<p><a class="btn small" href="get-ready.html">Back to the checklist</a></p>
+</div>
+<div class="progress" data-progress><span data-count>0 of 0 done</span><progress value="0" max="1" aria-label="Progress"></progress></div>
+<h2>Stuck?</h2><p><a href="help.html">Find help and the setup clinic</a>. Tell us the step number and what you can see.</p>
+</section></div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 7 October 2026.</p>
+<p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. Your ticks on checklists are saved only in your own browser.</p>
+</div></footer>
+</body>
+</html>

@@ -214,7 +214,8 @@ ol.timeline::before { content: ""; position: absolute; left: 8.6rem; top: .6rem;
 }
 
 /* steps */
-ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 1.2rem 0; }
+section.block { counter-reset: step; }
+ol.steps { list-style: none; padding: 0; margin: 1.2rem 0; }
 ol.steps > li { counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem 1.3rem 1.2rem 4.2rem; margin: .9rem 0; position: relative; transition: border-color .2s; }
 ol.steps > li::before { content: counter(step); position: absolute; left: 1.1rem; top: 1.15rem; width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); font-weight: 600; display: grid; place-items: center; font-size: .95rem; }
 ol.steps > li.is-done { border-color: var(--accent); }
@@ -355,3 +356,9 @@ footer { padding-bottom: 5rem; }
   @keyframes trophy { 0% { transform: scale(.5) rotate(-12deg); } 55% { transform: scale(1.12) rotate(6deg); } 100% { transform: scale(1) rotate(0); } }
 }
 @media (prefers-reduced-motion: reduce) { .lightbox.leaving { display: none; } }
+
+/* route comparison table */
+table.compare th, table.compare td { padding: .8rem .8rem .8rem 0; }
+table.compare tbody th { font-weight: 600; color: var(--text); font-size: .95rem; white-space: nowrap; }
+table.compare thead th { color: var(--text); font-size: .95rem; font-weight: 600; }
+table.compare td { min-width: 11rem; }
