@@ -36,6 +36,14 @@ Open <http://localhost:8765>. Use the server rather than opening files directly:
 - The exact safety sentence is repeated on several pages. Search for `personal learning exercise` and change all copies together.
 - Keep external links to official documentation and re-check them before the event (`--external` below).
 
+## After changing CSS or JavaScript
+
+```bash
+python3 scripts/version-assets.py
+```
+
+This stamps a content hash onto the `style.css` and `site.js` links (for example `style.css?v=d9ecfdfd`). Browsers and Cloudflare cache these files for hours, and without a new address visitors get the new page with the old styles. `check-site.py` fails if the hashes are stale.
+
 ## Check before publishing
 
 ```bash
