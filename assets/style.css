@@ -379,3 +379,11 @@ table.compare thead th .icon { width: 1.35em; height: 1.35em; margin-right: .5re
 .chip-pair .plus { margin: 0; font-size: 1.2rem; }
 .eyebrow .plus { margin: 0 .1rem; }
 table.compare thead th .plus { margin: 0 .35rem 0 -.1rem; }
+
+/* each name sits right next to its own icon */
+.pairlabel { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
+table.compare thead th .pairlabel .icon { margin-right: 0; vertical-align: 0; }
+table.compare thead th .plus { margin: 0 .5rem; }
+.eyebrow .pairlabel { color: var(--text); font-weight: 500; }
+.pairlabel, .pairlabel + .plus { vertical-align: middle; }
+.plus { line-height: 1; }
