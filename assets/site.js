@@ -102,9 +102,72 @@
         if (b.checked) p[b.dataset.key] = 1; else delete p[b.dataset.key];
         writeProgress(p);
         refresh();
+        if (b.checked) {
+          var li = b.closest('li');
+          if (li) {
+            li.classList.remove('celebrate');
+            void li.offsetWidth; // restart the animation if ticked again
+            li.classList.add('celebrate');
+            li.addEventListener('animationend', function () { li.classList.remove('celebrate'); }, { once: true });
+          }
+          var all = true;
+          boxes.forEach(function (x) { if (!x.checked) all = false; });
+          if (all) finale();
+        }
       });
     });
     refresh();
+  }
+
+  /* ---------- finale: confetti and a message that fades away (message only if reduced motion) ---------- */
+  function finale() {
+    var toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.setAttribute('role', 'status');
+    toast.textContent = 'Well done, you\u2019re ready for the hack!';
+    document.body.appendChild(toast);
+    setTimeout(function () { toast.remove(); }, 5200);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var canvas = document.createElement('canvas');
+    canvas.className = 'confetti';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1, W, H;
+    function size() { W = window.innerWidth; H = window.innerHeight; canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    size();
+    var cs = getComputedStyle(root);
+    var colours = [cs.getPropertyValue('--accent').trim() || '#4d6b35', '#f4c542', '#ef6f6c', '#5aa9e6', '#b48ef0', cs.getPropertyValue('--text').trim() || '#222'];
+    var parts = [];
+    for (var i = 0; i < 170; i++) {
+      var fromLeft = i % 2 === 0;
+      var angle = (fromLeft ? -65 : -115) * Math.PI / 180 + (Math.random() - .5) * .7;
+      var speed = 11 + Math.random() * 11;
+      parts.push({
+        x: fromLeft ? W * .08 : W * .92, y: H * .95,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        w: 6 + Math.random() * 6, h: 4 + Math.random() * 5,
+        rot: Math.random() * 6.28, vr: (Math.random() - .5) * .35,
+        c: colours[Math.floor(Math.random() * colours.length)]
+      });
+    }
+    var start = null, DURATION = 4200;
+    function frame(t) {
+      if (start === null) start = t;
+      var el = t - start;
+      ctx.clearRect(0, 0, W, H);
+      var fade = el > DURATION - 1200 ? Math.max(0, (DURATION - el) / 1200) : 1;
+      parts.forEach(function (p) {
+        p.vy += .32; p.vx *= .992; p.vy *= .992;
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        ctx.save(); ctx.globalAlpha = fade;
+        ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (el < DURATION) requestAnimationFrame(frame); else canvas.remove();
+    }
+    requestAnimationFrame(frame);
   }
 
   /* ---------- copy buttons ---------- */
