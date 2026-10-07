@@ -172,20 +172,28 @@
     var colours = [cs.getPropertyValue('--accent').trim() || '#4d6b35', '#f4c542', '#ef6f6c', '#5aa9e6', '#b48ef0', '#ffffff'];
     var scale = Math.max(.75, Math.min(1.4, H / 800));
     var parts = [], BURSTS = [0, 1700], DURATION = 6200;
+    // four cannons, one per corner, all firing together. Angles are in degrees, 0 = right, positive = downwards.
+    var CANNONS = [
+      { x: .05, y: 1.02, min: -75, max: -48 },  // bottom left, up and inwards
+      { x: .95, y: 1.02, min: -132, max: -105 }, // bottom right
+      { x: .05, y: -.02, min: 15, max: 50 },     // top left, down and inwards
+      { x: .95, y: -.02, min: 130, max: 165 }    // top right
+    ];
     function burst() {
-      for (var i = 0; i < 150; i++) {
-        var fromLeft = i % 2 === 0;
-        var angle = (fromLeft ? -62 : -118) * Math.PI / 180 + (Math.random() - .5) * .8;
-        var speed = (13 + Math.random() * 13) * scale;
-        var big = 11 + Math.random() * 12; // noticeably bigger pieces
-        parts.push({
-          x: fromLeft ? W * .06 : W * .94, y: H * 1.02,
-          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-          w: big, h: big * (.45 + Math.random() * .35), round: Math.random() < .25,
-          rot: Math.random() * 6.28, vr: (Math.random() - .5) * .3,
-          c: colours[Math.floor(Math.random() * colours.length)]
-        });
-      }
+      CANNONS.forEach(function (c) {
+        for (var i = 0; i < 48; i++) {
+          var angle = (c.min + Math.random() * (c.max - c.min)) * Math.PI / 180;
+          var speed = (12 + Math.random() * 12) * scale;
+          var big = 11 + Math.random() * 12; // noticeably bigger pieces
+          parts.push({
+            x: W * c.x, y: H * c.y,
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            w: big, h: big * (.45 + Math.random() * .35), round: Math.random() < .25,
+            rot: Math.random() * 6.28, vr: (Math.random() - .5) * .3,
+            c: colours[Math.floor(Math.random() * colours.length)]
+          });
+        }
+      });
     }
     BURSTS.forEach(function (ms) { setTimeout(burst, ms); });
     var start = null;
