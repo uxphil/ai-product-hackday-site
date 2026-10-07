@@ -15,6 +15,10 @@ No framework, no build step, no database, no analytics, no cookies. Plain HTML, 
 | `assets/site.js` | Password gate, tick-box progress (saved in the browser only), copy buttons, Mac/Windows switch. |
 | `robots.txt`, `<meta name="robots">` | Ask search engines not to index the site. |
 
+## Themes
+
+The default theme is sage (matching bonhard.ai). A bottom-left toggle switches to a neutral "Clean" theme (white, navy and blue). The choice is remembered in the visitor's browser only. Both themes follow the visitor's light/dark setting. Colours live in `:root` and `:root[data-style="clean"]` in `assets/style.css`. No third-party brand identity is used in either theme.
+
 ## Preview locally
 
 ```bash

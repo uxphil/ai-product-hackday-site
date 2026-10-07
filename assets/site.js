@@ -25,6 +25,8 @@
     } catch (e) { return null; }
   }
   var root = document.documentElement;
+  var STYLE_KEY = 'hackday-style';
+  if (store('localStorage', STYLE_KEY) === 'clean') root.setAttribute('data-style', 'clean');
   if (GATE_HASH && store('sessionStorage', GATE_KEY) !== '1') root.classList.add('locked');
 
   function buildGate() {
@@ -173,8 +175,26 @@
     items.forEach(function (i) { io.observe(i); });
   }
 
+  /* ---------- theme toggle (bottom left): sage (default) or clean ---------- */
+  function initTheme() {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'theme-toggle';
+    btn.innerHTML = '<span>Clean theme</span><span class="track" aria-hidden="true"></span>';
+    function sync() { btn.setAttribute('aria-pressed', String(root.getAttribute('data-style') === 'clean')); }
+    btn.addEventListener('click', function () {
+      var clean = root.getAttribute('data-style') === 'clean';
+      if (clean) root.removeAttribute('data-style'); else root.setAttribute('data-style', 'clean');
+      store('localStorage', STYLE_KEY, clean ? 'sage' : 'clean');
+      sync();
+    });
+    sync();
+    document.body.appendChild(btn);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (root.classList.contains('locked')) buildGate();
+    initTheme();
     initChecks(); initCopy(); initOS(); initCountdown(); initReveal();
   });
 })();
