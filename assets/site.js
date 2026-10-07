@@ -171,7 +171,7 @@
     var cs = getComputedStyle(root);
     var colours = [cs.getPropertyValue('--accent').trim() || '#4d6b35', '#f4c542', '#ef6f6c', '#5aa9e6', '#b48ef0', '#ffffff'];
     var scale = Math.max(.75, Math.min(1.4, H / 800));
-    var parts = [], BURSTS = [0, 1700], DURATION = 6200;
+    var parts = [], BURSTS = [0], DURATION = 4800;
     // four cannons, one per corner, all firing together. Angles are in degrees, 0 = right, positive = downwards.
     var CANNONS = [
       { x: .05, y: 1.02, min: -75, max: -48 },  // bottom left, up and inwards
@@ -181,7 +181,7 @@
     ];
     function burst() {
       CANNONS.forEach(function (c) {
-        for (var i = 0; i < 48; i++) {
+        for (var i = 0; i < 60; i++) {
           var angle = (c.min + Math.random() * (c.max - c.min)) * Math.PI / 180;
           var speed = (12 + Math.random() * 12) * scale;
           var big = 11 + Math.random() * 12; // noticeably bigger pieces
