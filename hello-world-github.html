@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Step-by-step hello-world using the GitHub website and GitHub Pages.">
+<title>Warm-up: GitHub route · AI Enabled Product Hackathon</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/site.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html">AI Enabled Product Hackathon</a>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li><a href="event.html">Event day</a></li><li><a href="get-ready.html">Get ready</a></li><li><a href="hello-world.html">Hello world</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="resources.html">Resources</a></li><li><a href="help.html">Get help</a></li><li><a href="themes.html">Themes</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+
+<p class="eyebrow"><a href="hello-world.html">Hello-world warm-up</a> · GitHub route</p>
+<h1>Make it, publish it, change it</h1>
+<p class="lead">About 30–40 minutes the first time (estimate). No installs and no payment. Tick each step as you go.</p>
+<div class="callout" role="note"><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</div>
+<div class="note"><strong>What “published” means here.</strong> Your page and its file will be public on GitHub. Anyone with the address can see them. That’s fine for a sample sentence and not for anything else.</div>
+
+<h2>Part 1 · Make the page on your computer</h2>
+<p class="muted">No accounts needed for this part.</p>
+<ol class="steps">
+<li><h3>Ask your AI assistant for the page<span class="time-tag">2 min</span></h3><p>Open your AI assistant and paste this prompt.</p>
+<div class="prompt"><p id="p1">Write one complete HTML file for a tiny web page. It needs a heading that says &quot;Hello, world&quot;, one friendly sentence, and a button that changes the sentence when clicked. Put everything in that single file, with no external libraries. Use sample text only, with no personal or work information. Reply with the code only.</p><p><button type="button" class="copy" data-copy="p1">Copy</button></p></div>
+<details><summary>Not working, or no AI handy? Use this ready-made page instead</summary>
+<pre id="code1">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;Hello, world&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;font-family: sans-serif; max-width: 32rem; margin: 3rem auto; padding: 0 1rem;&quot;&gt;
+  &lt;h1&gt;Hello, world&lt;/h1&gt;
+  &lt;p id=&quot;message&quot;&gt;This is my first web page, made as a warm-up for the hackathon.&lt;/p&gt;
+  &lt;button onclick=&quot;document.getElementById(&#x27;message&#x27;).textContent = &#x27;It works! I just changed this text.&#x27;&quot;&gt;Change the text&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre><p><button type="button" class="copy" data-copy="code1">Copy</button></p></details>
+<p>Check that you have <strong>only the code</strong>. If your assistant added explanation around it, copy just the part from <code>&lt;!DOCTYPE html&gt;</code> to <code>&lt;/html&gt;</code>.</p><label class="done"><input type="checkbox" data-key="gh1"> I’ve done this</label></li>
+<li><h3>Save it as index.html<span class="time-tag">3 min</span></h3><div class="os-switch" data-os-switch hidden role="group" aria-label="Your computer"><button type="button" data-set="mac" aria-pressed="false">Mac</button><button type="button" data-set="win" aria-pressed="false">Windows</button></div>
+<div class="os-block" data-os="mac"><h4>On a Mac</h4><ol>
+<li>Open <strong>TextEdit</strong> (press <kbd>⌘</kbd> + <kbd>Space</kbd>, type TextEdit, press Return).</li>
+<li>In the menu bar choose <strong>Format → Make Plain Text</strong>. This is important.</li>
+<li>Paste the code, then choose <strong>File → Save</strong>.</li>
+<li>Name it exactly <code>index.html</code> and choose Desktop. If it asks about <code>.txt</code>, choose <strong>Use .html</strong>.</li></ol></div>
+<div class="os-block" data-os="win"><h4>On Windows</h4><ol>
+<li>Open <strong>Notepad</strong> (press the Windows key, type Notepad, press Enter).</li>
+<li>Paste the code, then choose <strong>File → Save as</strong>.</li>
+<li>Set “Save as type” to <strong>All files</strong>.</li>
+<li>Name it exactly <code>index.html</code> and save it to the Desktop.</li></ol></div><label class="done"><input type="checkbox" data-key="gh2"> I’ve done this</label></li>
+<li><h3>Open it in your browser<span class="time-tag">2 min</span></h3><p>Double-click <code>index.html</code> on your Desktop. You should see “Hello, world”, a sentence and a button. Click the button: the sentence should change.</p>
+<details><summary>It doesn’t look right</summary><ul>
+<li><strong>You see lots of code instead of a page:</strong> the file was saved as plain text with a different name or type. On a Mac check you chose Make Plain Text before saving. On Windows check that “Save as type” was All files.</li>
+<li><strong>The name ends in .txt:</strong> on Windows, open File Explorer, choose View → Show → File name extensions, then rename the file to <code>index.html</code>.</li>
+<li><strong>It opens in a text editor:</strong> right-click the file and choose Open with, then your web browser.</li></ul></details><label class="done"><input type="checkbox" data-key="gh3"> It works on my computer</label></li>
+</ol>
+
+<h2>Part 2 · Publish it</h2>
+<ol class="steps">
+<li><h3>Create your GitHub account<span class="time-tag">5–10 min</span></h3><p>Go to <a href="https://github.com/signup" rel="noopener">github.com/signup</a>. GitHub Free needs no card. Use your own personal email. GitHub emails you a code to verify your email address, and you can’t create a repository until that’s done.</p>
+<p><strong>Your username will be part of your web address</strong> and will be public, so choose one you’re happy to share. Skip any optional questions or paid-plan offers. Already have an account? Sign in and move on.</p>
+<details><summary>GitHub asks for something unexpected</summary><p>GitHub recommends two-factor authentication. It isn’t needed to finish this warm-up, but doing it later is a good idea. If sign-up is blocked or asks for a card, pause and ask for help at the clinic.</p></details><label class="done"><input type="checkbox" data-key="gh4"> I’ve done this</label></li>
+<li><h3>Create a repository<span class="time-tag">2 min</span></h3><p>A repository is just a folder GitHub keeps for you. Go to <a href="https://github.com/new" rel="noopener">github.com/new</a>.</p>
+<ol><li>Repository name: <code>hello-hackday</code></li><li>Choose <strong>Public</strong>. Publishing for free needs this.</li><li>Leave everything else alone, then press <strong>Create repository</strong>.</li></ol><label class="done"><input type="checkbox" data-key="gh5"> I’ve done this</label></li>
+<li><h3>Upload your page<span class="time-tag">2 min</span></h3><ol><li>On the new, empty repository, click the link <strong>uploading an existing file</strong>. (Later, you’ll find it under <strong>Add file → Upload files</strong>.)</li>
+<li>Drag <code>index.html</code> from your Desktop into the box.</li>
+<li>Press <strong>Commit changes</strong>. “Commit” means “save this to GitHub”.</li></ol>
+<p>Your page is now saved in GitHub.</p><label class="done"><input type="checkbox" data-key="gh6"> I’ve done this</label></li>
+<li><h3>Turn on publishing<span class="time-tag">3 min</span></h3><ol><li>Open the repository’s <strong>Settings</strong> tab, then <strong>Pages</strong> in the left-hand list.</li>
+<li>Under <strong>Build and deployment</strong>, set Source to <strong>Deploy from a branch</strong>.</li>
+<li>Set the branch to <strong>main</strong>, leave the folder as <strong>/ (root)</strong>, and press <strong>Save</strong>.</li></ol>
+<details><summary>I can’t find Pages, or it’s greyed out</summary><p>Check the repository is <strong>Public</strong> (Settings → scroll to the bottom, “Danger Zone”, for visibility). GitHub Free only publishes public repositories.</p></details><label class="done"><input type="checkbox" data-key="gh7"> I’ve done this</label></li>
+<li><h3>Wait, then open your address<span class="time-tag">1–10 min</span></h3><p>Your address will look like <code>https://YOUR-USERNAME.github.io/hello-hackday/</code> and appears at the top of the Pages settings once it’s ready. GitHub says <strong>this can take up to 10 minutes</strong>. Refresh the Pages settings now and then. While you wait, have a look at the <a href="themes.html">project themes</a>.</p>
+<p>When it opens, send the address to your phone and open it there. That proves someone else can open it too.</p>
+<details><summary>I get “404 – there isn’t a GitHub Pages site here”</summary><ul><li>Wait a few more minutes and refresh.</li><li>Check the file is called exactly <code>index.html</code> and sits at the top level of the repository, not inside a folder.</li><li>Check that Pages is set to the <strong>main</strong> branch.</li></ul></details><label class="done"><input type="checkbox" data-key="gh8"> It opens on my phone</label></li>
+</ol>
+
+<h2>Part 3 · Change it and publish again</h2>
+<ol class="steps">
+<li><h3>Change one sentence<span class="time-tag">3 min</span></h3><ol><li>In your repository, click <code>index.html</code>, then the pencil icon (<strong>Edit this file</strong>).</li>
+<li>Change the sentence between the <code>&lt;p&gt;</code> tags to something else that’s sample text.</li>
+<li>Press <strong>Commit changes</strong>, then <strong>Commit changes</strong> again in the box.</li></ol><label class="done"><input type="checkbox" data-key="gh9"> I’ve done this</label></li>
+<li><h3>See the new version<span class="time-tag">1–10 min</span></h3><p>Wait a minute or two, then reload your page address. If you still see the old sentence, do a hard refresh (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> on Windows, <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> on a Mac). It can take up to 10 minutes.</p><label class="done"><input type="checkbox" data-key="gh10"> I can see my change</label></li>
+</ol>
+<p><strong>Short on time?</strong> Make the change in step 9 while the first publish is still waiting. You’ll then see both results at once. It teaches the same thing, just less clearly.</p>
+
+<div class="ready" data-ready hidden>
+<h2 style="margin-top:0">You’re ready ✔</h2>
+<ul class="checklist"><li>✔ You made a page on your computer.</li><li>✔ It’s published at an address someone else can open.</li><li>✔ You changed it and published again.</li><li>✔ It’s saved in your GitHub repository.</li></ul>
+<p>Keep your repository: you’ll make a new one on the day. You may be asked to send your address to Phil on Teams <span class="tbc">To be confirmed</span>.</p>
+<p><a href="get-ready.html">Back to the checklist</a></p>
+</div>
+<div class="progress" data-progress><span data-count>0 of 0 done</span><progress value="0" max="1" aria-label="Progress"></progress></div>
+<h2>Stuck?</h2><p><a href="help.html">Find help and the setup clinic</a>. Tell us the step number and what you can see.</p>
+
+</div></main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 7 October 2026.</p>
+<p>No cookies, no analytics. Your ticks on checklists are saved only in your own browser.</p>
+</div></footer>
+</body>
+</html>
