@@ -119,15 +119,47 @@
     refresh();
   }
 
-  /* ---------- finale: confetti and a message that fades away (message only if reduced motion) ---------- */
+  /* ---------- finale: two confetti bursts and a lightbox that fades away (or "Let's go!") ---------- */
+  var TROPHY = '<svg class="trophy" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+    '<path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/>' +
+    '<path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/>' +
+    '<path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>' +
+    '<path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg>';
+
   function finale() {
-    var toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.setAttribute('role', 'status');
-    toast.textContent = 'Well done, you\u2019re ready for the hack!';
-    document.body.appendChild(toast);
-    setTimeout(function () { toast.remove(); }, 5200);
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (document.querySelector('.lightbox')) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var opener = document.activeElement;
+    var box = document.createElement('div');
+    box.className = 'lightbox';
+    box.innerHTML = '<div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lb-title">' +
+      TROPHY + '<h2 id="lb-title">Well done, you’re ready for the hack!</h2>' +
+      '<p>Your warm-up is done. See you on 28 October.</p>' +
+      '<button type="button" class="btn">Let’s go!</button></div>';
+    document.body.appendChild(box);
+    var btn = box.querySelector('button');
+    btn.focus();
+    var closed = false, timer;
+    function close() {
+      if (closed) return;
+      closed = true;
+      clearTimeout(timer);
+      document.removeEventListener('keydown', onKey);
+      box.classList.add('leaving');
+      setTimeout(function () { box.remove(); if (opener && opener.focus) opener.focus(); }, reduce ? 0 : 500);
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') close();
+      if (e.key === 'Tab') { e.preventDefault(); btn.focus(); } // single control: keep focus inside the dialog
+    }
+    btn.addEventListener('click', close);
+    box.addEventListener('click', function (e) { if (e.target === box) close(); });
+    document.addEventListener('keydown', onKey);
+    timer = setTimeout(close, 9000);
+    if (!reduce) confetti();
+  }
+
+  function confetti() {
     var canvas = document.createElement('canvas');
     canvas.className = 'confetti';
     canvas.setAttribute('aria-hidden', 'true');
@@ -137,32 +169,39 @@
     function size() { W = window.innerWidth; H = window.innerHeight; canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
     size();
     var cs = getComputedStyle(root);
-    var colours = [cs.getPropertyValue('--accent').trim() || '#4d6b35', '#f4c542', '#ef6f6c', '#5aa9e6', '#b48ef0', cs.getPropertyValue('--text').trim() || '#222'];
-    var parts = [];
-    for (var i = 0; i < 170; i++) {
-      var fromLeft = i % 2 === 0;
-      var angle = (fromLeft ? -65 : -115) * Math.PI / 180 + (Math.random() - .5) * .7;
-      var speed = 11 + Math.random() * 11;
-      parts.push({
-        x: fromLeft ? W * .08 : W * .92, y: H * .95,
-        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-        w: 6 + Math.random() * 6, h: 4 + Math.random() * 5,
-        rot: Math.random() * 6.28, vr: (Math.random() - .5) * .35,
-        c: colours[Math.floor(Math.random() * colours.length)]
-      });
+    var colours = [cs.getPropertyValue('--accent').trim() || '#4d6b35', '#f4c542', '#ef6f6c', '#5aa9e6', '#b48ef0', '#ffffff'];
+    var scale = Math.max(.75, Math.min(1.4, H / 800));
+    var parts = [], BURSTS = [0, 1700], DURATION = 6200;
+    function burst() {
+      for (var i = 0; i < 150; i++) {
+        var fromLeft = i % 2 === 0;
+        var angle = (fromLeft ? -62 : -118) * Math.PI / 180 + (Math.random() - .5) * .8;
+        var speed = (13 + Math.random() * 13) * scale;
+        var big = 11 + Math.random() * 12; // noticeably bigger pieces
+        parts.push({
+          x: fromLeft ? W * .06 : W * .94, y: H * 1.02,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+          w: big, h: big * (.45 + Math.random() * .35), round: Math.random() < .25,
+          rot: Math.random() * 6.28, vr: (Math.random() - .5) * .3,
+          c: colours[Math.floor(Math.random() * colours.length)]
+        });
+      }
     }
-    var start = null, DURATION = 4200;
+    BURSTS.forEach(function (ms) { setTimeout(burst, ms); });
+    var start = null;
     function frame(t) {
       if (start === null) start = t;
       var el = t - start;
       ctx.clearRect(0, 0, W, H);
-      var fade = el > DURATION - 1200 ? Math.max(0, (DURATION - el) / 1200) : 1;
+      var fade = el > DURATION - 1000 ? Math.max(0, (DURATION - el) / 1000) : 1;
       parts.forEach(function (p) {
-        p.vy += .32; p.vx *= .992; p.vy *= .992;
+        p.vy += .34; p.vx *= .99; p.vy *= .993;
         p.x += p.vx; p.y += p.vy; p.rot += p.vr;
         ctx.save(); ctx.globalAlpha = fade;
         ctx.translate(p.x, p.y); ctx.rotate(p.rot);
-        ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.fillStyle = p.c;
+        if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.w / 2.4, 0, 6.283); ctx.fill(); }
+        else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
         ctx.restore();
       });
       if (el < DURATION) requestAnimationFrame(frame); else canvas.remove();

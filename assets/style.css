@@ -328,9 +328,14 @@ td.time { white-space: nowrap; font-variant-numeric: tabular-nums; }
 @media print { .theme-toggle { display: none; } }
 footer { padding-bottom: 5rem; }
 
-/* celebrations: step glow that settles into the green border, and the finale message */
-.confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 40; }
-.toast { position: fixed; left: 50%; top: 38%; transform: translate(-50%, -50%); z-index: 41; max-width: min(90vw, 34rem); text-align: center; padding: 1.4rem 2rem; border-radius: 20px; background: var(--bg); color: var(--text); border: 2px solid var(--accent); box-shadow: 0 10px 50px rgba(0, 0, 0, .3); font-size: clamp(1.5rem, 5vw, 2.3rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.2; pointer-events: none; }
+/* celebrations: step glow that settles into the green border, and the finale lightbox */
+.confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 60; }
+.lightbox { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(6, 9, 5, .72); }
+.lightbox-card { background: var(--bg); color: var(--text); border: 2px solid var(--accent); border-radius: 22px; padding: 2rem 2rem 1.8rem; max-width: 30rem; width: 100%; text-align: center; box-shadow: 0 20px 80px rgba(0, 0, 0, .5); }
+.lightbox-card h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); margin: .8rem 0 .5rem; line-height: 1.15; }
+.lightbox-card p { margin: 0 0 1.4rem; color: var(--muted); }
+.trophy { width: 6rem; height: 6rem; fill: none; stroke: #e5a823; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.trophy path:nth-of-type(5) { fill: rgba(244, 197, 66, .35); }
 @media (prefers-reduced-motion: no-preference) {
   ol.steps > li.celebrate { animation: glow 1.3s ease-out; }
   ol.steps > li.celebrate::before { animation: badge .6s cubic-bezier(.3, 1.6, .5, 1); }
@@ -340,12 +345,13 @@ footer { padding-bottom: 5rem; }
     100% { box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent; background: var(--surface); transform: scale(1); }
   }
   @keyframes badge { 0% { transform: scale(.4); } 100% { transform: scale(1); } }
-  .toast { animation: toast 5.2s ease both; }
-  @keyframes toast {
-    0%   { opacity: 0; transform: translate(-50%, -42%) scale(.92); }
-    10%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    78%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -58%) scale(1); }
-  }
+  .lightbox { animation: lb-in .45s ease both; }
+  .lightbox-card { animation: lb-card .6s cubic-bezier(.2, 1.3, .4, 1) both; }
+  .trophy { animation: trophy 1.2s .2s ease-out both; }
+  .lightbox.leaving { animation: lb-out .5s ease forwards; }
+  @keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lb-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes lb-card { from { transform: translateY(24px) scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes trophy { 0% { transform: scale(.5) rotate(-12deg); } 55% { transform: scale(1.12) rotate(6deg); } 100% { transform: scale(1) rotate(0); } }
 }
-@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .lightbox.leaving { display: none; } }
