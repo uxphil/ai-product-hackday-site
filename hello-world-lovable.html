@@ -6,51 +6,52 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Hello-world exercise using the Lovable browser builder.">
 <title>Warm-up: Lovable route · AI Enabled Product Hackathon</title>
+<link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/site.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="wrap">
-<a class="brand" href="index.html">AI Enabled Product Hackathon</a>
+<header class="site-header"><div class="wrap bar">
+<a class="brand" href="index.html">ai product <span>hackday</span></a>
 <nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li><a href="event.html">Event day</a></li><li><a href="get-ready.html">Get ready</a></li><li><a href="hello-world.html">Hello world</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="resources.html">Resources</a></li><li><a href="help.html">Get help</a></li><li><a href="themes.html">Themes</a></li></ul></nav>
 </div></header>
-<main id="main"><div class="wrap">
-
-<p class="eyebrow"><a href="hello-world.html">Hello-world warm-up</a> · Lovable route</p>
-<h1>Build it in the browser with Lovable</h1>
-<p class="lead">An alternative if you plan to use Lovable on the day. About 20–30 minutes (estimate).</p>
-<div class="callout" role="note"><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</div>
-<div class="note"><strong>Before you start: check the limits.</strong>
+<main id="main">
+<div class="wrap narrow">
+<section class="block first">
+<p class="eyebrow"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-heart"/></svg> <a href="hello-world.html">Hello-world warm-up</a> · Lovable route</p>
+<h1>Build it in the browser with <em>Lovable</em></h1>
+<p class="lead">An alternative if you plan to use Lovable on the day. About 20–30 minutes (an estimate).</p>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</p></div>
+<div class="note"><p><strong>Before you start: check the limits.</strong></p>
 <ul>
-<li>Lovable’s documentation (checked 7 October 2026) lists a Free plan with 5 build credits a day, up to 30 a month. Your prompt and each change use some credits, and building pauses when they run out.</li>
+<li>Lovable’s documentation (checked 7 October 2026) lists a Free plan with 5 build credits a day, up to 30 a month. Your prompt and each change use some, and building pauses when they run out.</li>
 <li>Publishing is free and works even with zero credits. On Free and Pro plans, anyone with the link can open a published app.</li>
 <li>The docs don’t say whether a card is needed to sign up. If you’re asked for one, stop and use the <a href="hello-world-github.html">GitHub route</a>.</li>
-<li>I found no limit on the number of published projects, but this is unconfirmed. We’ll verify it on a real account before the clinic.</li>
+<li>We found no limit on the number of published projects, but that’s unconfirmed. We’ll verify it on a real account before the clinic.</li>
 </ul></div>
 <p class="muted">These steps follow Lovable’s official documentation and haven’t yet been tried by us. Button names may differ slightly.</p>
-
 <ol class="steps">
-<li><h3>Create a GitHub account first<span class="time-tag">5–10 min</span></h3><p>You’ll save to GitHub at the end, so create or sign in to your personal account at <a href="https://github.com/signup" rel="noopener">github.com/signup</a>. Your username is public.</p><label class="done"><input type="checkbox" data-key="lv1"> I have a GitHub account</label></li>
-<li><h3>Sign up for Lovable<span class="time-tag">3 min</span></h3><p>Go to <a href="https://lovable.dev" rel="noopener">lovable.dev</a> and create a free account with your personal email.</p><label class="done"><input type="checkbox" data-key="lv2"> I’ve done this</label></li>
-<li><h3>Ask for the page<span class="time-tag">3 min</span></h3><p>Paste this into the chat.</p><div class="prompt"><p id="p2">Create a single-page website with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when clicked. Use sample text only. No sign-in, database or other services.</p><p><button type="button" class="copy" data-copy="p2">Copy</button></p></div>
-<p>Click the button in the preview to check it works.</p><label class="done"><input type="checkbox" data-key="lv3"> I’ve done this</label></li>
-<li><h3>Publish<span class="time-tag">2 min</span></h3><p>Click <strong>Publish</strong> at the top right, accept the suggested address (it ends in <code>lovable.app</code>) and click <strong>Publish</strong> again. Open the address on your phone.</p><label class="done"><input type="checkbox" data-key="lv4"> It opens on my phone</label></li>
-<li><h3>Change it and publish again<span class="time-tag">3 min</span></h3><p>Ask in the chat: “Change the sentence to something else.” Then click <strong>Publish</strong> and <strong>Publish changes</strong>. Changes don’t go live until you do this. Reload your address to check.</p><label class="done"><input type="checkbox" data-key="lv5"> I can see my change</label></li>
-<li><h3>Save it to GitHub<span class="time-tag">3–5 min</span></h3><p>Open <strong>Project settings → Git → GitHub</strong>, connect your GitHub account and let Lovable create the repository. The repository is private by default. Don’t delete it afterwards, or the link stops working.</p><label class="done"><input type="checkbox" data-key="lv6"> I’ve done this</label></li>
+<li><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-b-github"/></svg>Create a GitHub account first<span class="time-tag">5–10 min</span></h3><p>You’ll save to GitHub at the end, so create or sign in to your personal account at <a href="https://github.com/signup" rel="noopener">github.com/signup</a>. Your username is public.</p><label class="done"><input type="checkbox" data-key="lv1"> I have a GitHub account</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-user-round"/></svg>Sign up for Lovable<span class="time-tag">3 min</span></h3><p>Go to <a href="https://lovable.dev" rel="noopener">lovable.dev</a> and create a free account with your personal email.</p><label class="done"><input type="checkbox" data-key="lv2"> I’ve done this</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-sparkles"/></svg>Ask for the page<span class="time-tag">3 min</span></h3><p>Paste this into the chat.</p><div class="prompt"><p id="p2">Create a single-page website with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when clicked. Use sample text only. No sign-in, database or other services.</p><p><button type="button" class="copy" data-copy="p2">Copy</button></p></div><p>Click the button in the preview to check it works.</p><label class="done"><input type="checkbox" data-key="lv3"> I’ve done this</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-rocket"/></svg>Publish<span class="time-tag">2 min</span></h3><p>Click <strong>Publish</strong> at the top right, accept the suggested address (it ends in <code>lovable.app</code>) and click <strong>Publish</strong> again. Open the address on your phone.</p><label class="done"><input type="checkbox" data-key="lv4"> It opens on my phone</label></li>
+<li><h3><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-repeat"/></svg>Change it and publish again<span class="time-tag">3 min</span></h3><p>Ask in the chat: “Change the sentence to something else.” Then click <strong>Publish</strong> and <strong>Publish changes</strong>. Changes don’t go live until you do this. Reload your address to check.</p><label class="done"><input type="checkbox" data-key="lv5"> I can see my change</label></li>
+<li><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-b-github"/></svg>Save it to GitHub<span class="time-tag">3–5 min</span></h3><p>Open <strong>Project settings → Git → GitHub</strong>, connect your GitHub account and let Lovable create the repository. The repository is private by default. Don’t delete it afterwards, or the link stops working.</p><label class="done"><input type="checkbox" data-key="lv6"> I’ve done this</label></li>
 </ol>
-<div class="ready" data-ready hidden>
-<h2 style="margin-top:0">You’re ready ✔</h2>
-<ul class="checklist"><li>✔ You built a page in Lovable.</li><li>✔ It’s published at an address someone else can open.</li><li>✔ You changed it and published again.</li><li>✔ It’s saved in your GitHub account.</li></ul>
+<div class="ready" data-ready data-completes="gr3" hidden>
+<svg class="tick" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="22"/><path d="M16 27l7 7 14-15"/></svg>
+<h2 style="margin:.6rem 0 .4rem">You’re <em>ready</em></h2>
+<ul class="checklist"><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>You built a page in Lovable.</li><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>It’s published at an address someone else can open.</li><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>You changed it and published again.</li><li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>It’s saved in your GitHub account.</li></ul>
 <p>On the day you’ll start a new Lovable project. Ask at the clinic if you’re unsure how your credits will cover a full day.</p>
-<p><a href="get-ready.html">Back to the checklist</a></p>
+<p><a class="btn small" href="get-ready.html">Back to the checklist</a></p>
 </div>
 <div class="progress" data-progress><span data-count>0 of 0 done</span><progress value="0" max="1" aria-label="Progress"></progress></div>
-
-</div></main>
+</section></div>
+</main>
 <footer><div class="wrap">
 <p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 7 October 2026.</p>
-<p>No cookies, no analytics. Your ticks on checklists are saved only in your own browser.</p>
+<p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. Your ticks on checklists are saved only in your own browser.</p>
 </div></footer>
 </body>
 </html>

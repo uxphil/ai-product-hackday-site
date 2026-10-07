@@ -82,7 +82,16 @@
         bar.querySelector('progress').max = total;
         bar.querySelector('[data-count]').textContent = done + ' of ' + total + ' done';
       }
-      if (ready) ready.hidden = done < total;
+      if (ready) {
+        ready.hidden = done < total;
+        // finishing a warm-up route also ticks the "warm-up" step on the Get ready page
+        var key = ready.dataset.completes;
+        if (key) {
+          var p = readProgress();
+          if (done === total) p[key] = 1; else delete p[key];
+          writeProgress(p);
+        }
+      }
     }
     boxes.forEach(function (b) {
       b.checked = !!saved[b.dataset.key];
@@ -135,8 +144,37 @@
     set(choice);
   }
 
+  /* ---------- countdown (computed in the browser, nothing is sent anywhere) ---------- */
+  function initCountdown() {
+    document.querySelectorAll('[data-countdown]').forEach(function (el) {
+      var target = new Date(el.dataset.countdown + 'T00:00:00');
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      var days = Math.round((target - today) / 86400000);
+      var out = el.querySelector('[data-days]');
+      if (!out) return;
+      if (days > 1) out.innerHTML = '<strong>' + days + ' days</strong> to go';
+      else if (days === 1) out.innerHTML = '<strong>Tomorrow</strong>';
+      else if (days === 0) out.innerHTML = '<strong>Today</strong>';
+      else el.hidden = true;
+    });
+  }
+
+  /* ---------- gentle reveal on scroll (skipped when reduced motion is requested) ---------- */
+  function initReveal() {
+    var items = document.querySelectorAll('.reveal');
+    if (!items.length) return;
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      items.forEach(function (i) { i.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    items.forEach(function (i) { io.observe(i); });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (root.classList.contains('locked')) buildGate();
-    initChecks(); initCopy(); initOS();
+    initChecks(); initCopy(); initOS(); initCountdown(); initReveal();
   });
 })();

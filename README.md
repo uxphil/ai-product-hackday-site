@@ -9,7 +9,9 @@ No framework, no build step, no database, no analytics, no cookies. Plain HTML, 
 | Path | Purpose |
 |---|---|
 | `index.html` … `themes.html` | One file per page. Each has the same header and navigation. |
-| `assets/style.css` | All styling, including dark mode. Colours are variables at the top. |
+| `assets/style.css` | All styling, including dark mode. Colours and radius are variables at the top, matching the bonhard.ai look (DM Sans, olive-black and sage). |
+| `assets/fonts/` | DM Sans, self-hosted (SIL Open Font License) so visitors never contact Google. |
+| `assets/icons.svg` | Icon sprite. Interface icons are from Lucide (ISC licence); GitHub, Claude and Replit marks are from Simple Icons (CC0). Use an icon with `<svg class="icon"><use href="assets/icons.svg#i-NAME"/></svg>`. Brand names start with `b-`. |
 | `assets/site.js` | Password gate, tick-box progress (saved in the browser only), copy buttons, Mac/Windows switch. |
 | `robots.txt`, `<meta name="robots">` | Ask search engines not to index the site. |
 
@@ -20,7 +22,7 @@ cd site
 python3 -m http.server 8765
 ```
 
-Open <http://localhost:8765>. (The file also works opened directly, but the server matches how it will be hosted.)
+Open <http://localhost:8765>. Use the server rather than opening files directly: the icon sprite is loaded as a separate file.
 
 ## Edit
 
