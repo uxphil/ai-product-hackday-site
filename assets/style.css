@@ -371,3 +371,11 @@ table.compare td { min-width: 11rem; }
 table.compare thead th { white-space: nowrap; }
 table.compare thead th .icon { width: 1.35em; height: 1.35em; margin-right: .5rem; vertical-align: -.3em; color: var(--accent); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* paired tool icons: the paid tool + GitHub */
+.chip-pair { display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; }
+.chip-pair .chip { margin-bottom: 0; }
+.plus { color: var(--muted); font-weight: 500; margin: 0 .35rem; }
+.chip-pair .plus { margin: 0; font-size: 1.2rem; }
+.eyebrow .plus { margin: 0 .1rem; }
+table.compare thead th .plus { margin: 0 .35rem 0 -.1rem; }
