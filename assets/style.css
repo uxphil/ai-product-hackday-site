@@ -362,3 +362,8 @@ table.compare th, table.compare td { padding: .8rem .8rem .8rem 0; }
 table.compare tbody th { font-weight: 600; color: var(--text); font-size: .95rem; white-space: nowrap; }
 table.compare thead th { color: var(--text); font-size: .95rem; font-weight: 600; }
 table.compare td { min-width: 11rem; }
+
+/* cards in a grid: buttons share one baseline at the bottom whatever the text length */
+.grid > .card { display: flex; flex-direction: column; }
+.grid > .card .actions { margin-top: auto; padding-top: 1rem; margin-bottom: 0; }
+.grid > .card > .badge { align-self: flex-start; margin: -.3rem 0 0; }
