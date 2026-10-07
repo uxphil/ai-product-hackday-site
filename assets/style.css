@@ -387,3 +387,7 @@ table.compare thead th .plus { margin: 0 .5rem; }
 .eyebrow .pairlabel { color: var(--text); font-weight: 500; }
 .pairlabel, .pairlabel + .plus { vertical-align: middle; }
 .plus { line-height: 1; }
+
+/* second line of a paired header: "+ [GitHub icon] GitHub" */
+table.compare thead th .pairline2 { display: flex; align-items: center; margin-top: .3rem; }
+table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
