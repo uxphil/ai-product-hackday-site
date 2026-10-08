@@ -38,7 +38,8 @@
       '<h1 style="font-size:1.4rem;margin-top:0">AI Enabled Product Hackathon</h1>' +
       '<p>This preview is for invited participants. Enter the password you were given.</p>' +
       '<label for="gate-pw"><strong>Password</strong></label>' +
-      '<input id="gate-pw" type="password" autocomplete="off" autofocus>' +
+      '<div class="pw-wrap"><input id="gate-pw" type="password" autocomplete="off" autofocus>' +
+      '<button type="button" class="pw-toggle" aria-controls="gate-pw" aria-pressed="false">Show</button></div>' +
       '<p class="err" role="alert"></p>' +
       '<button class="btn" type="submit">Open the site</button>' +
       '</form>';
@@ -46,7 +47,15 @@
     var form = gate.querySelector('form');
     var input = gate.querySelector('input');
     var err = gate.querySelector('.err');
+    var toggle = gate.querySelector('.pw-toggle');
     input.focus();
+    toggle.addEventListener('click', function () {
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      toggle.textContent = show ? 'Hide' : 'Show';
+      toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+      input.focus();
+    });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (hash(input.value.trim().toLowerCase()) === GATE_HASH) {
