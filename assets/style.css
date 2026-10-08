@@ -281,9 +281,11 @@ footer p { margin: .4rem 0; max-width: 46rem; }
 html.locked body > :not(.gate) { display: none !important; }
 .gate { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
 .gate form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem; max-width: 25rem; width: 100%; }
-.gate input { width: 100%; font: inherit; padding: .7rem 4.2rem .7rem .8rem; border: 1px solid var(--muted); border-radius: 10px; background: var(--bg); color: var(--text); }
+.gate input { width: 100%; font: inherit; padding: .7rem 6rem .7rem .8rem; border: 1px solid var(--muted); border-radius: 10px; background: var(--bg); color: var(--text); }
 .gate .pw-wrap { position: relative; margin: .4rem 0 .8rem; }
-.gate .pw-toggle { position: absolute; top: 50%; right: .4rem; transform: translateY(-50%); font: inherit; font-size: .9rem; padding: .35rem .6rem; border: 0; border-radius: 8px; background: transparent; color: var(--text); cursor: pointer; text-decoration: underline; }
+.gate .pw-toggle { position: absolute; top: 50%; right: .4rem; transform: translateY(-50%); display: inline-flex; align-items: center; gap: .35rem; font: inherit; font-size: .9rem; padding: .35rem .65rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--text); cursor: pointer; }
+.gate .pw-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.gate .pw-toggle .icon { width: 1.1em; height: 1.1em; vertical-align: 0; }
 .gate .pw-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .gate .err { color: #b3261e; min-height: 1.4rem; margin: 0 0 .5rem; font-size: .95rem; }
 @media (prefers-color-scheme: dark) { .gate .err { color: #ff9b94; } }

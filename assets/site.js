@@ -30,6 +30,11 @@
   if (store('localStorage', STYLE_KEY) === 'clean') root.setAttribute('data-style', 'clean');
   if (GATE_HASH && store('sessionStorage', GATE_KEY) !== '1') root.classList.add('locked');
 
+  // drawn inline so the gate does not depend on the icon sprite being loaded
+  var ICON_OPEN = '<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">';
+  var EYE = ICON_OPEN + '<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>';
+  var EYE_OFF = ICON_OPEN + '<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>';
+
   function buildGate() {
     var gate = document.createElement('div');
     gate.className = 'gate';
@@ -39,7 +44,7 @@
       '<p>This preview is for invited participants. Enter the password you were given.</p>' +
       '<label for="gate-pw"><strong>Password</strong></label>' +
       '<div class="pw-wrap"><input id="gate-pw" type="password" autocomplete="off" autofocus>' +
-      '<button type="button" class="pw-toggle" aria-controls="gate-pw" aria-pressed="false">Show</button></div>' +
+      '<button type="button" class="pw-toggle" aria-controls="gate-pw" aria-pressed="false">' + EYE + '<span>Show</span></button></div>' +
       '<p class="err" role="alert"></p>' +
       '<button class="btn" type="submit">Open the site</button>' +
       '</form>';
@@ -52,7 +57,8 @@
     toggle.addEventListener('click', function () {
       var show = input.type === 'password';
       input.type = show ? 'text' : 'password';
-      toggle.textContent = show ? 'Hide' : 'Show';
+      toggle.querySelector('span').textContent = show ? 'Hide' : 'Show';
+      toggle.querySelector('svg').outerHTML = show ? EYE_OFF : EYE;
       toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
       input.focus();
     });
