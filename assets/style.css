@@ -169,6 +169,10 @@ button.copy { font: inherit; font-size: .82rem; background: transparent; color: 
 .card p strong { color: var(--text); font-weight: 600; }
 .card.rec { border-color: var(--accent); background: linear-gradient(180deg, var(--accent-soft), var(--surface)); }
 .card .actions { margin-bottom: 0; }
+.card .subtitle { margin-top: -.2rem; font-size: .92rem; }
+.card details { margin: .6rem 0; }
+.card details ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: .95rem; }
+.card details li { margin: .3rem 0; }
 
 /* stats (like the bonhard.ai numerals) */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 0; }
