@@ -114,6 +114,15 @@ nav a { display: inline-block; padding: .3rem .65rem; color: var(--text); text-d
 nav a:hover { color: var(--accent); }
 nav a[aria-current="page"] { border-bottom-color: var(--accent); }
 
+/* Themes sub menu (desktop: opens on hover or keyboard focus; mobile: listed inside the floating menu) */
+nav li.has-sub { position: relative; }
+nav li.has-sub > a::after { content: ""; display: inline-block; width: .38em; height: .38em; margin: 0 0 .2em .45em; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); opacity: .6; }
+nav ul.sub { display: none; position: absolute; top: 100%; left: 0; z-index: 20; min-width: 13.5rem; flex-direction: column; flex-wrap: nowrap; gap: 0; padding: .4rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); box-shadow: 0 12px 32px color-mix(in srgb, var(--text) 14%, transparent); }
+nav li.has-sub:hover > ul.sub, nav li.has-sub:focus-within > ul.sub { display: flex; }
+nav ul.sub a { display: block; padding: .5rem .75rem; border-bottom: 0; border-radius: 8px; }
+nav ul.sub a:hover { background: var(--surface-2); }
+nav ul.sub a[aria-current="page"] { color: var(--accent); font-weight: 500; }
+
 main { padding-bottom: 3rem; }
 section.block { padding: 3.5rem 0; border-top: 1px solid var(--line); }
 section.first { border-top: 0; padding-top: 2rem; }
@@ -423,6 +432,8 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
   .fab-menu a { display: block; padding: 13px 16px; border-radius: 10px; text-decoration: none; font-size: 1.05rem; color: var(--text); }
   .fab-menu a:hover, .fab-menu a:active { background: var(--surface-2); }
   .fab-menu a[aria-current="page"] { color: var(--accent); font-weight: 500; }
+  .fab-menu li.sub a { padding: 10px 16px 10px 36px; font-size: 1rem; color: var(--muted); }
+  .fab-menu li.sub a[aria-current="page"] { color: var(--accent); }
   .fab-menu li.sep { height: 1px; margin: 6px 8px; background: var(--line); }
   /* the checklist progress bar floats above the two bottom controls */
   .progress { bottom: 4.6rem; border-radius: var(--radius); border-bottom: 1px solid var(--line); padding-left: 1.1rem; }
