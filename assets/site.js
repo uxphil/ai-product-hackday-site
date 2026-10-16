@@ -47,6 +47,7 @@
       '<button type="button" class="pw-toggle" aria-controls="gate-pw" aria-pressed="false">' + EYE + '<span>Show</span></button></div>' +
       '<p class="err" role="alert"></p>' +
       '<button class="btn" type="submit">Open the site</button>' +
+      '<p class="gate-help">Lost the password? Check your invitation, or ask Phil Bonhard.</p>' +
       '</form>';
     document.body.appendChild(gate);
     var form = gate.querySelector('form');
@@ -98,7 +99,7 @@
       if (bar) {
         bar.querySelector('progress').value = done;
         bar.querySelector('progress').max = total;
-        bar.querySelector('[data-count]').textContent = done + ' of ' + total + ' done';
+        bar.querySelector('[data-count]').textContent = done + ' of ' + total + ' done · saved on this device only';
       }
       if (ready) {
         ready.hidden = done < total;
@@ -316,6 +317,16 @@
     });
     sync();
     document.body.appendChild(btn);
+    // on phones the switch lives inside the floating menu instead, so fewer things float over the page
+    var menu = document.getElementById('fab-menu');
+    if (menu) {
+      var li = document.createElement('li');
+      li.className = 'theme';
+      var copy = btn.cloneNode(true);
+      li.appendChild(copy);
+      menu.insertBefore(li, menu.querySelector('.sep'));
+      copy.addEventListener('click', function () { btn.click(); copy.setAttribute('aria-pressed', btn.getAttribute('aria-pressed')); });
+    }
   }
 
   /* ---------- mobile floating menu ---------- */
