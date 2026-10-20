@@ -57,6 +57,8 @@ Sites such as github.com/signup return 403 to scripts; open those in a browser i
 
 The site is protected by a shared password, but the check runs in the visitor's browser. It keeps casual visitors out; **it is not real security**. Anyone who reads the page source can find the check and bypass it, and the content is in the files whether or not the gate is shown. Put nothing confidential on the site. The password is not case-sensitive.
 
+`venue.html` is deliberately outside the gate: it loads no JavaScript, has no password box, forms or outside links, so it can be opened on locked-down work machines. Keep it that way (`check-site.py` fails if it loads a script).
+
 To change it, compute the new hash and replace `GATE_HASH` in `assets/site.js`:
 
 ```bash
