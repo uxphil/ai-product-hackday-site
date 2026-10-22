@@ -13,6 +13,7 @@ No framework, no build step, no database, no analytics, no cookies. Plain HTML, 
 | `assets/fonts/` | DM Sans, self-hosted (SIL Open Font License) so visitors never contact Google. |
 | `assets/icons.svg` | Icon sprite. Interface icons are from Lucide (ISC licence); GitHub, Claude and Replit marks are from Simple Icons (CC0). Use an icon with `<svg class="icon"><use href="assets/icons.svg#i-NAME"/></svg>`. Brand names start with `b-`. |
 | `assets/site.js` | Password gate, tick-box progress (saved in the browser only), copy buttons, Mac/Windows switch. |
+| `talks/` | Talk slides. Generated from `talks/<name>/deck` in the planning repository by `scripts/build-talk-page.py`; don't edit by hand. These pages have a slim header instead of the shared navigation. |
 | `robots.txt`, `<meta name="robots">` | Ask search engines not to index the site. |
 
 ## Themes

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Slides from the opening talk of the AI Enabled Product Hackathon.">
+<title>You lead, the AI builds · AI Enabled Product Hackathon</title>
+<link rel="preload" href="../assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/style.css?v=b3a105bf">
+<script src="../assets/site.js?v=1bd22d9d"></script>
+<style>
+@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 700 800; font-display: swap; src: url(../assets/fonts/dm-sans-normal-700-800.woff2) format('woff2'); }
+.deck-top { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: 1.5rem; }
+.deck { display: grid; gap: 2.5rem; padding: 1rem 0 4rem; }
+.slide-wrap { margin: 0; }
+.slide { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.08); background: #f7f8f5; }
+.slide > section { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; box-sizing: border-box; overflow: hidden; transform: scale(var(--k, .5)); transform-origin: 0 0; text-align: left; line-height: 1.4; }
+.slide section * { margin: 0; max-width: none; box-sizing: border-box; letter-spacing: inherit; }
+.slide section h2 { line-height: 1.15; letter-spacing: normal; }
+.slide section h3 { line-height: 1.2; letter-spacing: normal; }
+.slide section p, .slide section li { line-height: 1.4; }
+.slide section ul, .slide section ol { padding-left: 1.2em; }
+.slide section a { color: inherit; }
+.slide section b { font-weight: 700; }
+.slide section table { border-collapse: collapse; width: auto; }
+.slide section th, .slide section td { font-size: inherit; color: inherit; font-weight: inherit; padding: .35em .6em; border-bottom: 1px solid rgba(29,33,27,.15); vertical-align: top; }
+.slide section th { font-weight: 600; }
+.slide section hr { border: 0; }
+.slide section svg.icon { vertical-align: 0; }
+.slide-wrap figcaption { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-top: .6rem; color: var(--muted); font-size: .9rem; }
+.slide-wrap figcaption .num { font-variant-numeric: tabular-nums; padding-top: .75rem; white-space: nowrap; }
+.slide-wrap details { flex: 1; margin: 0; }
+.slide-wrap details p { margin: 0 0 .3rem; color: var(--text); }
+html.presenting { overflow: hidden; }
+.deck.presenting { position: fixed; inset: 0; z-index: 100; background: #0b0c0a; padding: 0; display: block; overflow: hidden; }
+.deck.presenting .slide-wrap { display: none; }
+.deck.presenting .slide-wrap.current { display: grid; place-items: center; width: 100vw; height: 100vh; }
+.deck.presenting .slide { width: min(100vw, calc(100vh * 16 / 9)); border-radius: 0; box-shadow: none; cursor: pointer; }
+.deck.presenting figcaption { display: none; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top"><div class="wrap bar">
+<a class="brand" href="../index.html">ai product <span>hackday</span></a>
+<a href="../resources.html">← Resources</a>
+</div></header>
+<main id="main">
+<div class="wrap">
+<section class="block first">
+<p class="eyebrow">Talk slides</p>
+<h1>You lead, the AI builds</h1>
+<p class="lead">The talk that opens the day: how to work with your AI, publishing together, and choosing a theme. Open the speaker notes under a slide for what was said, or press Present to show the slides full screen.</p>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="../stay-safe.html">More on staying safe</a>.</p></div>
+<div class="deck-top"><button class="btn" type="button" id="present">Present full screen</button><span class="muted small">Arrow keys or click to move on. Esc to stop.</span></div>
+</section>
+<div class="deck" id="deck">
+<figure class="slide-wrap" id="slide-1"><div class="slide"><section id="cover" style="background:#141712;color:#eceee8;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:row;align-items:center;gap:96px">
+<div style="flex:1;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#a9c98a">AI Enabled Product Hackathon</p>
+<h2 style="font-size:120px;font-weight:800;line-height:1.05;letter-spacing:-3px;color:#eceee8">You lead,<br>the AI builds</h2>
+<p style="font-size:32px;line-height:1.4;color:#a6ad9f">Working with your AI, publishing together, and choosing a theme</p>
+<p style="font-size:24px;color:#a6ad9f">Wednesday 28 October 2026 · Manchester</p>
+</div>
+<div style="width:400px;height:720px;background:#f7f8f5;border:14px solid #30362b;border-radius:64px;padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:24px">
+<p style="font-size:24px;color:#565d52;background:#e3e8d9;border-radius:40px;padding:10px 24px">you.github.io</p>
+<div style="flex:1"></div>
+<p style="font-size:56px;font-weight:600;line-height:1.15;color:#1d211b;text-align:center">hello<br>world 👋</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.4;color:#565d52;text-align:center">Live. Anyone can open it.</p>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>For the rest of today, think of your AI as a very fast colleague who’s never met you. It knows a lot about building things. It knows nothing about who you’re designing for. That’s your job.</p></details><span class="num">1 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-2"><div class="slide"><section id="colleague" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 1 · Working with your AI</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Talk to it like a colleague</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:96px;align-items:start">
+<div style="width:560px;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:24px">
+<h3 style="font-size:44px;font-weight:600;line-height:1.2;color:#1d211b">You don’t need special words.</h3>
+<p style="font-size:32px;line-height:1.4;color:#1d211b">Brief it the way you’d brief a colleague.</p>
+<p style="font-size:28px;line-height:1.4;color:#565d52">If the answer isn’t right, say so. It won’t be offended.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<p style="flex:1;font-size:32px;line-height:1.35"><b>Ask it for help</b> with anything, including “how do I…?”</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<p style="flex:1;font-size:32px;line-height:1.35"><b>Tell it who you are:</b> “I’m a designer. Explain things in plain words.”</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<p style="flex:1;font-size:32px;line-height:1.35"><b>Give it context:</b> who it’s for, the problem, what good looks like</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<p style="flex:1;font-size:32px;line-height:1.35"><b>Ask follow-up questions,</b> and say “that’s not what I meant”</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<p style="flex:1;font-size:32px;line-height:1.35"><b>Ask it to ask you questions</b> before it builds anything</p>
+</div>
+</div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>You don’t need special words. Talk to it the way you’d brief a colleague. If you’d explain the user and the problem to a person, explain it to the AI. And if the answer isn’t right, say so. It won’t be offended.</p></details><span class="num">2 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-3"><div class="slide"><section id="screenshots" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 1 · Working with your AI</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Show it, don’t describe it</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:48px">
+<div style="flex:1;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:20px">
+<h3 style="font-size:44px;font-weight:600;color:#1d211b">Mac</h3>
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">1 · Grab part of the screen</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:12px">
+<p style="font-size:32px;font-weight:600;background:#fbfbf8;border:2px solid #c9cfc1;border-radius:12px;padding:10px 22px;box-shadow:0 4px 0 #c9cfc1">⌘ Cmd</p>
+<p style="font-size:32px;color:#565d52">+</p>
+<p style="font-size:32px;font-weight:600;background:#fbfbf8;border:2px solid #c9cfc1;border-radius:12px;padding:10px 22px;box-shadow:0 4px 0 #c9cfc1">⇧ Shift</p>
+<p style="font-size:32px;color:#565d52">+</p>
+<p style="font-size:32px;font-weight:600;background:#fbfbf8;border:2px solid #c9cfc1;border-radius:12px;padding:10px 22px;box-shadow:0 4px 0 #c9cfc1">4</p>
+</div>
+<p style="font-size:28px;line-height:1.4">then drag a box round the bit you need</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">2 · Put it in the chat</p>
+<p style="font-size:28px;line-height:1.4">Drag the thumbnail (bottom right) into the chat. Or add <b>Ctrl</b> to copy it, then <b>⌘ Cmd + V</b>.</p>
+</div>
+<div style="flex:1;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:20px">
+<h3 style="font-size:44px;font-weight:600;color:#1d211b">Windows</h3>
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">1 · Grab part of the screen</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:12px">
+<p style="font-size:32px;font-weight:600;background:#fbfbf8;border:2px solid #c9cfc1;border-radius:12px;padding:10px 22px;box-shadow:0 4px 0 #c9cfc1">⊞ Win</p>
+<p style="font-size:32px;color:#565d52">+</p>
+<p style="font-size:32px;font-weight:600;background:#fbfbf8;border:2px solid #c9cfc1;border-radius:12px;padding:10px 22px;box-shadow:0 4px 0 #c9cfc1">⇧ Shift</p>
+<p style="font-size:32px;color:#565d52">+</p>
+<p style="font-size:32px;font-weight:600;background:#fbfbf8;border:2px solid #c9cfc1;border-radius:12px;padding:10px 22px;box-shadow:0 4px 0 #c9cfc1">S</p>
+</div>
+<p style="font-size:28px;line-height:1.4">then drag a box round the bit you need</p>
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">2 · Put it in the chat</p>
+<p style="font-size:28px;line-height:1.4">It’s copied already. Click in the chat and press <b>Ctrl + V</b>.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:24px;background:#fbf3dc;border:2px solid #b08a2e;border-radius:16px;padding:24px 32px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4a3a0d;width:40px;height:40px"><use href="../assets/icons.svg#i-triangle-alert"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.4;color:#4a3a0d"><b>Grab only the bit you need.</b> A full-screen shot can catch Teams, email, notifications and other tabs.</p>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>A screenshot beats a paragraph. Something looks wrong? An error you don’t understand? Grab it, paste it, ask “what’s going on here?” Always drag a box round just the bit that matters, never the whole screen. Demo it live: one Mac shortcut, one Windows shortcut.</p></details><span class="num">3 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-4"><div class="slide"><section id="in-charge" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 1 · Working with your AI</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Stay in charge</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:96px;align-items:start">
+<div style="width:640px;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:28px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:56px;height:56px"><use href="../assets/icons.svg#i-lightbulb"/></svg>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2;color:#1d211b">If in doubt, ask it to explain its choices.</h3>
+<p style="font-size:32px;line-height:1.4;font-style:italic;color:#4d6b35">“What were the options? Why this one?”</p>
+<p style="font-size:28px;line-height:1.4;color:#565d52">That’s how you learn, and it’s often how you catch the mistake.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #4d6b35;padding:4px 0 4px 28px">
+<p style="font-size:32px;font-weight:600;line-height:1.35">One change at a time</p>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Ask, check, then the next thing.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #4d6b35;padding:4px 0 4px 28px">
+<p style="font-size:32px;font-weight:600;line-height:1.35">Check it yourself</p>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Open it, click it, try it on your phone. “Done” doesn’t always mean done.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #4d6b35;padding:4px 0 4px 28px">
+<p style="font-size:32px;font-weight:600;line-height:1.35">Save when it works</p>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Publish a working version before a big change.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #4d6b35;padding:4px 0 4px 28px">
+<p style="font-size:32px;font-weight:600;line-height:1.35">Going round in circles?</p>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Start a fresh chat and explain where you’ve got to.</p>
+</div>
+</div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>AI can be confidently wrong. The cure is simple: small steps, and look at the result every time. When it makes a choice you don’t understand, ask why. That’s how you learn, and it’s often how you catch the mistake.</p></details><span class="num">4 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-5"><div class="slide"><section id="safe" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 1 · Working with your AI</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Keep it safe</h2>
+</div>
+<div style="background:#fbf3dc;border:2px solid #b08a2e;border-radius:16px;padding:28px 40px">
+<p style="font-size:28px;line-height:1.4;color:#4a3a0d"><b>This is a personal learning exercise.</b> Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites.</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div style="background:#eef1e8;border-radius:16px;padding:28px 32px;display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-key"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>Never</b> put a password, API key or token into the chat, your code or GitHub</p>
+</div>
+<div style="background:#eef1e8;border-radius:16px;padding:28px 32px;display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-lock"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>No company or confidential information:</b> customer or colleague details, internal documents or code, screenshots of work systems</p>
+</div>
+<div style="background:#eef1e8;border-radius:16px;padding:28px 32px;display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-users"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>No real people’s personal details</b> on a public page</p>
+</div>
+<div style="background:#eef1e8;border-radius:16px;padding:28px 32px;display:flex;flex-direction:row;gap:24px;align-items:start">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-house"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.35"><b>No real bank names or branding.</b> The mortgage theme uses a made-up bank</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#565d52">Shared something by mistake? Don’t panic. Stop and tell Phil straight away.</p>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Everything you publish today is public, and so is your GitHub repository. Use your own personal accounts. If you realise you’ve shared something you shouldn’t have, don’t panic. Stop and tell me straight away.</p></details><span class="num">5 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-6"><div class="slide"><section id="permissions" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 1 · Working with your AI</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Permissions, money and getting stuck</h2>
+</div>
+<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="background:#eef1e8;border-radius:24px;padding:40px 48px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<h3 style="flex:1;font-size:36px;font-weight:600;line-height:1.2">Read before you say yes</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Your AI asks permission before it does things. Yes to your project folder and GitHub. No to anything you don’t understand, then ask a helper.</p>
+</div>
+<div style="background:#eef1e8;border-radius:24px;padding:40px 48px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:44px;height:44px"><use href="../assets/icons.svg#i-triangle-alert"/></svg>
+<h3 style="flex:1;font-size:36px;font-weight:600;line-height:1.2">Don’t buy anything on the spot</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Asked to pay, upgrade or add a card? Stop and ask.</p>
+</div>
+<div style="background:#eef1e8;border-radius:24px;padding:40px 48px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:44px;height:44px"><use href="../assets/icons.svg#i-zap"/></svg>
+<h3 style="flex:1;font-size:36px;font-weight:600;line-height:1.2">Ran out of usage?</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Tell a helper. Don’t top up in a panic.</p>
+</div>
+<div style="background:#4d6b35;border-radius:24px;padding:40px 48px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#f7f8f5;width:44px;height:44px"><use href="../assets/icons.svg#i-clock"/></svg>
+<h3 style="flex:1;font-size:36px;font-weight:600;line-height:1.2;color:#f7f8f5">The 10-minute rule</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#f7f8f5">Stuck for 10 minutes? Ask for help. Another 10? We’ll make it simpler.</p>
+</div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>These tools can create files, run commands and use your accounts. That’s the magic, and it’s why you read before you click yes. Nobody needs to spend money today. And nobody should sit stuck on their own: ten minutes, then put your hand up.</p></details><span class="num">6 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-7"><div class="slide"><section id="loop" style="background:#141712;color:#eceee8;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#a9c98a">Part 2 · Publish together</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#eceee8">The loop you’ll use all day</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:24px">
+<div style="flex:1;background:#1c2019;border:2px solid #30362b;border-radius:24px;padding:32px 40px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:44px;font-weight:600;color:#eceee8">Change</h3>
+<p style="font-size:24px;color:#a6ad9f">Ask your AI</p>
+</div>
+<div aria-hidden="true" style="background:#a9c98a;width:64px;height:32px;flex:none;clip-path:polygon(0 30%,60% 30%,60% 0,100% 50%,60% 100%,60% 70%,0 70%)"></div>
+<div style="flex:1;background:#1c2019;border:2px solid #30362b;border-radius:24px;padding:32px 40px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:44px;font-weight:600;color:#eceee8">Check</h3>
+<p style="font-size:24px;color:#a6ad9f">Look at it yourself</p>
+</div>
+<div aria-hidden="true" style="background:#a9c98a;width:64px;height:32px;flex:none;clip-path:polygon(0 30%,60% 30%,60% 0,100% 50%,60% 100%,60% 70%,0 70%)"></div>
+<div style="flex:1;background:#1c2019;border:2px solid #30362b;border-radius:24px;padding:32px 40px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:44px;font-weight:600;color:#eceee8">Publish</h3>
+<p style="font-size:24px;color:#a6ad9f">Push to GitHub</p>
+</div>
+<div aria-hidden="true" style="background:#a9c98a;width:64px;height:32px;flex:none;clip-path:polygon(0 30%,60% 30%,60% 0,100% 50%,60% 100%,60% 70%,0 70%)"></div>
+<div style="flex:1;background:#1c2019;border:2px solid #a9c98a;border-radius:24px;padding:32px 40px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:44px;font-weight:600;color:#a9c98a">Share</h3>
+<p style="font-size:24px;color:#a6ad9f">Open it on a phone</p>
+</div>
+</div>
+<p style="font-size:28px;color:#a9c98a;text-align:right">…then round again</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:48px">
+<div style="border-top:2px solid #30362b;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:32px;font-weight:600;color:#eceee8">Repository (repo)</p>
+<p style="font-size:28px;line-height:1.4;color:#a6ad9f">Your project’s folder, stored on GitHub</p>
+</div>
+<div style="border-top:2px solid #30362b;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:32px;font-weight:600;color:#eceee8">Commit</p>
+<p style="font-size:28px;line-height:1.4;color:#a6ad9f">A save point you can go back to</p>
+</div>
+<div style="border-top:2px solid #30362b;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:32px;font-weight:600;color:#eceee8">Push</p>
+<p style="font-size:28px;line-height:1.4;color:#a6ad9f">Send your saved changes up to GitHub</p>
+</div>
+<div style="border-top:2px solid #30362b;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:32px;font-weight:600;color:#eceee8">GitHub Pages</p>
+<p style="font-size:28px;line-height:1.4;color:#a6ad9f">Turns your repository into a website with a real address</p>
+</div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>In the next fifteen minutes you’ll go round this loop twice with your hello-world page. It’s the same loop you’ll use for your real project this afternoon. Four words you’ll hear: repository, commit, push, GitHub Pages. That’s all the jargon you need. If you skipped the warm-up, use this slot to get set up: put your hand up and a helper will come to you.</p></details><span class="num">7 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-8"><div class="slide"><section id="connect" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 2 · Step 1 of 4</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Connect your AI to GitHub</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:64px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Open your <b>hello-hackday</b> folder in your AI tool</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">In your own words, say you want to put this page on GitHub and make it a website</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">It gives you a <b>one-time code</b>. Type it at <b>github.com/login/device</b> and approve</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Using Codex? Say yes when it asks to use the internet</p></div>
+<div style="flex:1"></div>
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">Worth asking for</p>
+<div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:12px">
+<p style="font-size:28px;background:#e3e8d9;border-radius:40px;padding:12px 28px">One step at a time</p>
+<p style="font-size:28px;background:#e3e8d9;border-radius:40px;padding:12px 28px">Explain each step</p>
+<p style="font-size:28px;background:#e3e8d9;border-radius:40px;padding:12px 28px">Sign me in through the browser</p>
+</div>
+</div>
+<div style="width:720px;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">In your browser (example)</p>
+<div style="background:#fbfbf8;border:2px solid #d8ddd1;border-radius:16px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:20px">
+<p style="font-size:24px;color:#565d52">github.com/login/device</p>
+<h3 style="font-size:36px;font-weight:600;color:#1d211b">Enter the code</h3>
+<p style="font-size:56px;font-weight:600;letter-spacing:6px;color:#1d211b;background:#eef1e8;border-radius:12px;padding:16px 32px">A1B2-C3D4</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center;background:#fbf3dc;border:2px solid #b08a2e;border-radius:16px;padding:20px 28px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4a3a0d;width:36px;height:36px"><use href="../assets/icons.svg#i-lock"/></svg>
+<p style="flex:1;font-size:28px;color:#4a3a0d"><b>Never</b> your password. <b>Never</b> a token.</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;right:128px;top:136px;width:304px;height:12px;display:flex;flex-direction:row;gap:16px">
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#d8ddd1;border-radius:6px"></div>
+<div style="flex:1;background:#d8ddd1;border-radius:6px"></div>
+<div style="flex:1;background:#d8ddd1;border-radius:6px"></div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Do this live on the big screen; leave the slide up while people work. Notice I’m not giving you a prompt. Say it your way. The one thing that matters: you sign in with the browser code. If it ever asks for your password or a token, say no.</p></details><span class="num">8 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-9"><div class="slide"><section id="repo" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 2 · Step 2 of 4</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Create your repository and push</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:64px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Ask for a <b>public</b> repository in <b>your own</b> GitHub account</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Approve its requests to use git and gh (GitHub’s own tool) for your hello-hackday folder</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Then look for yourself at<br><b>github.com/your-username/hello-hackday</b></p></div>
+<div style="flex:1"></div>
+<div style="background:#e3e8d9;border-radius:16px;padding:28px 32px">
+<p style="font-size:28px;line-height:1.4"><b>Public</b> means anyone can see the file. Fine for “hello world”, and why we only ever use sample content.</p>
+</div>
+</div>
+<div style="width:720px;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">On GitHub (example)</p>
+<div style="background:#fbfbf8;border:2px solid #d8ddd1;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;color:#565d52">your-username /</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<h3 style="font-size:40px;font-weight:600;color:#1d211b">hello-hackday</h3>
+<p style="font-size:24px;color:#565d52;border:2px solid #d8ddd1;border-radius:40px;padding:4px 18px">Public</p>
+</div>
+<hr style="border-top:2px solid #d8ddd1">
+<div style="display:flex;flex-direction:row;align-items:center;gap:16px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#565d52;width:32px;height:32px"><use href="../assets/icons.svg#i-file-code"/></svg>
+<p style="font-size:28px;font-weight:600;color:#1d211b">index.html</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#565d52">Add hello world page</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:16px;align-items:center">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:36px;height:36px"><use href="../assets/icons.svg#i-circle-check"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.4">Can you see your file? Then it’s on GitHub.</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;right:128px;top:136px;width:304px;height:12px;display:flex;flex-direction:row;gap:16px">
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#d8ddd1;border-radius:6px"></div>
+<div style="flex:1;background:#d8ddd1;border-radius:6px"></div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Public means anyone can see the file. That’s fine for “hello world”. It’s why we only ever use sample content. Once your AI says it’s pushed, don’t take its word for it: open GitHub and look.</p></details><span class="num">9 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-10"><div class="slide"><section id="online" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 2 · Step 3 of 4</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">See it online and share it</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:64px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Ask it to turn on <b>GitHub Pages</b></p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Your address looks like<br><b>your-username.github.io/hello-hackday</b></p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Open it <b>on your phone</b>, then send it to the person next to you</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">The first time can take <b>up to 10 minutes</b>. A 404 page usually means “not yet”</p></div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center;background:#e3e8d9;border-radius:16px;padding:24px 32px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:36px;height:36px"><use href="../assets/icons.svg#i-clock"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.4">While you wait, carry on to the next step.</p>
+</div>
+</div>
+<div style="width:720px;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;align-items:center;gap:24px">
+<p style="align-self:stretch;font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">On your phone</p>
+<div style="width:340px;height:460px;background:#fbfbf8;border:12px solid #1d211b;border-radius:48px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<p style="font-size:24px;color:#565d52;background:#e3e8d9;border-radius:40px;padding:8px 20px">you.github.io</p>
+<div style="flex:1"></div>
+<p style="font-size:48px;font-weight:600;line-height:1.15;color:#1d211b;text-align:center">hello<br>world</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#4d6b35;font-weight:600">Live</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;right:128px;top:136px;width:304px;height:12px;display:flex;flex-direction:row;gap:16px">
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#d8ddd1;border-radius:6px"></div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Opening it on your phone proves somebody else can open it too. That’s our definition of shipped today. GitHub can take up to ten minutes the first time, so while you wait, carry on to the next step.</p></details><span class="num">10 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-11"><div class="slide"><section id="emoji" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 2 · Step 4 of 4</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Make a change and push again</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:64px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Ask for an emoji on your page. Any emoji, your call</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Check it on your own computer first</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Ask it to publish the change</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start"><div style="padding-top:18px"><div style="width:12px;height:12px;background:#4d6b35;border-radius:6px"></div></div><p style="flex:1;font-size:32px;line-height:1.4">Refresh the live address. Give it a minute</p></div>
+<div style="flex:1"></div>
+<p style="font-size:40px;font-weight:600;line-height:1.25;color:#4d6b35">Changed it, checked it, and it’s live for anyone.</p>
+</div>
+<div style="width:720px;background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;align-items:center;gap:24px">
+<p style="align-self:stretch;font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">On your phone, a minute later</p>
+<div style="width:340px;height:460px;background:#fbfbf8;border:12px solid #1d211b;border-radius:48px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:16px">
+<p style="font-size:24px;color:#565d52;background:#e3e8d9;border-radius:40px;padding:8px 20px">you.github.io</p>
+<div style="flex:1"></div>
+<p style="font-size:48px;font-weight:600;line-height:1.15;color:#1d211b;text-align:center">hello<br>world 👋</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#4d6b35;font-weight:600">Updated</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;right:128px;top:136px;width:304px;height:12px;display:flex;flex-direction:row;gap:16px">
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+<div style="flex:1;background:#4d6b35;border-radius:6px"></div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>This is the moment it clicks: you changed something, checked it, and it’s live for anyone. Do this a hundred times today. If the live page hasn’t changed, give it a minute and refresh again.</p></details><span class="num">11 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-12"><div class="slide"><section id="stuck" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 2 · Publish together</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">If something goes wrong</h2>
+</div>
+<table style="font-size:28px;color:#1d211b">
+<tr><th style="width:42%;padding:18px 28px;text-align:left">If…</th><th style="width:58%;padding:18px 28px;text-align:left">Do this</th></tr>
+<tr style="background:#eef1e8"><td style="padding:18px 28px">It asks for a password or token</td><td style="padding:18px 28px"><b>Stop.</b> Say no. Use the browser code instead</td></tr>
+<tr><td style="padding:18px 28px">A Mac pop-up about developer tools</td><td style="padding:18px 28px">Choose <b>Install</b> and wait a few minutes</td></tr>
+<tr style="background:#eef1e8"><td style="padding:18px 28px">Windows can’t install Git or the GitHub tool</td><td style="padding:18px 28px">Ask it to explain the manual download, or grab a helper</td></tr>
+<tr><td style="padding:18px 28px">Still a 404 after 15 minutes</td><td style="padding:18px 28px">Screenshot it and ask your AI what’s wrong</td></tr>
+<tr style="background:#eef1e8"><td style="padding:18px 28px">No AI tool set up yet</td><td style="padding:18px 28px">Use the do-it-yourself route on the event site</td></tr>
+</table>
+<div style="flex:1"></div>
+<p style="font-size:40px;font-weight:600;line-height:1.25;color:#4d6b35">Screenshot, paste, ask. Your AI is the first helper you go to.</p>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>And remember: screenshot, paste, ask. Your AI is the first helper you go to. Then the ten-minute rule: still stuck after ten minutes, put your hand up.</p></details><span class="num">12 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-13"><div class="slide"><section id="miniature" style="background:#4d6b35;color:#f7f8f5;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+<div style="display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#e3e8d9">Part 2 · Publish together</p>
+<h2 style="font-size:96px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#f7f8f5">You’ve just done the whole day in miniature</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px 48px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center"><svg class="icon" aria-hidden="true" focusable="false" style="color:#e3e8d9;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg><p style="font-size:36px;font-weight:600">Connected</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center"><svg class="icon" aria-hidden="true" focusable="false" style="color:#e3e8d9;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg><p style="font-size:36px;font-weight:600">Created</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center"><svg class="icon" aria-hidden="true" focusable="false" style="color:#e3e8d9;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg><p style="font-size:36px;font-weight:600">Published</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center"><svg class="icon" aria-hidden="true" focusable="false" style="color:#e3e8d9;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg><p style="font-size:36px;font-weight:600">Shared</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center"><svg class="icon" aria-hidden="true" focusable="false" style="color:#e3e8d9;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg><p style="font-size:36px;font-weight:600">Changed</p></div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:center"><svg class="icon" aria-hidden="true" focusable="false" style="color:#e3e8d9;width:44px;height:44px"><use href="../assets/icons.svg#i-circle-check"/></svg><p style="font-size:36px;font-weight:600">Published again</p></div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#e3e8d9">Keep hello-hackday as your practice repository. Your real project gets a fresh start.</p>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Connected, created, published, shared, changed, published again. Everything from here is the same loop with a better idea in the middle. Keep the hello-hackday repo: it’s your practice one. Your real project gets a fresh start.</p></details><span class="num">13 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-14"><div class="slide"><section id="themes" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 3 · Themes and getting started</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Pick a theme</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px">
+<div style="background:#eef1e8;border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:48px;height:48px"><use href="../assets/icons.svg#i-globe"/></svg>
+<h3 style="font-size:36px;font-weight:600;line-height:1.2">Personal website</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">A one-page site for a made-up person: who they are and how to get in touch</p>
+</div>
+<div style="background:#eef1e8;border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:48px;height:48px"><use href="../assets/icons.svg#i-star"/></svg>
+<h3 style="font-size:36px;font-weight:600;line-height:1.2">Elf Help</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">A seven-day Elf on the Shelf planner for busy parents and carers</p>
+</div>
+<div style="background:#eef1e8;border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:48px;height:48px"><use href="../assets/icons.svg#i-house"/></svg>
+<h3 style="font-size:36px;font-weight:600;line-height:1.2">Mortgage journey</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">A guided journey for a first-time buyer at a made-up bank</p>
+</div>
+<div style="background:#f7f8f5;border:3px dashed #4d6b35;border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:48px;height:48px"><use href="../assets/icons.svg#i-lightbulb"/></svg>
+<h3 style="font-size:36px;font-weight:600;line-height:1.2">Your own idea</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">One user, one job, no more than three things it must do</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:center;background:#e3e8d9;border-radius:16px;padding:28px 36px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:40px;height:40px"><use href="../assets/icons.svg#i-zap"/></svg>
+<p style="flex:1;font-size:28px;line-height:1.4"><b>Want a challenge?</b> Two advanced routes: a shared idea board with a database, or a film-night finder using an API key. Expect to work more on your own.</p>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Every theme can be a simple website. AI features inside your product are optional.</p>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Every theme can be a simple website. AI features inside your product are optional. Pick the one you’d enjoy explaining at the demo. The briefs are on the event site under Themes.</p></details><span class="num">14 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-15"><div class="slide"><section id="fresh" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 3 · Themes and getting started</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Start fresh</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px">
+<div style="background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:20px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:56px;height:56px"><use href="../assets/icons.svg#i-book-open"/></svg>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">New folder</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Somewhere easy to find, named after your project</p>
+</div>
+<div style="background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:20px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:56px;height:56px"><use href="../assets/icons.svg#i-file-code"/></svg>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">New repository</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">Its own home on GitHub, separate from hello-hackday</p>
+</div>
+<div style="background:#eef1e8;border-radius:24px;padding:48px;display:flex;flex-direction:column;gap:20px">
+<svg class="icon" aria-hidden="true" focusable="false" style="color:#4d6b35;width:56px;height:56px"><use href="../assets/icons.svg#i-message-circle"/></svg>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">New chat</h3>
+<p style="font-size:28px;line-height:1.4;color:#565d52">A clean start for your AI, with your idea at the centre</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start;border-left:4px solid #4d6b35;padding:4px 0 4px 28px">
+<p style="flex:1;font-size:32px;line-height:1.4"><b>Don’t build inside hello-hackday.</b> Keep it as your practice page.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px;align-items:start;border-left:4px solid #4d6b35;padding:4px 0 4px 28px">
+<p style="flex:1;font-size:32px;line-height:1.4"><b>In a pair?</b> Both of you keep access. Swap the keyboard every 25–30 minutes.</p>
+</div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>A clean start keeps your practice page safe and your real project tidy. Working in a pair: both of you need access to the repository, and you both get time at the keyboard.</p></details><span class="num">15 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-16"><div class="slide"><section id="think" style="background:#f7f8f5;color:#1d211b;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4d6b35">Part 3 · Themes and getting started</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#1d211b">Think before you build</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:96px">
+<div style="width:680px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:56px;font-weight:600;line-height:1.15;color:#4d6b35">Ask your AI to interview you before it writes any code.</p>
+<p style="font-size:32px;line-height:1.4;color:#565d52">Let it challenge you. You make the decisions.</p>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:center;background:#eef1e8;border-radius:16px;padding:24px 28px">
+<p style="font-size:28px;font-weight:600;background:#fbfbf8;border:2px solid #d8ddd1;border-radius:10px;padding:8px 18px">PRD.md</p>
+<p style="flex:1;font-size:28px;line-height:1.4">Save what you agree in your repository. Read it before you say yes.</p>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#565d52">Questions to settle</p>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:start;border-top:2px solid #d8ddd1;padding-top:24px"><p style="font-size:32px;font-weight:600;color:#4d6b35">01</p><p style="flex:1;font-size:32px;line-height:1.4">Who is it for?</p></div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:start;border-top:2px solid #d8ddd1;padding-top:24px"><p style="font-size:32px;font-weight:600;color:#4d6b35">02</p><p style="flex:1;font-size:32px;line-height:1.4">What’s their problem?</p></div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:start;border-top:2px solid #d8ddd1;padding-top:24px"><p style="font-size:32px;font-weight:600;color:#4d6b35">03</p><p style="flex:1;font-size:32px;line-height:1.4">What’s the one journey that matters?</p></div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:start;border-top:2px solid #d8ddd1;padding-top:24px"><p style="font-size:32px;font-weight:600;color:#4d6b35">04</p><p style="flex:1;font-size:32px;line-height:1.4">What’s the smallest first release you can publish by lunch?</p></div>
+</div>
+</div>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>This is the design bit, and it’s the bit that makes the difference. Ask your AI to interview you. Let it challenge you; you make the decisions. When you agree, save it as PRD.md, a short product brief, in your repository. Twenty-five minutes of thinking will save you two hours of building the wrong thing.</p></details><span class="num">16 / 17</span></figcaption></figure>
+<figure class="slide-wrap" id="slide-17"><div class="slide"><section id="finish" style="background:#141712;color:#eceee8;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#a9c98a">Part 3 · Themes and getting started</p>
+<h2 style="font-size:72px;font-weight:800;line-height:1.1;letter-spacing:-1px;color:#eceee8">The finish line</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px">
+<div style="border-top:6px solid #a9c98a;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:56px;font-weight:600;color:#a9c98a">12:30</p>
+<p style="font-size:28px;line-height:1.4;color:#eceee8">A first version online</p>
+</div>
+<div style="border-top:6px solid #a9c98a;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:56px;font-weight:600;color:#a9c98a">14:15</p>
+<p style="font-size:28px;line-height:1.4;color:#eceee8">The core experience online</p>
+</div>
+<div style="border-top:6px solid #a9c98a;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:56px;font-weight:600;color:#a9c98a">15:15</p>
+<p style="font-size:28px;line-height:1.4;color:#eceee8">Stop adding features</p>
+</div>
+<div style="border-top:6px solid #a9c98a;padding-top:24px;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:56px;font-weight:600;color:#a9c98a">15:30</p>
+<p style="font-size:28px;line-height:1.4;color:#eceee8">Finish-line check</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#a6ad9f">By 15:30 you’ll have</p>
+<div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:16px">
+<div style="display:flex;flex-direction:row;gap:12px;align-items:center;background:#1c2019;border:2px solid #30362b;border-radius:40px;padding:12px 28px"><svg class="icon" aria-hidden="true" focusable="false" style="color:#a9c98a;width:32px;height:32px"><use href="../assets/icons.svg#i-check"/></svg><p style="font-size:28px">A live address</p></div>
+<div style="display:flex;flex-direction:row;gap:12px;align-items:center;background:#1c2019;border:2px solid #30362b;border-radius:40px;padding:12px 28px"><svg class="icon" aria-hidden="true" focusable="false" style="color:#a9c98a;width:32px;height:32px"><use href="../assets/icons.svg#i-check"/></svg><p style="font-size:28px">PRD.md in your repository</p></div>
+<div style="display:flex;flex-direction:row;gap:12px;align-items:center;background:#1c2019;border:2px solid #30362b;border-radius:40px;padding:12px 28px"><svg class="icon" aria-hidden="true" focusable="false" style="color:#a9c98a;width:32px;height:32px"><use href="../assets/icons.svg#i-check"/></svg><p style="font-size:28px">Tested by someone else</p></div>
+<div style="display:flex;flex-direction:row;gap:12px;align-items:center;background:#1c2019;border:2px solid #30362b;border-radius:40px;padding:12px 28px"><svg class="icon" aria-hidden="true" focusable="false" style="color:#a9c98a;width:32px;height:32px"><use href="../assets/icons.svg#i-check"/></svg><p style="font-size:28px">One next improvement</p></div>
+</div>
+</div>
+<p style="font-size:44px;font-weight:600;line-height:1.2;color:#a9c98a">Online early, then improve. Off you go.</p>
+
+</section></div><figcaption><details><summary>Speaker notes</summary><p>Online early, then improve. A small thing that works, and that someone else has tried, beats a big thing on your laptop. The full finish-line checklist is on the event site under The day. Off you go.</p></details><span class="num">17 / 17</span></figcaption></figure>
+</div>
+</div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool.</p>
+<p>No cookies, no analytics, no external fonts.</p>
+</div></footer>
+<script>
+(function () {
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var wraps = Array.prototype.slice.call(deck.querySelectorAll('.slide-wrap'));
+  function fit() { slides.forEach(function (s) { s.style.setProperty('--k', s.clientWidth / 1920); }); }
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(deck);
+  window.addEventListener('resize', fit); fit();
+  var i = 0, on = false;
+  function show(n) {
+    i = Math.max(0, Math.min(wraps.length - 1, n));
+    wraps.forEach(function (w, k) { w.classList.toggle('current', k === i); });
+    fit();
+  }
+  // presenting fills the window; full screen is a bonus where the browser allows it
+  function start() {
+    on = true;
+    deck.classList.add('presenting'); document.documentElement.classList.add('presenting');
+    show(0);
+    if (deck.requestFullscreen) deck.requestFullscreen().catch(function () {});
+  }
+  function stop() {
+    on = false;
+    deck.classList.remove('presenting'); document.documentElement.classList.remove('presenting');
+    wraps.forEach(function (w) { w.classList.remove('current'); });
+    if (document.fullscreenElement) document.exitFullscreen();
+    fit();
+    wraps[i].scrollIntoView();
+  }
+  document.getElementById('present').addEventListener('click', start);
+  document.addEventListener('fullscreenchange', function () { if (on && !document.fullscreenElement) stop(); else fit(); });
+  deck.addEventListener('click', function () { if (on) show(i + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (!on) return;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) { e.preventDefault(); show(i + 1); }
+    if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) { e.preventDefault(); show(i - 1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(wraps.length - 1);
+    if (e.key === 'Escape') stop();
+  });
+})();
+</script>
+</body>
+</html>
