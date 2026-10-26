@@ -1,6 +1,6 @@
 # Event website
 
-A small static site for participants: what the event is, the agenda, a short "Get ready" checklist, a guided hello-world warm-up, safety reminders, resources, help and project themes.
+A small static site for participants: what the event is, the agenda, a short "Get ready" checklist with three ways to take part (personal laptop, LBG laptop, phone or tablet), a guided hello-world warm-up, safety reminders, resources, help and project themes.
 
 No framework, no build step, no database, no analytics, no cookies. Plain HTML, one CSS file, one small JavaScript file. Anyone (or any AI tool) can edit it with a text editor.
 
@@ -9,6 +9,7 @@ No framework, no build step, no database, no analytics, no cookies. Plain HTML, 
 | Path | Purpose |
 |---|---|
 | `index.html` … `themes.html` | One file per page. Each has the same header and navigation. |
+| `route-work-laptop.html`, `route-phone.html` | Routes for people without a personal laptop (LBG laptop with Figma Make; phone or tablet). Linked from Get ready, not in the main navigation. |
 | `assets/style.css` | All styling, including dark mode. Colours and radius are variables at the top, matching the bonhard.ai look (DM Sans, olive-black and sage). |
 | `assets/fonts/` | DM Sans, self-hosted (SIL Open Font License) so visitors never contact Google. |
 | `assets/icons.svg` | Icon sprite. Interface icons are from Lucide (ISC licence); GitHub, Claude and Replit marks are from Simple Icons (CC0). Use an icon with `<svg class="icon"><use href="assets/icons.svg#i-NAME"/></svg>`. Brand names start with `b-`. |
@@ -34,7 +35,7 @@ Open <http://localhost:8765>. Use the server rather than opening files directly:
 - Change text directly in the HTML file. Keep one `<h1>` per page.
 - Mark anything unconfirmed with `<span class="tbc">To be confirmed</span>` (or the `tbc-box` block). **Never invent venue, speaker, helper, signup or endorsement details.**
 - If you add, rename or remove a page, update the `<nav>` list **and** the mobile `fab-menu` list in **every** page. On phones the header keeps only a "Get ready" link (the `cta` item) and the rest sits in a floating Menu button at the bottom right, as on bonhard.ai. The check script fails if the navigation differs between pages or from the mobile menu.
-- The exact safety sentence is repeated on several pages. Search for `personal learning exercise` and change all copies together.
+- The exact safety sentence is repeated on several pages. Search for `personal learning exercise` and change all copies together. The LBG laptop route (`route-work-laptop.html`) deliberately uses a different sentence about LBG’s normal rules.
 - Keep external links to official documentation and re-check them before the event (`--external` below).
 
 ## After changing CSS or JavaScript
