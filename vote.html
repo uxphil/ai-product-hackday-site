@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Vote for your favourite apps from the hackathon.">
+<title>Vote for favourites · AI Enabled Product Hackathon</title>
+<link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css?v=850429a4">
+<script src="assets/site.js?v=1bd22d9d"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top"><div class="wrap bar">
+<a class="brand" href="index.html">ai product <span>hackday</span></a>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li class="cta has-sub"><a href="get-ready.html">Get ready</a><ul class="sub"><li><a href="hello-world.html">Warm-up</a></li><li><a href="themes.html">Themes</a></li><li><a href="theme-personal-website.html">Personal website</a></li><li><a href="theme-elf-help.html">Elf Help</a></li><li><a href="theme-mortgage-journey.html">Mortgage journey</a></li></ul></li><li class="has-sub"><a href="event.html">The day</a><ul class="sub"><li><a href="plan.html">Plan your product</a></li></ul></li><li><a href="stay-safe.html">Stay safe</a></li><li class="has-sub"><a href="help.html">Get help</a><ul class="sub"><li><a href="resources.html">Resources</a></li></ul></li></ul></nav>
+</div></header>
+<main id="main">
+<div class="wrap">
+<section class="block first">
+<h1>Vote for your <em>favourites</em></h1>
+<p class="lead">Everything built on the day, in one place. Open a few, then pick up to <span id="max">three</span> you loved. You can change your mind until voting closes.</p>
+<p class="muted">Shown in a random order, so nobody gets an advantage from the alphabet. One set of votes per device, on trust.</p>
+
+<div class="vote-find"><label class="vh" for="find">Find a project</label><input type="search" id="find" placeholder="Find a project or a name" autocomplete="off"></div>
+<div id="vote-list" aria-live="polite"><p class="muted">Loading the projects…</p></div>
+
+<div class="vote-bar" id="vote-bar" hidden>
+<p class="count" id="count">0 <span>of 3 chosen</span></p>
+<button class="btn" type="button" id="send">Send my votes <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-heart"/></svg></button>
+<div class="form-status" id="status" role="status" aria-live="polite"></div>
+</div>
+
+<h2>About the vote</h2>
+<ul>
+<li>We only collect which projects you picked, against a random code saved in this browser. No names, no sign-in.</li>
+<li>Projects show the maker’s name, the project name and the app link they shared. PRDs aren’t shown.</li>
+<li>Phil Bonhard will share the people’s choice once voting closes. We delete the votes and submissions afterwards.</li>
+</ul>
+</section></div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 28 October 2026.</p>
+<p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page sends your picks to the organiser; app links open other people’s sites.</p>
+</div></footer>
+<div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Vote</span></button></div>
+<script>
+/* Lists the projects from the organiser's Worker (worker/ in the planning repository) and sends this device's picks.
+   A random voter code and the picks are kept in this browser, so sending again replaces the earlier votes. */
+(function () {
+  var API = 'https://hackday-api.bonhard.ai';
+  var KEY = 'hackday-vote';
+  var list = document.getElementById('vote-list'), bar = document.getElementById('vote-bar');
+  var send = document.getElementById('send'), status = document.getElementById('status'), find = document.getElementById('find');
+  var entries = [], max = 3, open = true;
+
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function words(n) { return ['no', 'one', 'two', 'three', 'four', 'five'][n] || String(n); }
+
+  var state = load();
+  if (!/^[a-f0-9]{24}$/.test(state.voter || '')) {
+    var a = new Uint8Array(12); crypto.getRandomValues(a);
+    state.voter = Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  }
+  state.picks = state.picks || [];
+  save();
+
+  // The same shuffled order on every visit from this device, different for each voter
+  function rank(id) {
+    var h = 2166136261, s = state.voter + id;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  function setStatus(kind, html) { status.className = 'form-status' + (kind ? ' ' + kind : ''); status.innerHTML = html; }
+
+  function render() {
+    var q = find.value.trim().toLowerCase();
+    var shown = entries.filter(function (e) { return !q || (e.project + ' ' + e.name).toLowerCase().indexOf(q) > -1; });
+    var full = state.picks.length >= max;
+    if (!entries.length) { list.innerHTML = '<p class="muted">No projects to vote on yet. Check back after the demos.</p>'; bar.hidden = true; return; }
+    list.innerHTML = shown.length ? '<ul class="vote-grid">' + shown.map(function (e) {
+      var on = state.picks.indexOf(e.id) > -1;
+      return '<li class="vote-card' + (on ? ' picked' : '') + '"><h3>' + esc(e.project) + '</h3><p class="by">' + esc(e.name) + '</p><div class="row">' +
+        '<button class="fav" type="button" data-id="' + esc(e.id) + '" aria-pressed="' + on + '"' + (!on && full || !open ? ' disabled' : '') + '><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-heart"/></svg>' + (on ? 'Favourite' : 'Pick') + '<span class="vh"> ' + esc(e.project) + '</span></button>' +
+        (e.appUrl ? '<a class="open" href="' + esc(e.appUrl) + '" target="_blank" rel="noopener noreferrer">Open the app <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-external-link"/></svg></a>' : '<span class="no-link">No app link shared</span>') +
+        '</div></li>';
+    }).join('') + '</ul>' : '<p class="muted">Nothing matches “' + esc(find.value) + '”.</p>';
+    bar.hidden = false;
+    document.getElementById('count').innerHTML = state.picks.length + ' <span>of ' + max + ' chosen' + (state.sent && !state.changed ? ' · votes sent ✓' : '') + '</span>';
+    send.disabled = !open || !state.picks.length;
+  }
+
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('.fav'); if (!b || b.disabled) return;
+    var id = b.dataset.id, i = state.picks.indexOf(id);
+    if (i > -1) state.picks.splice(i, 1); else if (state.picks.length < max) state.picks.push(id);
+    state.changed = true; save(); setStatus('', ''); render();
+    var again = list.querySelector('.fav[data-id="' + id + '"]'); if (again) again.focus();
+  });
+  find.addEventListener('input', render);
+
+  send.addEventListener('click', function () {
+    send.disabled = true;
+    fetch(API + '/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ voter: state.voter, picks: state.picks }) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) { setStatus('warn', '<strong>' + esc(res.message || 'That didn’t work.') + '</strong>'); return; }
+        state.sent = true; state.changed = false; save(); render();
+        setStatus('ok', '<strong><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>' + (res.updated ? 'Votes updated.' : 'Votes saved. Thank you!') + '</strong><p>Change your picks and send again any time until voting closes.</p>');
+        setTimeout(function () { if (status.classList.contains('ok')) setStatus('', ''); }, 5000);
+      })
+      .catch(function () { setStatus('warn', '<strong>We couldn’t reach our server.</strong><p>Check your connection and try again. Your picks are kept on this device.</p>'); })
+      .then(function () { send.disabled = !open || !state.picks.length; });
+  });
+
+  fetch(API + '/entries').then(function (r) { return r.json(); }).then(function (d) {
+    if (!d.ok) throw new Error();
+    open = d.open; max = d.maxPicks || 3;
+    document.getElementById('max').textContent = words(max);
+    entries = d.entries.slice().sort(function (x, y) { return rank(x.id) - rank(y.id); });
+    var ids = entries.map(function (e) { return e.id; });
+    state.picks = state.picks.filter(function (p) { return ids.indexOf(p) > -1; }); save();
+    render();
+    if (!open) setStatus('warn', '<strong>Voting has closed.</strong><p>Thanks for taking part. Phil will share the people’s choice.</p>');
+  }).catch(function () {
+    list.innerHTML = '<p class="muted">We couldn’t load the projects. Check your connection and <a href="vote.html">try again</a>.</p>';
+  });
+})();
+</script>
+</body>
+</html>

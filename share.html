@@ -7,7 +7,7 @@
 <meta name="description" content="Share your PRD and app link with the organisers for the demos.">
 <title>Share your PRD · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=c5c2d81d">
+<link rel="stylesheet" href="assets/style.css?v=850429a4">
 <script src="assets/site.js?v=1bd22d9d"></script>
 </head>
 <body>
@@ -35,6 +35,7 @@
 <p class="or" aria-hidden="true">or</p>
 <div class="field" id="f-prdUrl"><label for="prdUrl">Link to it on GitHub</label><p class="hint">Open <code>PRD.md</code> in your repository and copy the address from your browser. The repository must be public.</p><input type="url" id="prdUrl" name="prdUrl" inputmode="url" placeholder="https://github.com/you/your-project/blob/main/PRD.md" maxlength="500"><p class="msg" aria-live="polite"></p></div>
 </fieldset>
+<label class="checkline" for="inVote"><input type="checkbox" id="inVote" name="inVote" checked> <span>Include my project in the after-event vote. Other participants will see your name, project name and app link (not your PRD) and can pick their favourites.</span></label>
 <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
 <div class="form-status" id="status" role="status" aria-live="polite"></div>
 <p><button class="btn" type="submit" id="send">Share my PRD <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-upload"/></svg></button></p>
@@ -42,11 +43,12 @@
 
 <h2>What happens to it</h2>
 <ul>
-<li>Your name, project name, app address and PRD go to Phil Bonhard, the organiser. They’re not published on this site.</li>
+<li>Your name, project name, app address and PRD go to Phil Bonhard, the organiser. Your PRD is never published.</li>
 <li>We use them to pick and introduce demos today. Your name and project name may appear on the big screen.</li>
 <li>Each PRD gets a light-hearted score from an AI tool (Claude), just for fun. It isn’t how anything is judged.</li>
 <li>Changed something? Send it again from this device and it replaces your earlier one.</li>
-<li>We delete everything after the event.</li>
+<li>After the event, your name, project name and app link appear on the <a href="vote.html">vote page</a>, behind the site password, so other participants can pick their favourites. Untick the box above to leave your project out.</li>
+<li>We delete everything once voting closes.</li>
 </ul>
 </section></div>
 </main>
@@ -77,6 +79,8 @@
   var state = load();
   if (!state.id) { state.id = newId(); save(state); }
   fields.forEach(function (f) { if (state[f]) form.elements[f].value = state[f]; });
+  if (state.inVote === false) form.elements.inVote.checked = false;
+  form.elements.inVote.addEventListener('change', function () { state.inVote = form.elements.inVote.checked; save(state); });
 
   form.addEventListener('input', function (e) {
     if (fields.indexOf(e.target.name) > -1) { state[e.target.name] = e.target.value; save(state); clearField(e.target.name); }
@@ -185,7 +189,7 @@
     fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, prdText: v.prdText, prdFile: v.prdText ? state.prdFile || '' : '', prdUrl: v.prdText ? '' : v.prdUrl, website: form.elements.website.value, force: !!force })
+      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, prdText: v.prdText, prdFile: v.prdText ? state.prdFile || '' : '', prdUrl: v.prdText ? '' : v.prdUrl, inVote: form.elements.inVote.checked, website: form.elements.website.value, force: !!force })
     }).then(function (r) { return r.json().catch(function () { return { ok: false, message: 'Unexpected reply (' + r.status + ').' }; }); })
       .then(function (res) {
         if (res.ok) {

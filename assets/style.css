@@ -600,3 +600,30 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .form-status p { margin: .3rem 0; }
 .form-status .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .4rem; }
 .form .btn[disabled] { opacity: .6; cursor: progress; transform: none; }
+
+/* vote for favourites (vote.html) */
+.vote-find { margin: 1.5rem 0 0; }
+.vote-find input { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: .65rem 1.1rem; width: 100%; max-width: 24rem; box-sizing: border-box; }
+.vote-find input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.vote-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); margin: 1.2rem 0 2rem; padding: 0; list-style: none; }
+.vote-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: .2rem; transition: border-color .15s, background .15s; }
+.vote-card h3 { margin: 0; overflow-wrap: anywhere; }
+.vote-card .by { color: var(--muted); margin: 0 0 .8rem; overflow-wrap: anywhere; }
+.vote-card .row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-top: auto; }
+.vote-card.picked { border-color: var(--accent); background: linear-gradient(180deg, var(--accent-soft), var(--surface)); }
+.fav { display: inline-flex; align-items: center; gap: .4rem; font: inherit; font-size: .92rem; font-weight: 500; padding: .45rem .95rem; border-radius: 999px; border: 1px solid var(--muted); background: transparent; color: var(--text); cursor: pointer; }
+.fav .icon { width: 1.05rem; height: 1.05rem; }
+.fav[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.fav[aria-pressed="true"] .icon { fill: currentColor; }
+.fav:disabled { opacity: .45; cursor: not-allowed; }
+.vote-card .open { font-size: .92rem; display: inline-flex; align-items: center; gap: .3rem; }
+.vote-card .open .icon { width: .95rem; height: .95rem; }
+.vote-card .no-link { font-size: .88rem; color: var(--muted); }
+.vote-bar { position: sticky; bottom: 1rem; z-index: 5; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: .8rem 1rem .8rem 1.2rem; box-shadow: 0 8px 28px rgba(0, 0, 0, .14); }
+.vote-bar .count { font-weight: 600; font-variant-numeric: tabular-nums; margin-right: auto; }
+.vote-bar .count span { color: var(--muted); font-weight: 400; }
+.vote-bar .form-status { flex-basis: 100%; }
+@media (max-width: 760px) { .vote-bar { bottom: 5rem; padding: .6rem .6rem .6rem 1rem; gap: .6rem; } .vote-bar .btn { padding: .65rem 1.1rem; } .vote-bar .form-status { padding: .6rem .8rem; font-size: .92rem; } .vote-bar .form-status p { display: none; } }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.checkline { display: flex; gap: .7rem; align-items: flex-start; color: var(--muted); font-size: .95rem; cursor: pointer; }
+.checkline input { margin-top: .15rem; }
