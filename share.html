@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Share your PRD and app link with the organisers for the demos.">
+<title>Share your PRD · AI Enabled Product Hackathon</title>
+<link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css?v=7fcef5c0">
+<script src="assets/site.js?v=1bd22d9d"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top"><div class="wrap bar">
+<a class="brand" href="index.html">ai product <span>hackday</span></a>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li class="cta has-sub"><a href="get-ready.html">Get ready</a><ul class="sub"><li><a href="hello-world.html">Warm-up</a></li><li><a href="themes.html">Themes</a></li><li><a href="theme-personal-website.html">Personal website</a></li><li><a href="theme-elf-help.html">Elf Help</a></li><li><a href="theme-mortgage-journey.html">Mortgage journey</a></li></ul></li><li class="has-sub"><a href="event.html">The day</a><ul class="sub"><li><a href="plan.html">Plan your product</a></li></ul></li><li><a href="stay-safe.html">Stay safe</a></li><li class="has-sub"><a href="help.html">Get help</a><ul class="sub"><li><a href="resources.html">Resources</a></li></ul></li></ul></nav>
+</div></header>
+<main id="main">
+<div class="wrap narrow">
+<section class="block first">
+<h1>Share your <em>PRD</em></h1>
+<p class="lead">Send us your PRD and your app’s address before the demos. It takes two minutes, and it lets us put your product on the big screen at the end of the day.</p>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</p></div>
+
+<form class="form" id="share-form" novalidate>
+<div class="field" id="f-name"><label for="name">Your name</label><p class="hint">As you’d like it on screen. Working in a pair? Put both names.</p><input type="text" id="name" name="name" autocomplete="name" maxlength="80" required><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-project"><label for="project">Project name</label><input type="text" id="project" name="project" maxlength="100" required><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-appUrl"><label for="appUrl">Live app address</label><p class="hint">The link someone else can open, starting with https://. Not live yet? Leave it blank and send it again later.</p><input type="url" id="appUrl" name="appUrl" inputmode="url" placeholder="https://" maxlength="500"><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-prdText"><label for="prdText">Your PRD</label><p class="hint">Paste the whole document. In Claude or ChatGPT, use the copy button under the PRD. In Word or Notepad, select all (Ctrl+A or ⌘A) and copy. On GitHub, open <code>PRD.md</code> and use the copy button.</p><textarea id="prdText" name="prdText" spellcheck="false"></textarea><p class="count" id="count" aria-live="polite"></p><p class="msg" aria-live="polite"></p></div>
+<details id="link-box"><summary>Or share a link instead (GitHub or another public page)</summary>
+<div class="field" id="f-prdUrl"><label for="prdUrl">Link to your PRD</label><p class="hint">It must open without signing in. Links to OneDrive, SharePoint, Teams, Claude or ChatGPT won’t work: paste the text instead.</p><input type="url" id="prdUrl" name="prdUrl" inputmode="url" placeholder="https://github.com/you/your-project/blob/main/PRD.md" maxlength="500"><p class="msg" aria-live="polite"></p></div>
+</details>
+<div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<div class="form-status" id="status" role="status" aria-live="polite"></div>
+<p><button class="btn" type="submit" id="send">Share my PRD <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-upload"/></svg></button></p>
+</form>
+
+<h2>What happens to it</h2>
+<ul>
+<li>Your name, project name, app address and PRD go to Phil Bonhard, the organiser. They’re not published on this site.</li>
+<li>We use them to pick and introduce demos today. Your name and project name may appear on the big screen.</li>
+<li>Each PRD gets a light-hearted score from an AI tool (Claude), just for fun. It isn’t how anything is judged.</li>
+<li>Changed something? Send it again from this device and it replaces your earlier one.</li>
+<li>We delete everything after the event.</li>
+</ul>
+</section></div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 28 October 2026.</p>
+<p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page sends what you share to the organiser; nothing else on the site collects anything.</p>
+</div></footer>
+<div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Share your PRD</span></button></div>
+<script>
+/* Sends the form to the organisers' Cloudflare Worker (see worker/ in the planning repository).
+   The submission id and a draft are kept in this browser only, so sending again replaces the earlier one. */
+(function () {
+  var API = 'https://hackday-api.bonhard.ai/submit';
+  var KEY = 'hackday-share';
+  var form = document.getElementById('share-form');
+  var send = document.getElementById('send');
+  var status = document.getElementById('status');
+  var fields = ['name', 'project', 'appUrl', 'prdText', 'prdUrl'];
+
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+  function newId() {
+    var a = new Uint8Array(12); crypto.getRandomValues(a);
+    return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  }
+
+  var state = load();
+  if (!state.id) { state.id = newId(); save(state); }
+  fields.forEach(function (f) { if (state[f]) form.elements[f].value = state[f]; });
+  if (state.prdUrl && !state.prdText) document.getElementById('link-box').open = true;
+
+  var count = document.getElementById('count');
+  function updateCount() {
+    var n = form.elements.prdText.value.trim().length;
+    count.textContent = n ? n.toLocaleString('en-GB') + ' characters' : '';
+  }
+  updateCount();
+  form.addEventListener('input', function (e) {
+    if (fields.indexOf(e.target.name) > -1) { state[e.target.name] = e.target.value; save(state); clearField(e.target.name); }
+    if (e.target.name === 'prdText') updateCount();
+  });
+
+  function clearField(f) {
+    var box = document.getElementById('f-' + f);
+    if (!box) return;
+    box.classList.remove('bad');
+    box.querySelector('.msg').textContent = '';
+  }
+  function markField(f, msg) {
+    var box = document.getElementById('f-' + f);
+    if (!box) return false;
+    if (f === 'prdUrl') document.getElementById('link-box').open = true;
+    box.classList.add('bad');
+    box.querySelector('.msg').textContent = msg;
+    return true;
+  }
+  function setStatus(kind, html) { status.className = 'form-status' + (kind ? ' ' + kind : ''); status.innerHTML = html; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  function submit(force) {
+    fields.forEach(clearField);
+    setStatus('', '');
+    var v = {};
+    fields.forEach(function (f) { v[f] = form.elements[f].value.trim(); });
+    var problems = 0;
+    if (!v.name) problems += markField('name', 'Add your name.') ? 1 : 0;
+    if (!v.project) problems += markField('project', 'Give your project a name.') ? 1 : 0;
+    if (!v.prdText && !v.prdUrl) problems += markField('prdText', 'Paste your PRD here, or share a link below.') ? 1 : 0;
+    if (problems) { form.querySelector('.bad input, .bad textarea').focus(); return; }
+
+    send.disabled = true;
+    send.firstChild.textContent = v.prdUrl && !v.prdText ? 'Opening your link… ' : 'Sending… ';
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, prdText: v.prdText, prdUrl: v.prdText ? '' : v.prdUrl, website: form.elements.website.value, force: !!force })
+    }).then(function (r) { return r.json().catch(function () { return { ok: false, message: 'Unexpected reply (' + r.status + ').' }; }); })
+      .then(function (res) {
+        if (res.ok) {
+          state.sent = true; save(state);
+          setStatus('ok', '<strong><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-circle-check"/></svg>' + (res.updated ? 'Updated. ' : 'Got it. ') + 'Thanks, ' + esc(v.name.split(/[ ,&]/)[0]) + '.</strong><p>We can read your PRD' + (res.chars ? ' (' + res.chars.toLocaleString('en-GB') + ' characters)' : '') + '. Change anything and send again from this device to replace it.</p>');
+        } else if (res.warnings) {
+          var list = res.warnings.map(function (w) { markField(w.field, w.message); return '<li>' + esc(w.message) + '</li>'; }).join('');
+          setStatus('warn', '<strong>Before we take it, please check:</strong><ul>' + list + '</ul><div class="actions"><button class="btn small" type="button" id="force">It’s fine, send anyway</button><button class="btn small ghost" type="button" id="fix">I’ll fix it</button></div>');
+          document.getElementById('force').onclick = function () { submit(true); };
+          document.getElementById('fix').onclick = function () { setStatus('', ''); var b = form.querySelector('.bad input, .bad textarea'); if (b) b.focus(); };
+        } else {
+          if (!markField(res.field, res.message)) setStatus('warn', '<strong>' + esc(res.message || 'Something went wrong.') + '</strong>');
+          var b = form.querySelector('.bad input, .bad textarea'); if (b) b.focus();
+        }
+      })
+      .catch(function () {
+        setStatus('warn', '<strong>We couldn’t reach our server.</strong><p>Check your Wi-Fi and try again. If it keeps failing, find Phil or a helper. Your text is kept on this device, so nothing is lost.</p>');
+      })
+      .then(function () { send.disabled = false; send.firstChild.textContent = 'Share my PRD '; });
+  }
+
+  form.addEventListener('submit', function (e) { e.preventDefault(); submit(false); });
+})();
+</script>
+</body>
+</html>

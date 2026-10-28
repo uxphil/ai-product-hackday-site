@@ -557,3 +557,27 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .brief .dont { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
 .thumb { display: block; margin: -1.3rem -1.4rem 1rem; background: var(--surface-2); border-bottom: 1px solid var(--line); border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; }
 .thumb svg { display: block; width: 100%; height: auto; }
+
+/* share your PRD form (share.html) */
+.form { display: grid; gap: 1.4rem; margin: 1.8rem 0; }
+.field { display: grid; gap: .35rem; }
+.field > label { font-weight: 600; }
+.field .hint { color: var(--muted); font-size: .92rem; margin: 0; }
+.field input[type="text"], .field input[type="url"], .field textarea { font: inherit; font-size: 1rem; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: calc(var(--radius) - 4px); padding: .75rem .9rem; width: 100%; box-sizing: border-box; }
+.field textarea { min-height: 14rem; resize: vertical; font-size: .95rem; line-height: 1.5; }
+.field input:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.field .msg { margin: 0; font-size: .95rem; font-weight: 500; color: var(--warn-text); background: var(--warn-bg); border-left: 3px solid var(--warn-line); padding: .55rem .8rem; border-radius: 0 8px 8px 0; }
+.field .msg:empty { display: none; }
+.field.bad input, .field.bad textarea { border-color: var(--warn-line); }
+.field .count { font-size: .85rem; color: var(--muted); text-align: right; margin: 0; font-variant-numeric: tabular-nums; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-status:empty { display: none; }
+.form-status { border-radius: var(--radius); padding: 1rem 1.2rem; border: 1px solid var(--line); background: var(--surface); }
+.form-status.warn { border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-text); }
+.form-status.warn ul { margin: .5rem 0 .9rem; padding-left: 1.1rem; }
+.form-status.ok { border-color: var(--ok); background: var(--accent-soft); }
+.form-status.ok strong { display: flex; align-items: center; gap: .5rem; font-size: 1.15rem; }
+.form-status.ok .icon { color: var(--ok); }
+.form-status p { margin: .3rem 0; }
+.form-status .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .4rem; }
+.form .btn[disabled] { opacity: .6; cursor: progress; transform: none; }
