@@ -15,7 +15,7 @@ No framework, no build step, no database, no analytics, no cookies. One page col
 | `assets/icons.svg` | Icon sprite. Interface icons are from Lucide (ISC licence); GitHub, Claude and Replit marks are from Simple Icons (CC0). Use an icon with `<svg class="icon"><use href="assets/icons.svg#i-NAME"/></svg>`. Brand names start with `b-`. |
 | `assets/site.js` | Password gate, tick-box progress (saved in the browser only), copy buttons, Mac/Windows switch. |
 | `talks/` | Talk slides. Generated from `talks/<name>/deck` in the planning repository by `scripts/build-talk-page.py`; don't edit by hand. These pages have a slim header instead of the shared navigation. |
-| `share.html` | “Share your PRD” for the demos, added on the day. Not in the main navigation; linked from Home and The day. Sends the form to the organiser’s Cloudflare Worker at `hackday-api.bonhard.ai` (code and checks in `worker/README.md` in the planning repository). Its script is inline in the page. Says what happens to the data and that it is deleted after the event. |
+| `share.html` | “Share your PRD” for the demos, added on the day. Not in the main navigation; linked from Home and The day. Participants upload their PRD file (Markdown, text or Word, read in the browser: nothing to copy and paste) or link to it on GitHub. Sends the form to the organiser’s Cloudflare Worker at `hackday-api.bonhard.ai` (code and checks in `worker/README.md` in the planning repository). Its script is inline in the page. Says what happens to the data and that it is deleted after the event. |
 | `robots.txt`, `<meta name="robots">` | Ask search engines not to index the site. |
 
 ## Themes

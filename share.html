@@ -7,7 +7,7 @@
 <meta name="description" content="Share your PRD and app link with the organisers for the demos.">
 <title>Share your PRD · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=7fcef5c0">
+<link rel="stylesheet" href="assets/style.css?v=c5c2d81d">
 <script src="assets/site.js?v=1bd22d9d"></script>
 </head>
 <body>
@@ -27,10 +27,14 @@
 <div class="field" id="f-name"><label for="name">Your name</label><p class="hint">As you’d like it on screen. Working in a pair? Put both names.</p><input type="text" id="name" name="name" autocomplete="name" maxlength="80" required><p class="msg" aria-live="polite"></p></div>
 <div class="field" id="f-project"><label for="project">Project name</label><input type="text" id="project" name="project" maxlength="100" required><p class="msg" aria-live="polite"></p></div>
 <div class="field" id="f-appUrl"><label for="appUrl">Live app address</label><p class="hint">The link someone else can open, starting with https://. Not live yet? Leave it blank and send it again later.</p><input type="url" id="appUrl" name="appUrl" inputmode="url" placeholder="https://" maxlength="500"><p class="msg" aria-live="polite"></p></div>
-<div class="field" id="f-prdText"><label for="prdText">Your PRD</label><p class="hint">Paste the whole document. In Claude or ChatGPT, use the copy button under the PRD. In Word or Notepad, select all (Ctrl+A or ⌘A) and copy. On GitHub, open <code>PRD.md</code> and use the copy button.</p><textarea id="prdText" name="prdText" spellcheck="false"></textarea><p class="count" id="count" aria-live="polite"></p><p class="msg" aria-live="polite"></p></div>
-<details id="link-box"><summary>Or share a link instead (GitHub or another public page)</summary>
-<div class="field" id="f-prdUrl"><label for="prdUrl">Link to your PRD</label><p class="hint">It must open without signing in. Links to OneDrive, SharePoint, Teams, Claude or ChatGPT won’t work: paste the text instead.</p><input type="url" id="prdUrl" name="prdUrl" inputmode="url" placeholder="https://github.com/you/your-project/blob/main/PRD.md" maxlength="500"><p class="msg" aria-live="polite"></p></div>
-</details>
+<fieldset class="prd-choice"><legend>Your PRD</legend><p class="hint">Upload the file, or link to it on GitHub. One is enough.</p>
+<div class="field" id="f-prdText"><label for="prdFile">Upload the file</label><p class="hint">Markdown (<code>PRD.md</code>), text or Word. Is your PRD still in a chat? Ask your AI: “Give me the PRD as a Markdown file I can download.”</p>
+<label class="file-pick" id="file-pick"><input type="file" id="prdFile" accept=".md,.markdown,.txt,.docx,text/markdown,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-upload"/></svg><span><strong>Choose a file</strong><span>.md, .txt or .docx</span></span></label>
+<div class="file-chosen" id="file-chosen" hidden><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-file-text"/></svg><span><strong id="file-name"></strong><span id="file-size"></span></span><button class="btn small ghost" type="button" id="file-remove">Remove</button></div>
+<p class="msg" aria-live="polite"></p></div>
+<p class="or" aria-hidden="true">or</p>
+<div class="field" id="f-prdUrl"><label for="prdUrl">Link to it on GitHub</label><p class="hint">Open <code>PRD.md</code> in your repository and copy the address from your browser. The repository must be public.</p><input type="url" id="prdUrl" name="prdUrl" inputmode="url" placeholder="https://github.com/you/your-project/blob/main/PRD.md" maxlength="500"><p class="msg" aria-live="polite"></p></div>
+</fieldset>
 <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
 <div class="form-status" id="status" role="status" aria-live="polite"></div>
 <p><button class="btn" type="submit" id="send">Share my PRD <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-upload"/></svg></button></p>
@@ -60,7 +64,8 @@
   var form = document.getElementById('share-form');
   var send = document.getElementById('send');
   var status = document.getElementById('status');
-  var fields = ['name', 'project', 'appUrl', 'prdText', 'prdUrl'];
+  var fields = ['name', 'project', 'appUrl', 'prdUrl'];  // typed fields; the uploaded PRD is kept in state.prdText
+  var MAX_PRD = 60000;
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
   function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
@@ -72,18 +77,80 @@
   var state = load();
   if (!state.id) { state.id = newId(); save(state); }
   fields.forEach(function (f) { if (state[f]) form.elements[f].value = state[f]; });
-  if (state.prdUrl && !state.prdText) document.getElementById('link-box').open = true;
 
-  var count = document.getElementById('count');
-  function updateCount() {
-    var n = form.elements.prdText.value.trim().length;
-    count.textContent = n ? n.toLocaleString('en-GB') + ' characters' : '';
-  }
-  updateCount();
   form.addEventListener('input', function (e) {
     if (fields.indexOf(e.target.name) > -1) { state[e.target.name] = e.target.value; save(state); clearField(e.target.name); }
-    if (e.target.name === 'prdText') updateCount();
   });
+
+  // The PRD file is read here in the browser and sent as text, so nothing is pasted by hand.
+  var fileInput = document.getElementById('prdFile');
+  function showFile() {
+    var has = !!state.prdText;
+    document.getElementById('file-pick').hidden = has;
+    document.getElementById('file-chosen').hidden = !has;
+    if (has) {
+      document.getElementById('file-name').textContent = state.prdFile || 'Your PRD from before';
+      document.getElementById('file-size').textContent = state.prdText.length.toLocaleString('en-GB') + ' characters';
+    }
+  }
+  showFile();
+  fileInput.addEventListener('change', function () {
+    var file = fileInput.files[0];
+    fileInput.value = '';
+    if (!file) return;
+    clearField('prdText');
+    var ext = (file.name.match(/\.([a-z0-9]+)$/i) || [])[1];
+    ext = ext ? ext.toLowerCase() : '';
+    var read = ext === 'docx' ? file.arrayBuffer().then(docxText)
+      : ['md', 'markdown', 'txt'].indexOf(ext) > -1 || /^text\//.test(file.type) ? file.text()
+      : Promise.reject(new Error('type'));
+    read.then(function (text) {
+      text = text.replace(/\r\n?/g, '\n').trim();
+      if (!text) throw new Error('empty');
+      if (text.length > MAX_PRD) throw new Error('long');
+      state.prdText = text; state.prdFile = file.name; save(state); showFile();
+    }).catch(function (err) {
+      markField('prdText', err.message === 'empty' ? 'That file looks empty. Check you chose your PRD.'
+        : err.message === 'long' ? 'That file is very long for a PRD. Upload just the PRD, not the whole chat.'
+        : err.message === 'type' ? 'We can read Markdown (.md), text (.txt) and Word (.docx) files. Save your PRD as one of those, or link to it on GitHub.'
+        : 'We couldn’t read that file. Save it as PRD.md and try again, or link to it on GitHub.');
+    });
+  });
+  document.getElementById('file-remove').onclick = function () {
+    delete state.prdText; delete state.prdFile; save(state); showFile(); fileInput.focus();
+  };
+
+  // Text of a Word file: unzip word/document.xml with the browser's own DecompressionStream, keep paragraphs.
+  function docxText(buf) {
+    var v = new DataView(buf), e = buf.byteLength - 22;
+    while (e >= 0 && v.getUint32(e, true) !== 0x06054b50) e--;
+    if (e < 0) return Promise.reject(new Error('docx'));
+    var p = v.getUint32(e + 16, true), n = v.getUint16(e + 10, true), dec = new TextDecoder();
+    for (var i = 0; i < n; i++) {
+      var method = v.getUint16(p + 10, true), size = v.getUint32(p + 20, true), nameLen = v.getUint16(p + 28, true);
+      var name = dec.decode(new Uint8Array(buf, p + 46, nameLen)), local = v.getUint32(p + 42, true);
+      if (name === 'word/document.xml') {
+        var start = local + 30 + v.getUint16(local + 26, true) + v.getUint16(local + 28, true);
+        var data = new Blob([new Uint8Array(buf, start, size)]);
+        if (method === 8 && typeof DecompressionStream === 'undefined') return Promise.reject(new Error('docx'));
+        var xml = method === 8 ? new Response(data.stream().pipeThrough(new DecompressionStream('deflate-raw'))).text() : data.text();
+        return xml.then(function (x) {
+          var doc = new DOMParser().parseFromString(x, 'application/xml'), W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+          return Array.prototype.map.call(doc.getElementsByTagNameNS(W, 'p'), function (para) {
+            var out = '';
+            Array.prototype.forEach.call(para.getElementsByTagNameNS(W, '*'), function (el) {
+              if (el.localName === 't') out += el.textContent;
+              else if (el.localName === 'tab') out += '\t';
+              else if (el.localName === 'br') out += '\n';
+            });
+            return out;
+          }).join('\n');
+        });
+      }
+      p += 46 + nameLen + v.getUint16(p + 30, true) + v.getUint16(p + 32, true);
+    }
+    return Promise.reject(new Error('docx'));
+  }
 
   function clearField(f) {
     var box = document.getElementById('f-' + f);
@@ -94,7 +161,6 @@
   function markField(f, msg) {
     var box = document.getElementById('f-' + f);
     if (!box) return false;
-    if (f === 'prdUrl') document.getElementById('link-box').open = true;
     box.classList.add('bad');
     box.querySelector('.msg').textContent = msg;
     return true;
@@ -107,18 +173,19 @@
     setStatus('', '');
     var v = {};
     fields.forEach(function (f) { v[f] = form.elements[f].value.trim(); });
+    v.prdText = state.prdText || '';
     var problems = 0;
     if (!v.name) problems += markField('name', 'Add your name.') ? 1 : 0;
     if (!v.project) problems += markField('project', 'Give your project a name.') ? 1 : 0;
-    if (!v.prdText && !v.prdUrl) problems += markField('prdText', 'Paste your PRD here, or share a link below.') ? 1 : 0;
-    if (problems) { form.querySelector('.bad input, .bad textarea').focus(); return; }
+    if (!v.prdText && !v.prdUrl) problems += markField('prdText', 'Upload your PRD, or add a link to it on GitHub.') ? 1 : 0;
+    if (problems) { form.querySelector('.bad input').focus(); return; }
 
     send.disabled = true;
     send.firstChild.textContent = v.prdUrl && !v.prdText ? 'Opening your link… ' : 'Sending… ';
     fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, prdText: v.prdText, prdUrl: v.prdText ? '' : v.prdUrl, website: form.elements.website.value, force: !!force })
+      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, prdText: v.prdText, prdFile: v.prdText ? state.prdFile || '' : '', prdUrl: v.prdText ? '' : v.prdUrl, website: form.elements.website.value, force: !!force })
     }).then(function (r) { return r.json().catch(function () { return { ok: false, message: 'Unexpected reply (' + r.status + ').' }; }); })
       .then(function (res) {
         if (res.ok) {
@@ -128,14 +195,14 @@
           var list = res.warnings.map(function (w) { markField(w.field, w.message); return '<li>' + esc(w.message) + '</li>'; }).join('');
           setStatus('warn', '<strong>Before we take it, please check:</strong><ul>' + list + '</ul><div class="actions"><button class="btn small" type="button" id="force">It’s fine, send anyway</button><button class="btn small ghost" type="button" id="fix">I’ll fix it</button></div>');
           document.getElementById('force').onclick = function () { submit(true); };
-          document.getElementById('fix').onclick = function () { setStatus('', ''); var b = form.querySelector('.bad input, .bad textarea'); if (b) b.focus(); };
+          document.getElementById('fix').onclick = function () { setStatus('', ''); var b = form.querySelector('.bad input'); if (b) b.focus(); };
         } else {
           if (!markField(res.field, res.message)) setStatus('warn', '<strong>' + esc(res.message || 'Something went wrong.') + '</strong>');
-          var b = form.querySelector('.bad input, .bad textarea'); if (b) b.focus();
+          var b = form.querySelector('.bad input'); if (b) b.focus();
         }
       })
       .catch(function () {
-        setStatus('warn', '<strong>We couldn’t reach our server.</strong><p>Check your Wi-Fi and try again. If it keeps failing, find Phil or a helper. Your text is kept on this device, so nothing is lost.</p>');
+        setStatus('warn', '<strong>We couldn’t reach our server.</strong><p>Check your Wi-Fi and try again. If it keeps failing, find Phil or a helper. Your PRD is kept on this device, so nothing is lost.</p>');
       })
       .then(function () { send.disabled = false; send.firstChild.textContent = 'Share my PRD '; });
   }
