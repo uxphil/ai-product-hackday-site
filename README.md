@@ -2,7 +2,7 @@
 
 A small static site for participants: what the event is, the agenda, a short "Get ready" checklist with three ways to take part (personal laptop, LBG laptop, phone or tablet), a guided hello-world warm-up, safety reminders, resources, help and project themes.
 
-No framework, no build step, no database, no analytics, no cookies. Two pages collect something: `share.html` sends a participant’s name, project, app link and PRD to the organiser, and `vote.html` sends a device’s favourite picks (see below). Plain HTML, one CSS file, one small JavaScript file. Anyone (or any AI tool) can edit it with a text editor.
+No framework, no build step, no database, no analytics, no cookies. Two pages collect something: `share.html` sends a participant’s name, project, app link, product page link and PRD to the organiser, and `vote.html` sends a device’s favourite picks (see below). Plain HTML, one CSS file, one small JavaScript file. Anyone (or any AI tool) can edit it with a text editor.
 
 ## Files
 
@@ -16,7 +16,7 @@ No framework, no build step, no database, no analytics, no cookies. Two pages co
 | `assets/site.js` | Password gate, tick-box progress (saved in the browser only), copy buttons, Mac/Windows switch. |
 | `talks/` | Talk slides. Generated from `talks/<name>/deck` in the planning repository by `scripts/build-talk-page.py`; don't edit by hand. These pages have a slim header instead of the shared navigation. |
 | `share.html` | “Share your PRD” for the demos, added on the day. Not in the main navigation; linked from Home and The day. Participants upload their PRD file (Markdown, text or Word, read in the browser: nothing to copy and paste) or link to it on GitHub. Sends the form to the organiser’s Cloudflare Worker at `hackday-api.bonhard.ai` (code and checks in `worker/README.md` in the planning repository). Its script is inline in the page. Says what happens to the data and that it is deleted after the event. |
-| `vote.html` | After-event vote for favourite projects, added on the day. Lists each shared project (name, project, app link; never the PRD) in a random order per voter; each device picks up to three. Linked from Home and the share page. Its script is inline. Close it with `VOTE_OPEN` in the Worker. |
+| `vote.html` | After-event vote for favourite projects, added on the day. Lists each shared project (name, project, app and product page links; never the PRD) in a random order per voter; each device picks up to three. Linked from Home and the share page. Its script is inline. Close it with `VOTE_OPEN` in the Worker. |
 | `robots.txt`, `<meta name="robots">` | Ask search engines not to index the site. |
 
 ## Themes

@@ -20,13 +20,14 @@
 <div class="wrap narrow">
 <section class="block first">
 <h1>Share your <em>PRD</em></h1>
-<p class="lead">Send us your PRD and your app’s address before the demos. It takes two minutes, and it lets us put your product on the big screen at the end of the day.</p>
+<p class="lead">Send us your PRD, your app and your product page before the demos. It takes two minutes, and it lets us put your product on the big screen at the end of the day.</p>
 <div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</p></div>
 
 <form class="form" id="share-form" novalidate>
 <div class="field" id="f-name"><label for="name">Your name</label><p class="hint">As you’d like it on screen. Working in a pair? Put both names.</p><input type="text" id="name" name="name" autocomplete="name" maxlength="80" required><p class="msg" aria-live="polite"></p></div>
 <div class="field" id="f-project"><label for="project">Project name</label><input type="text" id="project" name="project" maxlength="100" required><p class="msg" aria-live="polite"></p></div>
-<div class="field" id="f-appUrl"><label for="appUrl">Your app’s website</label><p class="hint">The web address of the app you built today, so we can open it for your demo. Someone else must be able to open it, for example <code>https://yourname.github.io/your-project</code>. Not live yet? Leave it blank and send it again later.</p><input type="url" id="appUrl" name="appUrl" inputmode="url" placeholder="https://yourname.github.io/your-project" maxlength="500"><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-appUrl"><label for="appUrl">1. Your app</label><p class="hint">The address of the working product you built today, the thing people use. We open it for your demo. For example <code>https://yourname.github.io/your-project</code>. Not live yet? Leave it blank and send it again later.</p><input type="url" id="appUrl" name="appUrl" inputmode="url" placeholder="https://yourname.github.io/your-project" maxlength="500"><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-productUrl"><label for="productUrl">2. Your product page</label><p class="hint">The separate one-page site <em>about</em> your app, made from your PRD, with a button to the app. It’s a different address from your app. <a href="event.html#product-page">How to make one</a>. Not made one yet? Leave it blank.</p><input type="url" id="productUrl" name="productUrl" inputmode="url" placeholder="https://yourname.github.io/your-project-page" maxlength="500"><p class="msg" aria-live="polite"></p></div>
 <fieldset class="prd-choice"><legend>Your PRD</legend><p class="hint">Upload the file, or link to it on GitHub. One is enough.</p>
 <div class="field" id="f-prdText"><label for="prdFile">Upload the file</label><p class="hint">Markdown (<code>PRD.md</code>), text or Word. Is your PRD still in a chat? Ask your AI: “Give me the PRD as a Markdown file I can download.”</p>
 <label class="file-pick" id="file-pick"><input type="file" id="prdFile" accept=".md,.markdown,.txt,.docx,text/markdown,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-upload"/></svg><span><strong>Choose a file</strong><span>.md, .txt or .docx</span></span></label>
@@ -35,7 +36,7 @@
 <p class="or" aria-hidden="true">or</p>
 <div class="field" id="f-prdUrl"><label for="prdUrl">Link to it on GitHub</label><p class="hint">Open <code>PRD.md</code> in your repository and copy the address from your browser. The repository must be public.</p><input type="url" id="prdUrl" name="prdUrl" inputmode="url" placeholder="https://github.com/you/your-project/blob/main/PRD.md" maxlength="500"><p class="msg" aria-live="polite"></p></div>
 </fieldset>
-<label class="checkline" for="inVote"><input type="checkbox" id="inVote" name="inVote" checked> <span>Include my project in the after-event vote. Other participants will see your name, project name and app link (not your PRD) and can pick their favourites.</span></label>
+<label class="checkline" for="inVote"><input type="checkbox" id="inVote" name="inVote" checked> <span>Include my project in the after-event vote. Other participants will see your name, project name, app and product page (not your PRD) and can pick their favourites.</span></label>
 <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
 <div class="form-status" id="status" role="status" aria-live="polite"></div>
 <p><button class="btn" type="submit" id="send">Share my PRD <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-upload"/></svg></button></p>
@@ -43,11 +44,11 @@
 
 <h2>What happens to it</h2>
 <ul>
-<li>Your name, project name, app address and PRD go to Phil Bonhard, the organiser. Your PRD is never published.</li>
+<li>Your name, project name, both addresses and PRD go to Phil Bonhard, the organiser. Your PRD is never published.</li>
 <li>We use them to pick and introduce demos today. Your name and project name may appear on the big screen.</li>
 <li>Each PRD gets a light-hearted score from an AI tool (Claude), just for fun. It isn’t how anything is judged.</li>
 <li>Changed something? Send it again from this device and it replaces your earlier one.</li>
-<li>After the event, your name, project name and app link appear on the <a href="vote.html">vote page</a>, behind the site password, so other participants can pick their favourites. Untick the box above to leave your project out.</li>
+<li>After the event, your name, project name and both links appear on the <a href="vote.html">vote page</a>, behind the site password, so other participants can pick their favourites. Untick the box above to leave your project out.</li>
 <li>We delete everything once voting closes.</li>
 </ul>
 </section></div>
@@ -66,7 +67,7 @@
   var form = document.getElementById('share-form');
   var send = document.getElementById('send');
   var status = document.getElementById('status');
-  var fields = ['name', 'project', 'appUrl', 'prdUrl'];  // typed fields; the uploaded PRD is kept in state.prdText
+  var fields = ['name', 'project', 'appUrl', 'productUrl', 'prdUrl'];  // typed fields; the uploaded PRD is kept in state.prdText
   var MAX_PRD = 60000;
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
@@ -189,7 +190,7 @@
     fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, prdText: v.prdText, prdFile: v.prdText ? state.prdFile || '' : '', prdUrl: v.prdText ? '' : v.prdUrl, inVote: form.elements.inVote.checked, website: form.elements.website.value, force: !!force })
+      body: JSON.stringify({ id: state.id, name: v.name, project: v.project, appUrl: v.appUrl, productUrl: v.productUrl, prdText: v.prdText, prdFile: v.prdText ? state.prdFile || '' : '', prdUrl: v.prdText ? '' : v.prdUrl, inVote: form.elements.inVote.checked, website: form.elements.website.value, force: !!force })
     }).then(function (r) { return r.json().catch(function () { return { ok: false, message: 'Unexpected reply (' + r.status + ').' }; }); })
       .then(function (res) {
         if (res.ok) {

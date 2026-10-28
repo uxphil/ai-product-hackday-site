@@ -20,7 +20,7 @@
 <div class="wrap">
 <section class="block first">
 <h1>Vote for your <em>favourites</em></h1>
-<p class="lead">Everything built on the day, in one place. Open a few, then pick up to <span id="max">three</span> you loved. You can change your mind until voting closes.</p>
+<p class="lead">Everything built on the day, in one place. Open a few apps and product pages, then pick up to <span id="max">three</span> you loved. You can change your mind until voting closes.</p>
 <p class="muted">Shown in a random order, so nobody gets an advantage from the alphabet. One set of votes per device, on trust.</p>
 
 <div class="vote-find"><label class="vh" for="find">Find a project</label><input type="search" id="find" placeholder="Find a project or a name" autocomplete="off"></div>
@@ -35,7 +35,7 @@
 <h2>About the vote</h2>
 <ul>
 <li>We only collect which projects you picked, against a random code saved in this browser. No names, no sign-in.</li>
-<li>Projects show the maker’s name, the project name and the app link they shared. PRDs aren’t shown.</li>
+<li>Projects show the maker’s name, the project name, and links to the app and its product page if they shared them. PRDs aren’t shown.</li>
 <li>Phil Bonhard will share the people’s choice once voting closes. We delete the votes and submissions afterwards.</li>
 </ul>
 </section></div>
@@ -86,7 +86,8 @@
       var on = state.picks.indexOf(e.id) > -1;
       return '<li class="vote-card' + (on ? ' picked' : '') + '"><h3>' + esc(e.project) + '</h3><p class="by">' + esc(e.name) + '</p><div class="row">' +
         '<button class="fav" type="button" data-id="' + esc(e.id) + '" aria-pressed="' + on + '"' + (!on && full || !open ? ' disabled' : '') + '><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-heart"/></svg>' + (on ? 'Favourite' : 'Pick') + '<span class="vh"> ' + esc(e.project) + '</span></button>' +
-        (e.appUrl ? '<a class="open" href="' + esc(e.appUrl) + '" target="_blank" rel="noopener noreferrer">Open the app <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-external-link"/></svg></a>' : '<span class="no-link">No app link shared</span>') +
+        (e.appUrl ? '<a class="open" href="' + esc(e.appUrl) + '" target="_blank" rel="noopener noreferrer">App <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-external-link"/></svg></a>' : '<span class="no-link">No app link</span>') +
+        (e.productUrl ? '<a class="open" href="' + esc(e.productUrl) + '" target="_blank" rel="noopener noreferrer">Product page <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-external-link"/></svg></a>' : '') +
         '</div></li>';
     }).join('') + '</ul>' : '<p class="muted">Nothing matches “' + esc(find.value) + '”.</p>';
     bar.hidden = false;
