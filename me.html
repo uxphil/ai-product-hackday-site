@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Your board for the day: five stops and a call button.">
+<title>My day · AI Enabled Product Hackathon</title>
+<link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css?v=863daa6f">
+<script src="assets/site.js?v=b9ec382b"></script>
+</head>
+<body data-event-page>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top"><div class="wrap bar">
+<a class="brand" href="index.html">ai product <span>hackday</span></a>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li class="cta has-sub"><a href="get-ready.html">Get ready</a><ul class="sub"><li><a href="hello-world.html">Warm-up</a></li><li><a href="themes.html">Themes</a></li><li><a href="theme-personal-website.html">Personal website</a></li><li><a href="theme-elf-help.html">Elf Help</a></li><li><a href="theme-mortgage-journey.html">Mortgage journey</a></li></ul></li><li class="has-sub"><a href="event.html">The day</a><ul class="sub"><li><a href="me.html" aria-current="page">My day</a></li><li><a href="plan.html">Plan your product</a></li><li><a href="vote.html">Vote for favourites</a></li></ul></li><li><a href="stay-safe.html">Stay safe</a></li><li class="has-sub"><a href="help.html">Get help</a><ul class="sub"><li><a href="resources.html">Resources</a></li></ul></li></ul></nav>
+</div></header>
+<main id="main">
+<div class="wrap narrow">
+<section class="block first" id="me">
+<p class="eyebrow" id="b-event" hidden></p>
+<h1 id="title">My <em>day</em></h1>
+<p class="muted" id="loading">Loading your board…</p>
+
+<!-- No board in the address: boards joined on this device, or type your code -->
+<div id="find" hidden>
+<p class="lead" id="find-lead">Your board for the day: five stops from warm-up to a live app, and a call button for when you’re stuck.</p>
+<div id="boards"></div>
+<h2>Find your board</h2>
+<p>Closed it by mistake? Type the code from your board (10 letters and numbers), or open the link you bookmarked. No code? Ask a helper: they can look it up for you.</p>
+<form class="find-code" id="find-form" novalidate><div class="field" style="flex:1 1 12rem"><label class="vh" for="code">Board code</label><input type="text" id="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7QM4-TXP2A" maxlength="80"><p class="msg" aria-live="polite"></p></div><button class="btn" type="submit">Open my board</button></form>
+<p style="margin-top:1.6rem">New here? <a class="btn small ghost" href="join.html">Join the day <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-arrow-right"/></svg></a></p>
+</div>
+
+<!-- The board -->
+<div id="board" hidden>
+<p class="lead">This is your board for the day. Tick each stop as you reach it, and call a helper whenever you’re stuck.</p>
+
+<div class="pass">
+<dl><dt>Passenger</dt><dd id="b-name"></dd><dt>Day job</dt><dd id="b-job"></dd></dl>
+<dl class="stub"><dt>Board code</dt><dd class="code" id="b-code"></dd></dl>
+</div>
+<div class="pass-actions">
+<button class="btn small" type="button" id="copy-link"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-link"/></svg><span>Copy my link</span></button>
+<button class="btn small ghost" type="button" id="phone-btn" aria-expanded="false" aria-controls="phone"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-smartphone"/></svg>Open on my phone</button>
+</div>
+<p class="pass-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-bookmark"/></svg> <strong>Bookmark this page.</strong> It’s yours alone. Lost it? Open <strong>My day</strong> under The day and type your code.</p>
+<div class="form-status" id="phone" hidden><p style="margin:0">On your phone, open <code id="phone-url"></code> and type <strong class="code" id="phone-code"></strong>. You’ll need the site password. Both devices then share this board.</p></div>
+
+<div class="call" id="call" data-state="idle">
+<button class="call-btn" type="button" id="call-btn" aria-pressed="false" aria-describedby="call-text"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-hand"/></svg><span class="vh" id="call-label">Call a helper</span></button>
+<div id="call-text"><h2 id="call-title">Stuck? Call a helper</h2><p id="call-sub">Like the button above a plane seat. A helper sees your nickname, your stop and your note, and comes to you.</p></div>
+<div class="field" id="note-field"><label class="vh" for="note">What’s stuck? (optional)</label><input type="text" id="note" maxlength="140" placeholder="What’s stuck? (optional) e.g. GitHub says permission denied"></div>
+<div class="call-actions" id="call-actions" hidden><button class="btn small ghost" type="button" id="call-off">I’m sorted, put my hand down</button></div>
+</div>
+
+<div class="flight">
+<div class="flight-head"><h2>Your <em>flight</em></h2><span class="phase" id="phase"></span></div>
+<div class="track" id="track" aria-hidden="true"><span class="done" id="track-done"></span><span class="plane" id="plane"><svg class="icon" focusable="false"><use href="assets/icons.svg#i-plane"/></svg></span></div>
+<ol class="stops" id="stops"></ol>
+</div>
+
+<div class="form-status" id="status" role="status" aria-live="polite"></div>
+
+<div class="board-foot">
+<a href="help.html">Get help</a>
+<span id="switch-wrap" hidden><a href="me.html#boards">Switch board</a></span>
+<a href="join.html">Join as someone else</a>
+<button class="linkish" type="button" id="forget">Forget me</button>
+</div>
+</div>
+</section></div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 29 October 2026.</p>
+<p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page keeps your board with the organiser; see <a href="join.html">Join the day</a> for what we keep and when we delete it.</p>
+</div></footer>
+<div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html" aria-current="page">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">My day</span></button></div>
+<script>
+/* A participant's board for the day (join.html makes one). The board's private code is in the address
+   (me.html#CODE), so each board is its own bookmark and several people can share a device. Boards opened
+   here are also listed in this browser only. Everything else is kept by the organiser's Worker. */
+(function () {
+  var API = 'https://hackday-api.bonhard.ai';
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8792
+    try { var q = new URLSearchParams(location.search).get('api'); if (q) sessionStorage.setItem('hackday-api', q); API = sessionStorage.getItem('hackday-api') || API; } catch (e) {}
+  }
+  var KEY = 'hackday-boards';
+  var STOPS = [
+    { key: 'warmup', title: 'Warm-up done', text: 'Hello world on your own computer.', href: 'hello-world.html' },
+    { key: 'github', title: 'GitHub connected', text: 'Your AI tool can save to your GitHub account.', href: 'hello-world-publish.html' },
+    { key: 'pushed', title: 'Hello world pushed', text: 'Your page is on GitHub with a live address.', href: 'hello-world-publish.html' },
+    { key: 'prd', title: 'PRD shared', text: 'Sent for the demos.', href: 'share.html' },
+    { key: 'live', title: 'App live', text: 'Someone else can open it on their own device.', href: 'event.html' },
+  ];
+  var PHASES = ['At the gate', 'Boarding', 'Taxiing', 'Take-off', 'Cruising', 'Landed 🎉'];
+  var $ = function (id) { return document.getElementById(id); };
+  var board = null, code = null, timer = null;
+
+  function boards() { try { return JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { return []; } }
+  function saveBoards(list) { try { localStorage.setItem(KEY, JSON.stringify(list.slice(0, 20))); } catch (e) {} }
+  function remember(b) { saveBoards([{ code: b.code, nickname: b.nickname, event: b.event.id }].concat(boards().filter(function (x) { return x.code !== b.code; }))); }
+  function forgetHere(c) { saveBoards(boards().filter(function (x) { return x.code !== c; })); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function normalise(v) {
+    var s = String(v || '').toUpperCase().split('#').pop().replace(/[\s-]/g, '');
+    return /^[2-9A-HJ-NP-Z]{10}$/.test(s) ? s : null;
+  }
+  function pretty(c) { return c.slice(0, 5) + '-' + c.slice(5); }
+  function ago(iso) { var m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000)); return m < 1 ? 'just now' : m === 1 ? '1 minute ago' : m + ' minutes ago'; }
+  function status(text, warn) { $('status').className = 'form-status' + (warn ? ' warn' : ''); $('status').textContent = text || ''; }
+
+  function post(body) {
+    return fetch(API + '/me', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ code: code }, body)) })
+      .then(function (r) { return r.json(); });
+  }
+
+  // ---------- no code in the address: this device's boards, or type a code ----------
+  function showFind(message) {
+    $('loading').hidden = true; $('board').hidden = true; $('find').hidden = false; $('b-event').hidden = true;
+    $('title').innerHTML = 'My <em>day</em>';
+    document.title = 'My day · AI Enabled Product Hackathon';
+    var list = boards();
+    $('boards').innerHTML = list.length ? '<p><strong>On this device</strong></p><ul class="boards">' + list.map(function (b) {
+      return '<li><a href="me.html#' + esc(b.code) + '"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-plane"/></svg><strong>' + esc(b.nickname) + '</strong><span>' + esc(b.event) + '</span></a></li>';
+    }).join('') + '</ul>' : '';
+    if (message) { var f = $('find-form').querySelector('.field'); f.classList.add('bad'); f.querySelector('.msg').textContent = message; }
+  }
+  $('find-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var c = normalise($('code').value), f = this.querySelector('.field');
+    if (!c) { f.classList.add('bad'); f.querySelector('.msg').textContent = 'That doesn’t look like a board code. It’s 10 letters and numbers, like K7QM4-TXP2A.'; return; }
+    location.hash = c;
+  });
+
+  // ---------- the board ----------
+  function load() {
+    clearTimeout(timer);
+    code = normalise(location.hash);
+    if (!code) {
+      var list = boards(), here = list.filter(function (b) { return b.event === window.hackdayEvent; });
+      if (here.length === 1 && location.hash !== '#boards') { location.replace('#' + here[0].code); return; }
+      return showFind();
+    }
+    if (location.hash.slice(1) !== code) history.replaceState(null, '', '#' + code);
+    post({}).then(function (d) {
+      if (d.ok) return render(d.board);
+      if (d.gone) { forgetHere(code); history.replaceState(null, '', location.pathname); return showFind('We couldn’t find that board. It may have been deleted. Check the code, or join again.'); }
+      showFind(d.message);
+    }).catch(offline);
+  }
+  function offline() {
+    $('loading').textContent = 'We couldn’t reach the server. Check your connection; we’ll keep trying.';
+    status('Offline: we’ll keep trying.', true);
+    schedule(15000);
+  }
+  function schedule(ms) {
+    clearTimeout(timer);
+    timer = setTimeout(function () { if (!document.hidden) refresh(); else schedule(ms); }, ms);
+  }
+  function refresh() { post({}).then(function (d) { if (d.ok) render(d.board); else if (d.gone) load(); }).catch(offline); }
+
+  function render(b) {
+    var first = !board;
+    board = b; remember(b);
+    $('loading').hidden = true; $('find').hidden = true; $('board').hidden = false; status('');
+    document.title = b.nickname + '’s day · AI Enabled Product Hackathon';
+    $('b-event').textContent = b.event.name + ' · ' + new Date(b.event.held_on + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + (b.hereAt ? ' · Checked in ✓' : '');
+    $('title').innerHTML = 'Hi, <em></em>'; $('title').querySelector('em').textContent = b.nickname;
+    $('b-event').hidden = false;
+    $('b-name').textContent = b.name;
+    $('b-job').textContent = b.jobTitle;
+    $('b-code').textContent = pretty(b.code);
+    $('phone-url').textContent = location.host + location.pathname.replace(/[^/]*$/, '') + 'me.html';
+    $('phone-code').textContent = pretty(b.code);
+    $('switch-wrap').hidden = boards().length < 2;
+
+    // Stops and the plane
+    var done = STOPS.filter(function (s) { return b.steps[s.key]; }).length;
+    if (first) {
+      $('stops').innerHTML = STOPS.map(function (s, i) {
+        return '<li class="stop" data-key="' + s.key + '"><span class="num">' + (i + 1) + '</span><div><h3>' + s.title + '</h3><p>' + s.text + ' <a href="' + s.href + '">How</a></p></div>' +
+          '<button class="tick" type="button" aria-pressed="false" aria-label="' + s.title + '"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-check"/></svg><span>Done</span></button></li>';
+      }).join('');
+      $('track').insertAdjacentHTML('afterbegin', STOPS.map(function (s, i) { return '<span class="dot" style="left:' + ((i + 1) * 20) + '%"></span>'; }).join(''));
+    }
+    STOPS.forEach(function (s) {
+      var on = Boolean(b.steps[s.key]), li = $('stops').querySelector('[data-key="' + s.key + '"]'), btn = li.querySelector('.tick');
+      li.classList.toggle('is-done', on);
+      btn.setAttribute('aria-pressed', String(on)); btn.disabled = false;
+      btn.querySelector('span').textContent = on ? 'Done' : 'Mark done';
+    });
+    $('track').querySelectorAll('.dot').forEach(function (d, i) { d.classList.toggle('on', i < done); });
+    $('track-done').style.width = done * 20 + '%';
+    $('plane').style.left = done * 20 + '%';
+    $('phase').textContent = PHASES[done];
+
+    // The call button
+    var c = b.call, state = !c ? 'idle' : c.answeredAt ? 'coming' : 'up';
+    $('call').dataset.state = state;
+    $('call-btn').setAttribute('aria-pressed', String(Boolean(c)));
+    $('call-label').textContent = c ? 'Put my hand down' : 'Call a helper';
+    $('call-title').textContent = state === 'idle' ? 'Stuck? Call a helper' : state === 'up' ? 'Your hand is up' : (c.answeredBy || 'A helper') + ' is on the way';
+    $('call-sub').textContent = state === 'idle' ? 'Like the button above a plane seat. A helper sees your nickname, your stop and your note, and comes to you.'
+      : state === 'up' ? 'You called ' + ago(c.madeAt) + '. Stay where you are: a helper will come to you.' + (c.note ? ' You said: “' + c.note + '”' : '')
+      : 'They saw your call ' + ago(c.answeredAt) + '. Wave if you can’t see them.';
+    $('note-field').hidden = Boolean(c);
+    $('call-actions').hidden = !c;
+    schedule(c ? 8000 : 30000);  // faster while waiting, so "on the way" shows up quickly
+  }
+
+  $('stops').addEventListener('click', function (e) {
+    var btn = e.target.closest('.tick');
+    if (!btn) return;
+    var key = btn.closest('.stop').dataset.key, on = btn.getAttribute('aria-pressed') !== 'true';
+    btn.disabled = true;
+    post({ step: key, done: on }).then(function (d) { if (d.ok) render(d.board); else { btn.disabled = false; status(d.message, true); } })
+      .catch(function () { btn.disabled = false; status('That didn’t save. Check your connection and try again.', true); });
+  });
+
+  function setCall(on) {
+    $('call-btn').disabled = true;
+    post(on ? { call: 'on', note: $('note').value.trim() } : { call: 'off' })
+      .then(function (d) { $('call-btn').disabled = false; if (d.ok) { $('note').value = ''; render(d.board); } else status(d.message, true); })
+      .catch(function () { $('call-btn').disabled = false; status('Your call didn’t go through. Check your connection, or wave at a helper.', true); });
+  }
+  $('call-btn').addEventListener('click', function () { setCall(!(board && board.call)); });
+  $('call-off').addEventListener('click', function () { setCall(false); });
+  $('note').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); setCall(true); } });
+
+  $('copy-link').addEventListener('click', function () {
+    var label = this.querySelector('span');
+    (navigator.clipboard ? navigator.clipboard.writeText(location.href) : Promise.reject()).then(function () {
+      label.textContent = 'Copied'; setTimeout(function () { label.textContent = 'Copy my link'; }, 2000);
+    }, function () { label.textContent = 'Copy it from the address bar'; });
+  });
+  $('phone-btn').addEventListener('click', function () {
+    var open = $('phone').hidden;
+    $('phone').hidden = !open; this.setAttribute('aria-expanded', String(open));
+  });
+  $('forget').addEventListener('click', function () {
+    if (!board || !confirm('Delete ' + board.nickname + '’s board for good? Your name, job title, stops and calls are removed straight away.')) return;
+    post({ forget: true }).then(function (d) {
+      if (!d.ok) return status(d.message, true);
+      forgetHere(code); board = null; clearTimeout(timer);
+      history.replaceState(null, '', location.pathname);
+      showFind(); $('find-lead').textContent = 'Your board has been deleted. Thanks for coming.';
+    }).catch(function () { status('That didn’t go through. Check your connection and try again.', true); });
+  });
+
+  window.addEventListener('hashchange', function () { board = null; $('stops').innerHTML = ''; $('track').querySelectorAll('.dot').forEach(function (d) { d.remove(); }); load(); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && board) refresh(); });
+  load();
+})();
+</script>
+</body>
+</html>
