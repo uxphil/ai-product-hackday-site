@@ -565,6 +565,7 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 
 /* share your PRD form (share.html) */
 .form { display: grid; gap: 1.4rem; margin: 1.8rem 0; }
+.form[hidden] { display: none; }
 .field { display: grid; gap: .35rem; }
 .field > label { font-weight: 600; }
 .field .hint { color: var(--muted); font-size: .92rem; margin: 0; }

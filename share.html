@@ -7,7 +7,7 @@
 <meta name="description" content="Share your PRD and app link with the organisers for the demos.">
 <title>Share your PRD · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=7deb41c5">
+<link rel="stylesheet" href="assets/style.css?v=8dae943d">
 <script src="assets/site.js?v=b9ec382b"></script>
 </head>
 <body data-event-page>
@@ -19,6 +19,7 @@
 <main id="main">
 <div class="wrap narrow">
 <section class="block first">
+<p class="eyebrow" id="event-name" hidden></p>
 <h1>Share your <em>PRD</em></h1>
 <p class="lead">Send us your PRD, your app and your product page before the demos. It takes two minutes, and it lets us put your product on the big screen at the end of the day.</p>
 <div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="stay-safe.html">More on staying safe</a>.</p></div>
@@ -62,7 +63,11 @@
 /* Sends the form to the organisers' Cloudflare Worker (see worker/ in the planning repository).
    The submission id and a draft are kept in this browser only, so sending again replaces the earlier one. */
 (function () {
-  var API = 'https://hackday-api.bonhard.ai/submit';
+  var BASE = 'https://hackday-api.bonhard.ai';
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8792
+    try { var q = new URLSearchParams(location.search).get('api'); if (q) sessionStorage.setItem('hackday-api', q); BASE = sessionStorage.getItem('hackday-api') || BASE; } catch (e) {}
+  }
+  var API = BASE + '/submit';
   var KEY = 'hackday-share';
   var form = document.getElementById('share-form');
   var send = document.getElementById('send');
@@ -213,6 +218,22 @@
   }
 
   form.addEventListener('submit', function (e) { e.preventDefault(); submit(false); });
+
+  // The organiser opens sharing for one event on the day; it closes by itself once that day is over
+  fetch(BASE + '/').then(function (r) { return r.json(); }).then(function (d) {
+    var ev = d.shareEvent;
+    if (ev) {
+      var label = document.getElementById('event-name');
+      label.textContent = 'Sharing for: ' + ev.name + ', ' + new Date(ev.held_on + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      label.hidden = false;
+    } else if (d.ok) {
+      var box = document.createElement('div');
+      box.className = 'form-status warn';
+      box.innerHTML = '<strong>Sharing is closed.</strong><p style="margin:.3rem 0 0">PRDs are shared on the day of an event, once the organiser opens sharing. Missed it? Find Phil.</p>';
+      form.parentNode.insertBefore(box, form);
+      form.hidden = true;
+    }
+  }).catch(function () {});
 })();
 </script>
 </body>
