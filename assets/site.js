@@ -346,9 +346,49 @@
     });
   }
 
+  /* ---------- event picker: which hackathon the event-specific pages (share, vote) are for ---------- */
+  // Newest first; the first is the default. Add the next event here (see site/README.md).
+  var EVENTS = [
+    { id: '2026-10-28', label: '28 Oct 2026 · Manchester' },
+  ];
+  var EVENT_KEY = 'hackday-event';
+  function known(id) { return EVENTS.some(function (e) { return e.id === id; }) ? id : null; }
+  var param = new URLSearchParams(location.search).get('event');
+  var eventId = known(param) || known(store('localStorage', EVENT_KEY)) || EVENTS[0].id;
+  window.hackdayEvent = eventId; // read by vote.html
+
+  function initEventPicker() {
+    var bar = document.querySelector('.site-header .bar'), nav = bar && bar.querySelector('nav');
+    if (!nav) return;
+    var wrap = document.createElement('label');
+    wrap.className = 'event-pick';
+    wrap.innerHTML = '<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-calendar"/></svg>' +
+      '<span class="vh">Event</span><select>' + EVENTS.map(function (e) {
+        return '<option value="' + e.id + '"' + (e.id === eventId ? ' selected' : '') + '>' + e.label + '</option>';
+      }).join('') + '</select>';
+    bar.insertBefore(wrap, nav);
+    tagLinks();
+    wrap.querySelector('select').addEventListener('change', function () {
+      eventId = this.value;
+      store('localStorage', EVENT_KEY, eventId);
+      if (param || document.body.hasAttribute('data-event-page')) {
+        var u = new URL(location.href); u.searchParams.set('event', eventId); location.href = u.toString();
+      } else {
+        window.hackdayEvent = eventId; tagLinks();
+      }
+    });
+  }
+  // Links to the event-specific pages carry the chosen event in their address
+  function tagLinks() {
+    document.querySelectorAll('a[href^="vote.html"], a[href^="share.html"]').forEach(function (a) {
+      var u = new URL(a.getAttribute('href'), location.href); u.searchParams.set('event', eventId);
+      a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (root.classList.contains('locked')) buildGate();
-    initTheme(); initFab();
+    initTheme(); initFab(); initEventPicker();
     initChecks(); initCopy(); initOS(); initCountdown(); initReveal();
   });
 })();

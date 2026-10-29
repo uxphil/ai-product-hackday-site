@@ -109,6 +109,11 @@ a:hover { text-decoration-thickness: 2px; }
 .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .3rem 1.5rem; padding-top: .8rem; padding-bottom: .8rem; }
 .brand { font-weight: 600; font-size: 1.05rem; color: var(--text); text-decoration: none; letter-spacing: -.01em; }
 .brand span { color: var(--accent); font-style: italic; font-weight: 500; }
+.event-pick { position: relative; display: inline-flex; align-items: center; margin-right: auto; color: var(--text); }
+.event-pick .icon { position: absolute; left: .7rem; width: 1rem; height: 1rem; color: var(--accent); pointer-events: none; }
+.event-pick select { appearance: none; -webkit-appearance: none; font: inherit; font-size: .88rem; font-weight: 500; color: inherit; background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right .75rem center; border: 1px solid var(--line); border-radius: 999px; padding: .38rem 2rem .38rem 2.1rem; cursor: pointer; max-width: 100%; }
+.event-pick select:hover { border-color: var(--accent); }
+.event-pick select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .1rem .15rem; }
 nav a { display: inline-block; padding: .3rem .65rem; color: var(--text); text-decoration: none; font-size: .92rem; border-bottom: 2px solid transparent; }
 nav a:hover { color: var(--accent); }

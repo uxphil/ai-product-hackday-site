@@ -36,6 +36,8 @@ Open <http://localhost:8765>. Use the server rather than opening files directly:
 
 - Change text directly in the HTML file. Keep one `<h1>` per page.
 - Mark anything unconfirmed with `<span class="tbc">To be confirmed</span>` (or the `tbc-box` block). **Never invent venue, speaker, helper, signup or endorsement details.**
+- **Event picker.** The header shows which hackathon the event-specific pages are for (`site.js` adds it next to the brand; `venue.html` loads no script, so it has none). The list is `EVENTS` in `site/assets/site.js`, newest first, and the first is the default (28 Oct 2026 · Manchester). The choice is remembered in this browser, and links to `share.html` and `vote.html` carry it as `?event=<id>`. `vote.html` refuses to take picks if the chosen event isn't the one the Worker has open for voting. To add an event, put it at the top of `EVENTS`, run `python3 scripts/version-assets.py`, and create it in the demo control.
+- `vote.html` sits under “The day” in the navigation.
 - If you add, rename or remove a page, update the `<nav>` list **and** the mobile `fab-menu` list in **every** page. On phones the header keeps only a "Get ready" link (the `cta` item) and the rest sits in a floating Menu button at the bottom right, as on bonhard.ai. The check script fails if the navigation differs between pages or from the mobile menu.
 - The exact safety sentence is repeated on several pages. Search for `personal learning exercise` and change all copies together. The LBG laptop route (`route-work-laptop.html`) deliberately uses a different sentence about LBG’s normal rules.
 - Keep external links to official documentation and re-check them before the event (`--external` below).
