@@ -7,7 +7,7 @@
 <meta name="description" content="Vote for your favourite apps from the hackathon.">
 <title>Vote for favourites · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=863daa6f">
+<link rel="stylesheet" href="assets/style.css?v=7deb41c5">
 <script src="assets/site.js?v=b9ec382b"></script>
 </head>
 <body data-event-page>
@@ -95,7 +95,7 @@
       var tile = '<span class="tile" aria-hidden="true">' + esc(initials(e.project)) + '</span>';
       var peek = link
         ? '<a class="peek" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">' + tile +
-          (previewable(link) ? '<iframe src="' + esc(link) + '" loading="lazy" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer" tabindex="-1" title=""></iframe>' : '') + '</a>'
+          (previewable(link) ? '<iframe src="' + esc(link) + '" loading="lazy" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer" tabindex="-1" title="" inert></iframe>' : '') + '</a>'
         : '<span class="peek">' + tile + '</span>';
       return '<li class="vote-card" data-id="' + esc(e.id) + '" style="--h:' + (rank(e.id) % 360) + '">' + peek +
         '<span class="badge" aria-hidden="true"><svg class="icon" focusable="false"><use href="assets/icons.svg#i-heart"/></svg></span>' +
