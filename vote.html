@@ -19,6 +19,7 @@
 <main id="main">
 <div class="wrap">
 <section class="block first">
+<p class="eyebrow" id="event-name" hidden></p>
 <h1>Vote for your <em>favourites</em></h1>
 <p class="lead">Everything built on the day, in one place. Each card shows a live preview of the app. Open a few, then pick up to <span id="max">three</span> you loved. You can change your mind until voting closes.</p>
 <p class="muted">Shown in a random order, so nobody gets an advantage from the alphabet. One set of votes per device, on trust.</p>
@@ -53,7 +54,7 @@
   var KEY = 'hackday-vote';
   var list = document.getElementById('vote-list'), bar = document.getElementById('vote-bar');
   var send = document.getElementById('send'), status = document.getElementById('status'), find = document.getElementById('find');
-  var entries = [], max = 3, open = true;
+  var entries = [], max = 3, open = true, event = null;
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
@@ -136,7 +137,7 @@
 
   send.addEventListener('click', function () {
     send.disabled = true;
-    fetch(API + '/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ voter: state.voter, picks: state.picks }) })
+    fetch(API + '/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ voter: state.voter, picks: state.picks, event: event && event.id }) })
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res.ok) { setStatus('warn', '<strong>' + esc(res.message || 'That didn’t work.') + '</strong>'); return; }
@@ -151,6 +152,15 @@
   fetch(API + '/entries').then(function (r) { return r.json(); }).then(function (d) {
     if (!d.ok) throw new Error();
     open = d.open; max = d.maxPicks || 3;
+    // Which event this vote is for, so nobody votes in the wrong one. Picks are kept per event.
+    if (d.event) {
+      event = d.event;
+      var el = document.getElementById('event-name');
+      el.textContent = 'Voting for: ' + event.name + ', ' + new Date(event.held_on + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      el.hidden = false;
+      if (state.event && state.event !== event.id) { state.picks = []; state.sent = false; }
+      state.event = event.id;
+    }
     document.getElementById('max').textContent = words(max);
     entries = d.entries.slice().sort(function (x, y) { return rank(x.id) - rank(y.id); });
     var ids = entries.map(function (e) { return e.id; });
