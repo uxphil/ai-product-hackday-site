@@ -7,7 +7,7 @@
 <meta name="description" content="Vote for your favourite apps from the hackathon.">
 <title>Vote for favourites · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=3037908d">
+<link rel="stylesheet" href="assets/style.css?v=8b10421c">
 <script src="assets/site.js?v=b9ec382b"></script>
 </head>
 <body data-event-page>
@@ -95,7 +95,7 @@
       var tile = '<span class="tile" aria-hidden="true">' + esc(initials(e.project)) + '</span>';
       var peek = link
         ? '<a class="peek" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">' + tile +
-          (previewable(link) ? '<iframe src="' + esc(link) + '" loading="lazy" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer" tabindex="-1" title=""></iframe>' : '') + '</a>'
+          (previewable(link) ? '<iframe src="' + esc(link) + '" loading="lazy" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer" tabindex="-1" title="" inert></iframe>' : '') + '</a>'
         : '<span class="peek">' + tile + '</span>';
       return '<li class="vote-card" data-id="' + esc(e.id) + '" style="--h:' + (rank(e.id) % 360) + '">' + peek +
         '<span class="badge" aria-hidden="true"><svg class="icon" focusable="false"><use href="assets/icons.svg#i-heart"/></svg></span>' +
@@ -126,16 +126,6 @@
     document.getElementById('count').innerHTML = state.picks.length + ' <span>of ' + max + ' chosen' + (state.sent && !state.changed ? ' · votes sent ✓' : '') + '</span>';
     send.disabled = !open || !state.picks.length;
   }
-
-  // Some apps focus a button or field as soon as they load, which makes the browser scroll this page
-  // to their preview. Previews can't be clicked (the card's link takes the click), so a preview that
-  // has focus took it by itself: hand focus back and undo the jump.
-  var keepY = window.scrollY, heading = document.querySelector('h1');
-  heading.tabIndex = -1;
-  function stolen() { var a = document.activeElement; return a && a.tagName === 'IFRAME' && a.closest('.peek'); }
-  function giveBack() { heading.focus({ preventScroll: true }); window.scrollTo({ top: keepY, behavior: 'instant' }); }
-  window.addEventListener('scroll', function () { if (stolen()) giveBack(); else keepY = window.scrollY; }, { passive: true });
-  window.addEventListener('blur', function () { setTimeout(function () { if (stolen()) giveBack(); }, 0); });
 
   list.addEventListener('click', function (e) {
     var b = e.target.closest('.fav'); if (!b || b.disabled) return;
