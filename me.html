@@ -35,7 +35,12 @@
 
 <!-- The board -->
 <div id="board" hidden>
-<p class="lead">This is your board for the day. Tick each stop as you reach it, and call a helper whenever you’re stuck.</p>
+<div class="call" id="call" data-state="idle">
+<button class="call-btn" type="button" id="call-btn" aria-pressed="false" aria-describedby="call-text"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-hand"/></svg><span class="vh" id="call-label">Call a helper</span></button>
+<div id="call-text"><h2 id="call-title">Stuck? Call a helper</h2><p id="call-sub">Like the button above a plane seat. A helper sees your nickname, your stop and your note, and comes to you.</p></div>
+<div class="field" id="note-field"><label class="vh" for="note">What’s stuck? (optional)</label><input type="text" id="note" maxlength="140" placeholder="What’s stuck? (optional) e.g. GitHub says permission denied"></div>
+<div class="call-actions" id="call-actions" hidden><button class="btn small ghost" type="button" id="call-off">I’m sorted, put my hand down</button></div>
+</div>
 
 <div class="pass">
 <dl><dt>Passenger</dt><dd id="b-name"></dd><dt>Day job</dt><dd id="b-job"></dd></dl>
@@ -45,15 +50,8 @@
 <button class="btn small" type="button" id="copy-link"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-link"/></svg><span>Copy my link</span></button>
 <button class="btn small ghost" type="button" id="phone-btn" aria-expanded="false" aria-controls="phone"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-smartphone"/></svg>Open on my phone</button>
 </div>
-<p class="pass-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-bookmark"/></svg> <strong>Bookmark this page.</strong> It’s yours alone. Lost it? Open <strong>My day</strong> under The day and type your code.</p>
+<p class="pass-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-bookmark"/></svg> <strong>Bookmark this page.</strong> It’s yours alone. Lost it? Go to <strong>My day</strong> in the menu and type your code.</p>
 <div class="form-status" id="phone" hidden><p style="margin:0">On your phone, open <code id="phone-url"></code> and type <strong class="code" id="phone-code"></strong>. You’ll need the site password. Both devices then share this board.</p></div>
-
-<div class="call" id="call" data-state="idle">
-<button class="call-btn" type="button" id="call-btn" aria-pressed="false" aria-describedby="call-text"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-hand"/></svg><span class="vh" id="call-label">Call a helper</span></button>
-<div id="call-text"><h2 id="call-title">Stuck? Call a helper</h2><p id="call-sub">Like the button above a plane seat. A helper sees your nickname, your stop and your note, and comes to you.</p></div>
-<div class="field" id="note-field"><label class="vh" for="note">What’s stuck? (optional)</label><input type="text" id="note" maxlength="140" placeholder="What’s stuck? (optional) e.g. GitHub says permission denied"></div>
-<div class="call-actions" id="call-actions" hidden><button class="btn small ghost" type="button" id="call-off">I’m sorted, put my hand down</button></div>
-</div>
 
 <div class="flight">
 <div class="flight-head"><h2>Your <em>flight</em></h2><span class="phase" id="phase"></span></div>
@@ -123,7 +121,7 @@
     document.title = 'My day · AI Enabled Product Hackathon';
     var list = boards();
     $('boards').innerHTML = list.length ? '<p><strong>On this device</strong></p><ul class="boards">' + list.map(function (b) {
-      return '<li><a href="me.html#' + esc(b.code) + '"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-plane"/></svg><strong>' + esc(b.nickname) + '</strong><span>' + esc(b.event) + '</span></a></li>';
+      return '<li><a href="me.html#' + esc(b.code) + '"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-plane"/></svg><strong>' + esc(b.nickname) + '</strong><span>' + new Date(String(b.event).slice(0, 10) + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + '</span></a></li>';
     }).join('') + '</ul>' : '';
     if (message) { var f = $('find-form').querySelector('.field'); f.classList.add('bad'); f.querySelector('.msg').textContent = message; }
   }
