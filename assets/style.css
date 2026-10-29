@@ -607,6 +607,7 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .form .btn[disabled] { opacity: .6; cursor: progress; transform: none; }
 
 /* vote for favourites (vote.html) */
+h1[tabindex="-1"]:focus { outline: none; } /* vote.html takes focus back here from previews */
 .vote-find { margin: 1.5rem 0 0; }
 .vote-find input { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: .65rem 1.1rem; width: 100%; max-width: 24rem; box-sizing: border-box; }
 .vote-find input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
