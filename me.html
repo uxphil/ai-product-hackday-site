@@ -138,6 +138,7 @@
     code = normalise(location.hash);
     if (!code) {
       var list = boards(), here = list.filter(function (b) { return b.event === window.hackdayEvent; });
+      if (!here.length && list.length === 1) here = list;  // e.g. a test event that isn't in the event menu
       if (here.length === 1 && location.hash !== '#boards') { location.replace('#' + here[0].code); return; }
       return showFind();
     }

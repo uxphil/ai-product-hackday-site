@@ -76,9 +76,10 @@
     f.querySelector('.msg').textContent = text || '';
   }
 
-  // Already joined on this device? Offer the board first, so nobody gets two by mistake
-  var mine = boards().filter(function (b) { return b.event === window.hackdayEvent; });
-  if (mine.length) {
+  // Already joined this event on this device? Offer the board first, so nobody gets two by mistake
+  function offerBoards(eventId) {
+    var mine = boards().filter(function (b) { return b.event === eventId; });
+    if (!mine.length) return;
     var box = document.getElementById('already');
     box.innerHTML = '<div class="form-status"><p style="margin:0 0 .6rem"><strong>You’ve already joined on this device.</strong> Open your board, or join below as someone else (sharing a laptop is fine).</p>' +
       '<ul class="boards">' + mine.map(function (b) {
@@ -87,12 +88,13 @@
     box.hidden = false;
   }
 
-  // Which event is open for joining
+  // Which event is open for joining: the organiser opens one in the demo control, so it needn't be in the event menu
   fetch(API + '/').then(function (r) { return r.json(); }).then(function (d) {
     var label = document.getElementById('event-name'), j = d.joinEvent;
     if (j) {
       label.textContent = 'Joining: ' + j.name + ', ' + new Date(j.held_on + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
       label.hidden = false;
+      offerBoards(j.id);
     } else if (d.ok) {
       status.className = 'form-status';
       status.textContent = 'Joining isn’t open yet. It opens on the morning of the event.';
@@ -102,7 +104,7 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     fields.forEach(function (f) { setMsg(f, ''); });
-    var body = { event: window.hackdayEvent, website: document.getElementById('website').value };
+    var body = { website: document.getElementById('website').value };
     fields.forEach(function (f) { body[f] = document.getElementById(f).value.trim(); });
     var missing = fields.filter(function (f) { return !body[f]; });
     if (missing.length) {
