@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
+<title>Event summary · AI Enabled Product Hackathon</title>
+<link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/style.css?v=40151697">
+<script src="assets/site.js?v=b9ec382b"></script>
+</head>
+<body data-event-page>
+<header class="site-header" id="top"><div class="wrap bar">
+<a class="brand" href="index.html">ai product <span>hackday</span></a>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li class="cta has-sub"><a href="get-ready.html">Get ready</a><ul class="sub"><li><a href="hello-world.html">Warm-up</a></li><li><a href="themes.html">Themes</a></li><li><a href="theme-personal-website.html">Personal website</a></li><li><a href="theme-elf-help.html">Elf Help</a></li><li><a href="theme-mortgage-journey.html">Mortgage journey</a></li></ul></li><li class="has-sub"><a href="event.html">The day</a><ul class="sub"><li><a href="me.html">My day</a></li><li><a href="plan.html">Plan your product</a></li><li><a href="vote.html">Vote for favourites</a></li></ul></li><li><a href="stay-safe.html">Stay safe</a></li><li class="has-sub"><a href="help.html">Get help</a><ul class="sub"><li><a href="resources.html">Resources</a></li></ul></li></ul></nav>
+</div></header>
+<main id="main">
+<div class="wrap">
+<section class="block first sum-hero">
+<p class="eyebrow" id="sum-event">Event summary</p>
+<h1>The day in <em>review</em></h1>
+<p class="lead" id="sum-lead">Loading the summary…</p>
+<dl class="stats sum-stats" id="sum-stats" hidden></dl>
+</section>
+<div id="sum-body" hidden>
+
+<section class="block sum-round" id="round-ai" aria-labelledby="round-ai-h">
+<p class="sum-kicker">Round one</p>
+<h2 id="round-ai-h">The AI <em>judge</em></h2>
+<p class="muted sum-intro">Claude read every PRD and scored it out of 10 in seven categories, so out of 70 in all. It’s just for fun: the AI never saw the apps, and re-scoring the same PRD can move it by a few points.</p>
+<ol class="sum-board" id="ai-board" aria-live="polite"></ol>
+<div class="sum-actions"><button class="btn" type="button" id="ai-next"></button> <button class="btn ghost small" type="button" id="skip">Show everything</button></div>
+</section>
+
+<section class="block sum-round" id="round-people" aria-labelledby="round-people-h">
+<p class="sum-kicker">Round two</p>
+<h2 id="round-people-h">The <em>people</em></h2>
+<div class="sum-curtain" id="people-curtain">
+<p><strong>The AI has had its say.</strong> <span id="curtain-text">After the event, everyone voted for up to three favourites. Did they agree with the machine?</span></p>
+<button class="btn" type="button" id="people-go" disabled>Reveal the people’s choice</button>
+<p class="muted small" id="people-hint">Reveal the AI’s winner first.</p>
+</div>
+<div id="people-result" hidden>
+<p class="muted sum-intro" id="people-intro"></p>
+<ol class="sum-board people" id="people-board"></ol>
+<div class="sum-agree" id="agree"></div>
+</div>
+</section>
+
+<section class="block" aria-labelledby="prizes-h">
+<h2 id="prizes-h">The <em>prizes</em></h2>
+<p class="muted sum-intro">One prize per project, so the love gets spread. The category prizes go to the AI judge’s top score in each category; the people’s choice goes to the most votes.</p>
+<div class="sum-prizes" id="prizes"></div>
+</section>
+
+<section class="block" aria-labelledby="built-h">
+<h2 id="built-h">What got <em>built</em></h2>
+<p class="muted sum-intro">The kind of app each PRD describes, as the AI judge saw it.</p>
+<div class="sum-built" id="built"></div>
+</section>
+
+<section class="block" aria-labelledby="extras-h">
+<h2 id="extras-h">From the <em>day</em></h2>
+<div class="grid sum-soon" id="extras">
+<div class="card"><h3>Your feedback</h3><p>What you said about the day, from the feedback sheets.</p><span class="tbc">Coming soon</span></div>
+<div class="card"><h3>Photos</h3><p>A few pictures from Westminster House.</p><span class="tbc">Coming soon</span></div>
+<div class="card"><h3>The reel</h3><p>A short film of everything that got built.</p><span class="tbc">Coming soon</span></div>
+</div>
+</section>
+
+<section class="block" aria-labelledby="how-h">
+<h2 id="how-h" class="sum-small-h">How this was worked out</h2>
+<ul class="muted sum-how">
+<li><strong>Participants:</strong> <span id="how-people">people who took part</span>.</li>
+<li><strong>AI scores:</strong> complexity, creativity, breadth, clarity, focus, testability and usefulness, each out of 10, from the PRD only. Ties share a place.</li>
+<li><strong>People’s choice:</strong> each voter picked up to three favourites on the vote page, one set of votes per device, on trust.</li>
+<li><strong>What we show:</strong> first names and project names only. PRDs are never published. Asked not to be named? Your project appears without a name.</li>
+</ul>
+</section>
+</div>
+</div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 2 November 2026.</p>
+<p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page reads the summary from the organiser’s server and remembers in this browser how far you’ve revealed.</p>
+</div></footer>
+<div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Vote</span></button></div>
+
+<script>
+/* The event summary, from the organiser's Worker (GET /summary, worker/src/summary.js in the planning repository).
+   Round one reveals the AI judge's top five one place at a time; round two, the people's choice, unlocks once the
+   AI's winner is out. How far this browser has revealed is remembered here only, per event. */
+(function () {
+  var API = 'https://hackday-api.bonhard.ai';
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794
+    try { var q = new URLSearchParams(location.search).get('api'); if (q) sessionStorage.setItem('hackday-api', q); API = sessionStorage.getItem('hackday-api') || API; } catch (e) {}
+  }
+  var CAT = { complexity: 'Complexity', creativity: 'Creativity', breadth: 'Breadth', clarity: 'Clarity', focus: 'Focus', testability: 'Testability', usefulness: 'Usefulness' };
+  // Same prizes, order and rule as the demo control's Awards view (presenter/index.html)
+  var AWARDS = [
+    ['creativity', 'Most creative', 'The freshest idea or cleverest twist'],
+    ['complexity', 'Most ambitious', 'Biggest technical swing for one day'],
+    ['usefulness', 'Most useful', 'The one we’d actually use tomorrow'],
+    ['clarity', 'Sharpest PRD', 'Clearest user and problem'],
+    ['focus', 'Best scoped', 'Smallest useful release, bravest cuts'],
+    ['breadth', 'Widest reach', 'Covers the most of the journey'],
+    ['testability', 'Most testable', 'Acceptance checks you could run today']
+  ];
+  var TOP = 5;  // places revealed one by one
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function ordinal(n) { var s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+  var WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+  function word(n) { return n < WORDS.length ? WORDS[n] : String(n); }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function dateLabel(iso) { return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  function emoji(p) { return p.emoji || '✨'; }
+  function who(p) { return p.names ? '<span class="names">' + esc(p.names) + '</span>' : ''; }
+
+  var eventId = new URLSearchParams(location.search).get('event') || '';
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var data, aiRanked, peopleRanked, state = { ai: 0, people: false };
+  function key() { return 'hackday-summary:' + data.event.id; }
+  function save() { try { localStorage.setItem(key(), JSON.stringify(state)); } catch (e) {} }
+  function restore() { try { var s = JSON.parse(localStorage.getItem(key()) || 'null'); if (s) state = { ai: Math.min(+s.ai || 0, TOP), people: !!s.people }; } catch (e) {} }
+
+  // Standard competition ranking: equal scores share a place (1, 2, 2, 4)
+  function ranked(list, val) {
+    var sorted = list.slice().sort(function (a, b) { return val(b) - val(a) || a.project.localeCompare(b.project); });
+    sorted.forEach(function (p, i) { p._rank = i && val(p) === val(sorted[i - 1]) ? sorted[i - 1]._rank : i + 1; });
+    return sorted.map(function (p) { return { p: p, rank: p._rank, tie: sorted.filter(function (o) { return o._rank === p._rank; }).length > 1 }; });
+  }
+  function place(r) { return (r.tie ? 'Joint ' : '') + ordinal(r.rank); }
+  function rankCell(r) { return '<span class="rank' + (r.tie ? ' tie' : '') + '">' + (r.tie ? '<span class="joint">Joint </span>' : '') + ordinal(r.rank) + '</span>'; }
+  function best(p) {
+    var k = Object.keys(CAT).sort(function (a, b) { return p.scores[b] - p.scores[a]; })[0];
+    return 'Best at ' + CAT[k].toLowerCase() + ', ' + p.scores[k] + '/10';
+  }
+
+  fetch(API + '/summary' + (eventId ? '?event=' + encodeURIComponent(eventId) : ''))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d.event) $('sum-event').textContent = 'Event summary · ' + d.event.name + ' · ' + dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '');
+      if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
+      if (!d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
+      data = d; restore(); render();
+    })
+    .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });
+
+  function render() {
+    var n = data.numbers, P = data.projects;
+    var rated = P.filter(function (p) { return p.scores; });
+    var voted = P.filter(function (p) { return p.inVote; });
+    aiRanked = ranked(rated, function (p) { return p.total; });
+    peopleRanked = ranked(voted, function (p) { return p.votes; });
+
+    $('sum-lead').textContent = cap(word(n.participants)) + ' people, one day, ' + word(n.projects) + ' products planned and built with AI. Here’s how it went.';
+    var tiles = [[n.participants, 'participants'], [n.projects, 'projects shared'], [n.voters, n.voters === 1 ? 'person voted' : 'people voted']];
+    if (n.appsLive) tiles.push([n.appsLive, 'said their app went live']);
+    $('sum-stats').innerHTML = tiles.map(function (t) { return '<div class="stat"><dt class="vh">' + esc(t[1]) + '</dt><dd><b>' + t[0] + '</b><span aria-hidden="true">' + esc(t[1]) + '</span></dd></div>'; }).join('');
+    $('sum-stats').hidden = false;
+    $('how-people').textContent = n.participantsCounted ? 'everyone named on a shared project or who joined the day on the site, whichever is more' : 'the organiser’s head count on the day';
+    $('sum-body').hidden = false;
+
+    renderAi(); renderPeople(); renderPrizes(); renderBuilt();
+    $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
+    $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
+    $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
+  }
+
+  // ---- Round one: the AI judge. Places 6 and below show at once; the top five are revealed 5th, 4th … 1st.
+  function renderAi(justNow) {
+    var top = Math.min(TOP, aiRanked.length), shown = Math.min(state.ai, top);
+    if (!aiRanked.length) { $('ai-board').innerHTML = '<li class="empty">No PRDs were scored for this event.</li>'; $('ai-next').hidden = $('skip').hidden = true; return; }
+    $('ai-board').innerHTML = aiRanked.map(function (r, i) {
+      var p = r.p, hidden = i < top && i < top - shown;
+      if (hidden) return '<li class="row hidden' + (i < 3 ? ' podium' : '') + '"><span class="rank">' + ordinal(i + 1) + '</span><span class="what"><b>Still to be revealed</b></span><span class="score">?</span></li>';
+      var fresh = justNow && i === top - shown;
+      return '<li class="row' + (i < top ? ' top' : '') + (r.rank === 1 ? ' winner' : '') + (fresh ? ' fresh' : '') + '">' +
+        rankCell(r) +
+        '<span class="what"><span class="emoji" aria-hidden="true">' + esc(emoji(p)) + '</span><span><b>' + esc(p.project) + '</b>' + who(p) +
+        (i < top ? '<small>' + esc(best(p)) + '</small>' : '') + '</span></span>' +
+        '<span class="score"><span class="meter" aria-hidden="true"><i style="width:' + Math.round(p.total / 70 * 100) + '%"></i></span><b>' + p.total + '</b><small>/70</small></span></li>';
+    }).join('');
+    var left = top - shown;
+    $('ai-next').hidden = !left;
+    $('ai-next').textContent = left === 1 ? 'Reveal the AI’s winner' : 'Reveal ' + ordinal(left) + ' place';
+    $('skip').hidden = !left && state.people;
+    if (justNow && !left) celebrate($('ai-board').querySelector('.winner'));
+  }
+
+  // ---- Round two: the people's choice, once the AI's winner is out
+  function renderPeople(justNow) {
+    var aiDone = state.ai >= Math.min(TOP, aiRanked.length);
+    $('people-go').disabled = !aiDone;
+    $('people-hint').hidden = aiDone;
+    if (!state.people) { $('people-curtain').hidden = false; $('people-result').hidden = true; return; }
+    $('people-curtain').hidden = true; $('people-result').hidden = false;
+    $('skip').hidden = true;
+    var n = data.numbers, max = peopleRanked.length ? Math.max(1, peopleRanked[0].p.votes) : 1;
+    $('people-intro').textContent = n.voters ? cap(word(n.voters)) + (n.voters === 1 ? ' person' : ' people') + ' voted, picking up to three favourites each: ' + n.votes + ' votes in all.' : 'Nobody voted for this event.';
+    $('people-board').innerHTML = peopleRanked.filter(function (r) { return r.p.votes > 0; }).map(function (r, i) {
+      var p = r.p;
+      return '<li class="row' + (r.rank === 1 ? ' winner' : '') + (r.rank <= 3 ? ' top' : '') + '" style="--d:' + (i * 60) + 'ms">' +
+        rankCell(r) +
+        '<span class="what"><span class="emoji" aria-hidden="true">' + esc(emoji(p)) + '</span><span><b>' + esc(p.project) + '</b>' + who(p) + '</span></span>' +
+        '<span class="score"><span class="meter" aria-hidden="true"><i style="width:' + Math.round(p.votes / max * 100) + '%"></i></span><b>' + p.votes + '</b><small>' + (p.votes === 1 ? 'vote' : 'votes') + '</small></span></li>';
+    }).join('');
+    if (justNow && !reduce) $('people-board').classList.add('grow');
+    renderAgree();
+    if (justNow) celebrate($('people-board').querySelector('.winner'));
+  }
+
+  // ---- Did the AI agree? Each project in either top five, with both places
+  function renderAgree() {
+    if (!aiRanked.length || !peopleRanked.length || !data.numbers.votes) { $('agree').innerHTML = ''; return; }
+    var aiPlace = {}, pPlace = {};
+    aiRanked.forEach(function (r) { aiPlace[r.p.id] = r; });
+    peopleRanked.forEach(function (r) { pPlace[r.p.id] = r; });
+    var aiWin = aiRanked[0].p, pWin = peopleRanked[0].p, same = aiRanked[0].rank === 1 && pPlace[aiWin.id] && pPlace[aiWin.id].rank === 1;
+    var line = same ? 'They agreed: ' + esc(aiWin.project) + ' won both rounds.'
+      : 'They didn’t agree. The AI’s favourite, ' + esc(aiWin.project) + ', came ' + (pPlace[aiWin.id] && aiWin.votes ? place(pPlace[aiWin.id]).toLowerCase() : 'without a vote') + ' with the people' +
+        (aiPlace[pWin.id] ? ', and the people’s favourite, ' + esc(pWin.project) + ', was ' + place(aiPlace[pWin.id]).toLowerCase() + ' with the AI.' : '.');
+    var ids = [];
+    aiRanked.slice(0, TOP).concat(peopleRanked.slice(0, TOP)).forEach(function (r) { if (ids.indexOf(r.p.id) < 0 && (r.p.votes || aiPlace[r.p.id].rank <= TOP)) ids.push(r.p.id); });
+    var rows = ids.map(function (id) { return { a: aiPlace[id], v: pPlace[id] }; }).filter(function (x) { return x.a; })
+      .sort(function (x, y) { return x.a.rank - y.a.rank; });
+    $('agree').innerHTML = '<h3>Did the AI <em>agree</em>?</h3><p>' + line + '</p>' +
+      '<table class="sum-agree-table"><thead><tr><th scope="col">Project</th><th scope="col">AI judge</th><th scope="col">People</th></tr></thead><tbody>' +
+      rows.map(function (x) {
+        var p = x.a.p, v = x.v && p.votes ? x.v.rank : null, diff = v == null ? null : x.a.rank - v;
+        var chip = diff == null ? '' : diff > 0 ? '<span class="move up">▲ ' + diff + '</span>' : diff < 0 ? '<span class="move down">▼ ' + -diff + '</span>' : '<span class="move same">=</span>';
+        return '<tr><td><span aria-hidden="true">' + esc(emoji(p)) + '</span> ' + esc(p.project) + '</td><td>' + place(x.a) + '</td><td>' + (v == null ? '–' : place(x.v)) + ' ' + chip + '</td></tr>';
+      }).join('') + '</tbody></table><p class="sum-key">▲ the people placed it higher than the AI did. ▼ lower.</p>';
+  }
+
+  // ---- Prizes: one per project. The people's choice first, then the AI's categories.
+  function renderPrizes() {
+    if (!state.people) { $('prizes').innerHTML = '<p class="sum-locked">The prizes would give the game away. They appear here once both rounds are revealed.</p>'; return; }
+    var used = {}, cards = [];
+    var pTop = peopleRanked.filter(function (r) { return r.rank === 1 && r.p.votes > 0; });
+    if (pTop.length) {
+      pTop.forEach(function (r) { used[r.p.id] = true; });
+      cards.push({ title: 'People’s choice', why: 'Most votes from everyone who took part', list: pTop.map(function (r) { return r.p; }), stat: pTop[0].p.votes + (pTop[0].p.votes === 1 ? ' vote' : ' votes'), people: true });
+    }
+    var rated = aiRanked.map(function (r) { return r.p; });
+    AWARDS.forEach(function (a) {
+      var winner = rated.filter(function (p) { return !used[p.id]; }).sort(function (x, y) { return y.scores[a[0]] - x.scores[a[0]] || y.total - x.total; })[0];
+      if (!winner) return;
+      used[winner.id] = true;
+      cards.push({ title: a[1], why: a[2], list: [winner], stat: CAT[a[0]] + ' ' + winner.scores[a[0]] + '/10' });
+    });
+    $('prizes').innerHTML = cards.length ? cards.map(function (c) {
+      return '<article class="prize' + (c.people ? ' people' : '') + '"><h3>' + esc(c.title) + '</h3><p class="why">' + esc(c.why) + '</p>' +
+        c.list.map(function (p) { return '<p class="won"><span class="emoji" aria-hidden="true">' + esc(emoji(p)) + '</span><span><b>' + esc(p.project) + '</b>' + who(p) + '</span></p>'; }).join('') +
+        '<p class="stat-line">' + esc(c.stat) + '</p></article>';
+    }).join('') : '<p class="muted">No prizes: nothing was scored or voted for.</p>';
+  }
+
+  // ---- What got built: app types, most common first
+  function renderBuilt() {
+    var counts = {}, rated = data.projects.filter(function (p) { return p.appType; });
+    rated.forEach(function (p) { counts[p.appType] = (counts[p.appType] || 0) + 1; });
+    var rows = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || a.localeCompare(b); });
+    var max = rows.length ? counts[rows[0]] : 1;
+    $('built').innerHTML = rows.length ? '<ul class="sum-bars">' + rows.map(function (k) {
+      var eg = rated.filter(function (p) { return p.appType === k; }).map(function (p) { return p.project; });
+      return '<li><span class="label">' + esc(k) + '<small>' + esc(eg.slice(0, 3).join(', ') + (eg.length > 3 ? ' and ' + (eg.length - 3) + ' more' : '')) + '</small></span>' +
+        '<span class="meter" aria-hidden="true"><i style="width:' + Math.round(counts[k] / max * 100) + '%"></i></span><b>' + counts[k] + '</b></li>';
+    }).join('') + '</ul>' : '<p class="muted">Nothing was scored, so there’s nothing to sort.</p>';
+  }
+
+  function celebrate(el) {
+    if (!el || reduce) return;
+    el.classList.remove('cheer'); void el.offsetWidth; el.classList.add('cheer');
+  }
+})();
+</script>
+</body>
+</html>

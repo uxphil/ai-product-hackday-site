@@ -726,3 +726,98 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .find-code input { flex: 1 1 12rem; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
 .pass-note .icon { width: 1rem; height: 1rem; vertical-align: -.15em; color: var(--accent); }
 .call-actions[hidden], .call .field[hidden], #board[hidden], #find[hidden] { display: none; }
+
+/* event summary (summary.html): two rounds of leaderboards, prizes and what got built */
+:root { --people: #b8432f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --people: #e5846f; } }
+.sum-stats { margin-top: 2rem; }
+.sum-stats dd { margin: 0; }
+.sum-kicker { font-size: .8rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .3rem; }
+#round-people .sum-kicker { color: var(--people); }
+.sum-intro { max-width: 40rem; margin-top: -.3rem; }
+.sum-board { list-style: none; margin: 1.5rem 0 1rem; padding: 0; border-top: 1px solid var(--line); }
+.sum-board .row { display: grid; grid-template-columns: 5.5rem 1fr minmax(8rem, 14rem); align-items: center; gap: 1rem; padding: .7rem .2rem; border-bottom: 1px solid var(--line); }
+.sum-board .rank { color: var(--muted); font-size: .95rem; font-variant-numeric: tabular-nums; }
+.sum-board .what { display: flex; align-items: center; gap: .8rem; min-width: 0; }
+.sum-board .what > span:last-child { min-width: 0; }
+.sum-board .what b { font-weight: 600; }
+.sum-board .names { color: var(--muted); margin-left: .5rem; }
+.sum-board .what small { display: block; color: var(--muted); font-size: .88rem; }
+.sum-board .emoji { font-size: 1.5rem; line-height: 1; flex: none; width: 2rem; text-align: center; }
+.sum-board .score { display: flex; align-items: center; gap: .5rem; justify-content: flex-end; font-variant-numeric: tabular-nums; }
+.sum-board .score b { font-weight: 600; min-width: 1.6rem; text-align: right; }
+.sum-board .score small { color: var(--muted); font-size: .85rem; min-width: 2.4rem; }
+.meter { flex: 1; height: .45rem; border-radius: 999px; background: var(--surface-2); overflow: hidden; max-width: 8rem; }
+.meter i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.sum-board.people .meter i { background: var(--people); }
+.sum-board .top { padding-top: 1rem; padding-bottom: 1rem; }
+.sum-board .top .what b { font-size: 1.15rem; }
+.sum-board .top .emoji { font-size: 2rem; width: 2.6rem; }
+.sum-board .hidden .what b { color: var(--muted); font-weight: 400; font-style: italic; }
+.sum-board .hidden .score { color: var(--muted); font-size: 1.3rem; padding-right: 2.4rem; }
+.sum-board .hidden { background: repeating-linear-gradient(135deg, transparent 0 10px, var(--accent-soft) 10px 20px); }
+.sum-board .winner { background: linear-gradient(90deg, var(--accent-soft), transparent 70%); border-radius: var(--radius); border-bottom-color: transparent; }
+.sum-board.people .winner { background: linear-gradient(90deg, color-mix(in srgb, var(--people) 14%, transparent), transparent 70%); }
+.sum-board .winner .rank { color: var(--accent); font-weight: 600; }
+.sum-board.people .winner .rank { color: var(--people); }
+.sum-board ~ .sum-actions [hidden], .sum-curtain [hidden] { display: none; }
+.sum-locked { grid-column: 1 / -1; margin: 0; padding: 1.4rem 1.6rem; border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted); }
+.sum-actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.sum-curtain { margin-top: 1.5rem; padding: 2rem 1.6rem; border: 1px dashed var(--people); border-radius: var(--radius); background: color-mix(in srgb, var(--people) 7%, transparent); text-align: center; }
+.sum-curtain p { max-width: 34rem; margin: 0 auto 1.2rem; }
+.sum-curtain .btn { background: var(--people); border-color: var(--people); color: #fff; }
+.sum-curtain .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.sum-curtain .small { font-size: .9rem; margin: .8rem 0 0; }
+.sum-agree { margin-top: 2.2rem; }
+.sum-agree h3 { font-size: 1.4rem; font-weight: 500; margin: 0 0 .4rem; }
+.sum-agree h3 em { font-style: italic; color: var(--people); font-weight: 400; }
+.sum-agree > p { color: var(--muted); max-width: 40rem; }
+.sum-agree-table { width: 100%; max-width: 40rem; border-collapse: collapse; font-size: .98rem; }
+.sum-agree-table th { text-align: left; font-size: .82rem; font-weight: 600; color: var(--muted); padding: .4rem .5rem; border-bottom: 1px solid var(--line); }
+.sum-agree-table td { padding: .55rem .5rem; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.sum-agree-table td:not(:first-child), .sum-agree-table th:not(:first-child) { white-space: nowrap; }
+.sum-key { font-size: .85rem; color: var(--muted); margin-top: .6rem; }
+.move { display: inline-block; font-size: .78rem; font-weight: 600; padding: .05rem .45rem; border-radius: 999px; margin-left: .3rem; }
+.move.up { color: var(--ok); background: color-mix(in srgb, var(--ok) 13%, transparent); }
+.move.down { color: var(--people); background: color-mix(in srgb, var(--people) 13%, transparent); }
+.move.same { color: var(--muted); background: var(--surface-2); }
+.sum-prizes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); margin-top: 1.5rem; }
+.prize { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem 1.3rem; display: flex; flex-direction: column; }
+.prize h3 { font-size: 1.2rem; font-weight: 600; margin: 0; }
+.prize .why { color: var(--muted); font-size: .92rem; margin: .2rem 0 1rem; }
+.prize .won { display: flex; gap: .7rem; align-items: center; margin: 0 0 .4rem; line-height: 1.3; }
+.prize .won .emoji { font-size: 1.9rem; line-height: 1; }
+.prize .won .names { display: block; color: var(--muted); font-size: .92rem; }
+.prize .stat-line { margin: auto 0 0; padding-top: .8rem; font-size: .85rem; color: var(--accent); font-weight: 600; }
+.prize.people { border-color: var(--people); background: linear-gradient(180deg, color-mix(in srgb, var(--people) 10%, var(--surface)), var(--surface)); }
+.prize.people .stat-line { color: var(--people); }
+.sum-bars { list-style: none; margin: 1.5rem 0 0; padding: 0; max-width: 46rem; }
+.sum-bars li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(5rem, 12rem) 1.6rem; align-items: center; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--line); }
+.sum-bars .label small { display: block; color: var(--muted); font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sum-bars .meter { max-width: none; }
+.sum-bars b { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.sum-soon .card h3 { margin: 0 0 .2rem; font-size: 1.15rem; font-weight: 600; }
+.sum-soon .card .tbc { align-self: flex-start; margin-top: .8rem; }
+.sum-small-h { font-size: 1.3rem; }
+.sum-how { padding-left: 1.1rem; font-size: .95rem; max-width: 46rem; }
+.sum-how li { margin: .35rem 0; }
+.sum-how strong { color: var(--text); font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) {
+  .sum-board .fresh { animation: sum-in .6s cubic-bezier(.2, 1.4, .4, 1) both; }
+  .sum-board.grow .row { animation: sum-in .5s ease both; animation-delay: var(--d); }
+  .sum-board.grow .meter i { animation: sum-bar .9s ease-out both; animation-delay: var(--d); }
+  .sum-board .cheer .emoji { animation: sum-cheer 1s ease .2s 2; }
+}
+@keyframes sum-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes sum-bar { from { width: 0; } }
+@keyframes sum-cheer { 0%, 100% { transform: none; } 30% { transform: scale(1.35) rotate(-8deg); } 60% { transform: scale(1.2) rotate(6deg); } }
+@media (max-width: 640px) {
+  .sum-board .row { grid-template-columns: 3.6rem 1fr auto; gap: .6rem; }
+  .sum-board .rank { font-size: .85rem; }
+  .sum-board .rank .joint { display: none; }
+  .sum-board .rank.tie::before { content: '='; }
+  .sum-board .meter { display: none; }
+  .sum-board .names { display: block; margin-left: 0; font-size: .9rem; }
+  .sum-board .hidden .score { padding-right: 1rem; }
+  .sum-bars li { grid-template-columns: minmax(0, 1fr) 4rem 1.4rem; gap: .6rem; }
+}
