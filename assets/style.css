@@ -796,8 +796,6 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .sum-bars .label small { display: block; color: var(--muted); font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sum-bars .meter { max-width: none; }
 .sum-bars b { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
-.sum-soon .card h3 { margin: 0 0 .2rem; font-size: 1.15rem; font-weight: 600; }
-.sum-soon .card .tbc { align-self: flex-start; margin-top: .8rem; }
 .sum-small-h { font-size: 1.3rem; }
 .sum-how { padding-left: 1.1rem; font-size: .95rem; max-width: 46rem; }
 .sum-how li { margin: .35rem 0; }
@@ -820,4 +818,31 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
   .sum-board .names { display: block; margin-left: 0; font-size: .9rem; }
   .sum-board .hidden .score { padding-right: 1rem; }
   .sum-bars li { grid-template-columns: minmax(0, 1fr) 4rem 1.4rem; gap: .6rem; }
+}
+.sum-h3 { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 .8rem; }
+.sum-soon-line { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; padding: 1rem 1.2rem; border: 1px dashed var(--line); border-radius: var(--radius); }
+.sum-soon-line p { margin: 0; color: var(--muted); }
+.sum-takedown { margin-top: 1.5rem; font-size: .9rem; }
+.sum-gallery { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+.sum-gallery.photos { display: block; columns: 3 16rem; column-gap: .7rem; }
+.sum-gallery .pic { display: block; width: 100%; padding: 0; border: 0; border-radius: 12px; overflow: hidden; background: var(--surface-2); cursor: zoom-in; margin: 0 0 .7rem; break-inside: avoid; }
+.sum-gallery.feedback .pic { aspect-ratio: 3 / 4; margin: 0; }
+.sum-gallery img { display: block; width: 100%; height: auto; transition: transform .3s ease; }
+.sum-gallery.feedback img { height: 100%; object-fit: cover; object-position: top; }
+.sum-gallery .pic:hover img { transform: scale(1.03); }
+.sum-lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; overflow: visible; }
+.sum-lightbox::backdrop { background: rgba(10, 12, 9, .88); }
+.sum-lightbox img { display: block; max-width: 96vw; max-height: 86vh; width: auto; height: auto; border-radius: 10px; }
+.sum-lightbox p { color: #e8ebe4; text-align: center; margin: .6rem 0 0; font-size: .95rem; }
+.lb-btn { position: fixed; width: 2.8rem; height: 2.8rem; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .14); color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.lb-btn:hover, .lb-btn:focus-visible { background: rgba(255, 255, 255, .28); }
+.lb-btn[hidden] { display: none; }
+.lb-close { top: 1rem; right: 1rem; font-size: 1.2rem; }
+.lb-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 1rem; top: 50%; transform: translateY(-50%); }
+@media (max-width: 640px) {
+  .sum-gallery { grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .sum-gallery.photos { columns: 2; column-gap: .5rem; }
+  .sum-gallery .pic { margin-bottom: .5rem; }
+  .lb-prev, .lb-next { top: auto; bottom: 1rem; transform: none; }
 }

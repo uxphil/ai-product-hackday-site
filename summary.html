@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=40151697">
+<link rel="stylesheet" href="assets/style.css?v=d3d5ac7a">
 <script src="assets/site.js?v=b9ec382b"></script>
 </head>
 <body data-event-page>
@@ -62,11 +62,20 @@
 
 <section class="block" aria-labelledby="extras-h">
 <h2 id="extras-h">From the <em>day</em></h2>
-<div class="grid sum-soon" id="extras">
-<div class="card"><h3>Your feedback</h3><p>What you said about the day, from the feedback sheets.</p><span class="tbc">Coming soon</span></div>
-<div class="card"><h3>Photos</h3><p>A few pictures from Westminster House.</p><span class="tbc">Coming soon</span></div>
-<div class="card"><h3>The reel</h3><p>A short film of everything that got built.</p><span class="tbc">Coming soon</span></div>
-</div>
+<h3 class="sum-h3">Your feedback</h3>
+<div id="feedback"></div>
+<h3 class="sum-h3">Photos</h3>
+<div id="photos"></div>
+<h3 class="sum-h3">The reel</h3>
+<div class="sum-soon-line"><p>A short film of everything that got built.</p><span class="tbc">Coming soon</span></div>
+<p class="muted small sum-takedown">In a photo and would rather not be? Tell Phil and it comes down.</p>
+<dialog class="sum-lightbox" id="lightbox" aria-label="Image">
+<img id="lb-img" alt="">
+<p id="lb-cap"></p>
+<button type="button" class="lb-btn lb-close" id="lb-close" aria-label="Close">✕</button>
+<button type="button" class="lb-btn lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
+<button type="button" class="lb-btn lb-next" id="lb-next" aria-label="Next image">›</button>
+</dialog>
 </section>
 
 <section class="block" aria-labelledby="how-h">
@@ -144,6 +153,7 @@
       if (d.event) $('sum-event').textContent = 'Event summary · ' + d.event.name + ' · ' + dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '');
       if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
       if (!d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
+      ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
       data = d; restore(); render();
     })
     .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });
@@ -163,7 +173,7 @@
     $('how-people').textContent = n.participantsCounted ? 'everyone named on a shared project or who joined the day on the site, whichever is more' : 'the organiser’s head count on the day';
     $('sum-body').hidden = false;
 
-    renderAi(); renderPeople(); renderPrizes(); renderBuilt();
+    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderPictures();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
@@ -270,6 +280,37 @@
         '<span class="meter" aria-hidden="true"><i style="width:' + Math.round(counts[k] / max * 100) + '%"></i></span><b>' + counts[k] + '</b></li>';
     }).join('') + '</ul>' : '<p class="muted">Nothing was scored, so there’s nothing to sort.</p>';
   }
+
+  // ---- Feedback sheets and photos, with a lightbox. Images come from the Worker, only while the summary is published.
+  var shown = [], at = 0;
+  function renderPictures() {
+    [['feedback', 'What you said about the day, from the feedback sheets.', 'Feedback sheet'], ['photos', 'A few pictures from the day.', 'Photo from the day']].forEach(function (x) {
+      var list = data[x[0]] || [];
+      $(x[0]).innerHTML = list.length ? '<div class="sum-gallery ' + x[0] + '">' + list.map(function (m, i) {
+        var alt = m.caption || x[2] + ' ' + (i + 1);
+        return '<button type="button" class="pic" data-set="' + x[0] + '" data-i="' + i + '" aria-label="Open ' + esc(alt) + '"><img src="' + esc(m.url) + '" alt="' + esc(alt) + '" loading="lazy"' +
+          (m.width && m.height ? ' width="' + m.width + '" height="' + m.height + '"' : '') + '></button>';
+      }).join('') + '</div>' : '<div class="sum-soon-line"><p>' + esc(x[1]) + '</p><span class="tbc">Coming soon</span></div>';
+    });
+  }
+  function openPic(set, i) {
+    shown = data[set]; at = i;
+    var m = shown[at];
+    $('lb-img').src = m.url; $('lb-img').alt = m.caption || '';
+    $('lb-cap').textContent = m.caption || (at + 1) + ' of ' + shown.length;
+    $('lb-prev').hidden = $('lb-next').hidden = shown.length < 2;
+    if (!$('lightbox').open) $('lightbox').showModal();
+  }
+  document.addEventListener('click', function (e) {
+    var p = e.target.closest('.pic');
+    if (p) openPic(p.dataset.set, +p.dataset.i);
+  });
+  function step(d) { openPic(shown === data.feedback ? 'feedback' : 'photos', (at + d + shown.length) % shown.length); }
+  $('lb-close').onclick = function () { $('lightbox').close(); };
+  $('lb-prev').onclick = function () { step(-1); };
+  $('lb-next').onclick = function () { step(1); };
+  $('lightbox').addEventListener('click', function (e) { if (e.target === this) this.close(); });
+  $('lightbox').addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
 
   function celebrate(el) {
     if (!el || reduce) return;
