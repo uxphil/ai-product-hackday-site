@@ -7,7 +7,7 @@
 <meta name="description" content="A short hype reel for the AI Enabled Product Hackathon: what’s coming up, or how the day went.">
 <title>The reel · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=5f1109a3">
+<link rel="stylesheet" href="assets/style.css?v=499f14ad">
 <script src="assets/site.js?v=2f1ed5d7"></script>
 </head>
 <body data-event-page>
@@ -64,6 +64,9 @@
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794
     try { var q = new URLSearchParams(location.search).get('api'); if (q) sessionStorage.setItem('hackday-api', q); API = sessionStorage.getItem('hackday-api') || API; } catch (e) {}
   }
+  // In the demo control's summary preview (/preview/reel.html, behind Access) the page sends the draft over postMessage
+  var PREVIEW = /^\/preview\//.test(location.pathname);
+  if (PREVIEW) API = '';
   var SITE = 'hackday.bonhard.ai';
   var CAT = { complexity: 'Complexity', creativity: 'Creativity', breadth: 'Breadth', clarity: 'Clarity', focus: 'Focus', testability: 'Testability', usefulness: 'Usefulness' };
   // Same prizes, order and rule as summary.html and the demo control's Awards view
@@ -219,8 +222,8 @@
         ctx.globalAlpha = 1;
       } }
     ];
-    // The briefs and talks go after the seven moves, before the numbers
-    list.splice.apply(list, [3, 0].concat(dayScenes(day || {}, { schedule: false }).reverse()));
+    // The briefs go after the seven moves, before the numbers
+    list.splice.apply(list, [3, 0].concat(briefScenes(day || {})));
     if (last) list.push({ d: 4, say: 'Last time: ' + last.numbers.participants + ' people, ' + last.numbers.projects + ' products shared' + (last.numbers.appsLive ? ', ' + last.numbers.appsLive + ' apps went live' : '') + '.', draw: function (t, d) {
       var a = inout(t, d), n = last.numbers;
       ctx.globalAlpha = a * fadeIn(t); kicker('Last time, in ' + (last.event.location || 'one room'), 300, 1);
@@ -259,37 +262,9 @@
     return list;
   }
 
-  // ---------- from the day: the timetable, talks and themes in assets/events/<id>.json (any of them can be left out) ----------
-  function dayScenes(day, which) {
+  // ---------- the briefs, from assets/events/<id>.json (optional) ----------
+  function briefScenes(day) {
     var list = [];
-    if (which.schedule && day.schedule && day.schedule.length) list.push({ d: 4.6, say: 'The day: ' + day.schedule.map(function (r) { return r[0] + ' ' + r[1]; }).join(', ') + '.', draw: function (t, d) {
-      var a = inout(t, d), rows = day.schedule.slice(0, 8), rh = Math.min(84, 600 / rows.length), on = Math.min(rows.length - 1, Math.floor((t - 0.5) / (3.2 / rows.length)));
-      ctx.globalAlpha = a * fadeIn(t);
-      line([['The ', {}], ['day', { italic: true, weight: 400, color: C.accent }]], PAD, 230 + rise(t), { size: 88 });
-      ctx.fillStyle = C.line; ctx.fillRect(PAD + 170, 300, 3, rh * rows.length - 20);
-      rows.forEach(function (r, i) {
-        var y = 300 + i * rh, lit = i <= on;
-        ctx.globalAlpha = a * fadeIn(t, 0.2 + i * 0.06);
-        text(r[0], PAD, y + rh * 0.5, { size: 32, weight: 600, color: lit ? C.accent : C.muted });
-        ctx.fillStyle = lit ? C.accent : C.surface; ctx.beginPath(); ctx.arc(PAD + 171.5, y + rh * 0.5 - 10, i === on ? 13 : 9, 0, Math.PI * 2); ctx.fill();
-        text(clip(r[1], S - PAD * 2 - 220, 36, 500), PAD + 215, y + rh * 0.5, { size: i === on ? 38 : 34, weight: i === on ? 600 : 500, color: lit ? C.text : C.muted });
-      });
-      ctx.globalAlpha = 1;
-    } });
-    if (day.talks && day.talks.length) list.push({ d: 4.4, say: 'Short talks: ' + day.talks.map(function (k) { return k.title + (k.by ? ', ' + k.by : ''); }).join('; ') + '.', draw: function (t, d) {
-      var a = inout(t, d), rows = day.talks.slice(0, 4), rh = Math.min(150, 600 / rows.length);
-      ctx.globalAlpha = a * fadeIn(t); kicker(rows.length === 1 ? 'One short talk' : rows.length + ' short talks', 210, 1);
-      line([['Ideas from the ', {}], ['stage', { italic: true, weight: 400, color: C.accent }]], PAD, 300 + rise(t), { size: 84 });
-      rows.forEach(function (k, i) {
-        var y = 370 + i * rh, delay = 0.4 + i * 0.35;
-        ctx.globalAlpha = a * fadeIn(t, delay);
-        ctx.fillStyle = C.surface; rrect(PAD, y + rise(t, delay), S - PAD * 2, rh - 22, 20); ctx.fill();
-        ctx.fillStyle = C.accent; rrect(PAD, y + rise(t, delay), 8, rh - 22, 4); ctx.fill();
-        text(clip(k.title, S - PAD * 2 - 80, 38, 600), PAD + 44, y + rh * 0.42 + rise(t, delay), { size: 38, weight: 600 });
-        if (k.by) text(k.by, PAD + 44, y + rh * 0.42 + 46 + rise(t, delay), { size: 28, weight: 400, color: C.muted });
-      });
-      ctx.globalAlpha = 1;
-    } });
     if (day.themes && day.themes.length) list.push({ d: 4.2, say: 'The briefs: ' + day.themes.map(function (k) { return k.name; }).join(', ') + '.', draw: function (t, d) {
       var a = inout(t, d), cards = day.themes.slice(0, 4), cw = (S - PAD * 2 - 32) / 2, ch = 290;
       ctx.globalAlpha = a * fadeIn(t);
@@ -312,69 +287,103 @@
   }
 
   // ---------- after the day: the published summary ----------
-  function afterScenes(d, photos, day) {
-    var n = d.numbers, P = d.projects;
+  // The words can be written by the AI in the preview page (content.reel.words, see worker/src/reel.js); anything it
+  // leaves out uses these. *Stars* mark the word shown in green italics.
+  function reelWords(d) {
+    var n = d.numbers, w = (d.reel && d.reel.words) || {};
+    var def = {
+      opener: { kicker: 'The day in review', title: n.projects + (n.projects === 1 ? ' app.' : ' apps.') + ' *One day.*', line: dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '') },
+      built: 'What got *built*', spotlight: 'Quick look', judge: 'The AI *judge*', people: 'The *people* chose', prizes: 'The *prizes*',
+      photos: 'From the *day*', numbers: 'One *day*.', closing: { title: 'Thank you for *building*.', line: 'The full summary is at ' + SITE }, featured: []
+    };
+    var pick = function (a, b) { return typeof a === 'string' && a.trim() ? a.trim() : b; };
+    return {
+      opener: { kicker: pick((w.opener || {}).kicker, def.opener.kicker), title: pick((w.opener || {}).title, def.opener.title), line: pick((w.opener || {}).line, def.opener.line) },
+      built: pick(w.built, def.built), spotlight: pick(w.spotlight, def.spotlight), judge: pick(w.judge, def.judge), people: pick(w.people, def.people),
+      prizes: pick(w.prizes, def.prizes), photos: pick(w.photos, def.photos), numbers: pick(w.numbers, def.numbers),
+      closing: { title: pick((w.closing || {}).title, def.closing.title), line: pick((w.closing || {}).line, def.closing.line) },
+      featured: Array.isArray(w.featured) ? w.featured : []
+    };
+  }
+  function marked(str) {  // 'What got *built*' -> segments for line()
+    return String(str).split('*').map(function (part, i) { return [part, i % 2 ? { italic: true, weight: 400, color: C.accent } : {}]; }).filter(function (s) { return s[0]; });
+  }
+  function plain(str) { return String(str).replace(/\*/g, ''); }
+  function heading(str, y, t, size) {
+    var segs = marked(str), sz = fitSize(plain(str), S - PAD * 2, size || 88, 500);
+    line(segs, PAD, y + rise(t), { size: sz });
+  }
+
+  function afterScenes(d, photos) {
+    var n = d.numbers, P = d.projects, W = reelWords(d);
     var aiRanked = ranked(P.filter(function (p) { return p.scores; }), function (p) { return p.total; });
     var peopleRanked = ranked(P.filter(function (p) { return p.inVote && p.votes > 0; }), function (p) { return p.votes; });
-    var when = dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '');
     var list = [];
 
-    list.push({ d: 3.6, mood: 'calm', say: 'The day in review: ' + d.event.name + ', ' + when + '.', draw: function (t, dd) {
-      var a = inout(t, dd);
-      ctx.globalAlpha = a * fadeIn(t); kicker('The day in review', 360, 1);
-      ctx.globalAlpha = a * fadeIn(t, 0.2);
-      line([['AI Enabled', {}]], PAD, 500 + rise(t, 0.2), { size: 104 });
-      line([['Product ', {}], ['Hackathon', { italic: true, weight: 400, color: C.accent }]], PAD, 615 + rise(t, 0.2), { size: 104 });
-      ctx.globalAlpha = a * fadeIn(t, 0.9);
-      text(when, PAD, 730 + rise(t, 0.9), { size: 40, weight: 400, color: C.muted });
+    // 1. Straight in: how many apps, in one day
+    list.push({ d: 2.8, say: plain(W.opener.title) + ' ' + plain(W.opener.kicker) + ', ' + W.opener.line + '.', draw: function (t, dd) {
+      var a = inout(t, dd), k = clamp(t / 0.55);
+      ctx.globalAlpha = a * fadeIn(t); kicker(plain(W.opener.kicker), 380, 1);
+      ctx.save(); ctx.globalAlpha = a * Math.min(1, k * 1.6);
+      var sc = reduce ? 1 : 0.86 + 0.14 * pop(k); ctx.translate(PAD, 540); ctx.scale(sc, sc);
+      var lines = W.opener.title.split(/(?<=[.!?])\s+/).slice(0, 2);  // one sentence a line
+      lines.forEach(function (l, i) { line(marked(l), 0, i * 140, { size: fitSize(plain(l), S - PAD * 2, 140, 500) }); });
+      ctx.restore();
+      ctx.globalAlpha = a * fadeIn(t, 0.7);
+      text(W.opener.line, PAD, 540 + lines.length * 140 + 10, { size: 36, weight: 400, color: C.muted });
       ctx.globalAlpha = 1;
     } });
 
-    var tiles = [[n.participants, 'people'], [n.projects, 'products shared'], [n.appsLive, 'apps went live'], [n.voters, 'people voted']].filter(function (x) { return x[0]; });
-    list.push({ d: 4.6, say: 'One day: ' + tiles.map(function (x) { return x[0] + ' ' + x[1]; }).join(', ') + '.', draw: function (t, dd) {
-      var a = inout(t, dd);
-      ctx.globalAlpha = a * fadeIn(t);
-      line([['One ', {}], ['day', { italic: true, weight: 400, color: C.accent }], ['.', {}]], PAD, 250 + rise(t), { size: 96 });
-      tiles.forEach(function (x, i) {
-        var col = i % 2, row = Math.floor(i / 2), X = PAD + col * 452, Y = 340 + row * 290, delay = 0.35 + i * 0.25;
-        ctx.globalAlpha = a * fadeIn(t, delay);
-        ctx.fillStyle = C.line; ctx.fillRect(X, Y, 400, 2);
-        text(String(Math.round(x[0] * ease((t - delay) / 1.2))), X, Y + 150 + rise(t, delay), { size: 150, weight: 500, color: i ? C.text : C.accent });
-        text(x[1], X, Y + 205, { size: 36, weight: 400, color: C.muted });
-      });
-      ctx.globalAlpha = 1;
-    } });
-
-    list = list.concat(dayScenes(day || {}, { schedule: true }));
-
+    // 2. Every app, popping in
     if (P.length) {
       var shown = P.slice(0, 12), more = P.length - shown.length;
-      list.push({ d: 5, say: 'What got built: ' + P.map(function (p) { return p.project; }).join(', ') + '.', draw: function (t, dd) {
+      list.push({ d: 4.4, say: plain(W.built) + ': ' + P.map(function (p) { return p.project; }).join(', ') + '.', draw: function (t, dd) {
         var a = inout(t, dd), cols = 3, cw = (S - PAD * 2) / cols, rows = Math.ceil(shown.length / cols), rh = Math.min(170, 640 / rows);
-        ctx.globalAlpha = a * fadeIn(t);
-        line([['What got ', {}], ['built', { italic: true, weight: 400, color: C.accent }]], PAD, 230 + rise(t), { size: 88 });
+        ctx.globalAlpha = a * fadeIn(t); heading(W.built, 230, t);
         shown.forEach(function (p, i) {
-          var x = PAD + (i % cols) * cw + cw / 2, y = 300 + Math.floor(i / cols) * rh, delay = 0.4 + i * 0.12, k = clamp((t - delay) / 0.45);
+          var x = PAD + (i % cols) * cw + cw / 2, y = 300 + Math.floor(i / cols) * rh, delay = 0.25 + i * 0.09, k = clamp((t - delay) / 0.4);
           if (k <= 0) return;
           ctx.globalAlpha = a * Math.min(1, k * 2);
           emojiAt(emoji(p), x, y + rh * 0.32, Math.min(76, rh * 0.48), pop(k));
           text(clip(p.project, cw - 24, 28, 500), x, y + rh * 0.78, { size: 28, weight: 500, align: 'center' });
         });
-        if (more > 0) { ctx.globalAlpha = a * fadeIn(t, 2.2); text('and ' + more + ' more', S / 2, 960, { size: 30, color: C.muted, align: 'center' }); }
+        if (more > 0) { ctx.globalAlpha = a * fadeIn(t, 1.6); text('and ' + more + ' more', S / 2, 960, { size: 30, color: C.muted, align: 'center' }); }
+        ctx.globalAlpha = 1;
+      } });
+
+      // 3. Quick-fire spotlight: one app at a time, the AI's picks first, then the highest scores
+      var byId = {}; P.forEach(function (p) { byId[p.id] = p; });
+      var featured = W.featured.map(function (id) { return byId[id]; }).filter(Boolean);
+      aiRanked.concat(P.map(function (p) { return { p: p }; })).forEach(function (r) { if (featured.indexOf(r.p) < 0) featured.push(r.p); });
+      featured = featured.slice(0, 6);
+      var each = 0.75;
+      list.push({ d: 0.5 + featured.length * each, hits: featured.map(function (p, i) { return { t: 0.4 + i * each, small: true }; }),
+        say: plain(W.spotlight) + ': ' + featured.map(function (p) { return p.project + (p.appType ? ' (' + p.appType + ')' : ''); }).join(', ') + '.', draw: function (t, dd) {
+        var a = inout(t, dd), i = Math.max(0, Math.min(featured.length - 1, Math.floor((t - 0.4) / each))), p = featured[i], lt = t - 0.4 - i * each, k = clamp(lt / 0.3);
+        ctx.globalAlpha = a; kicker(plain(W.spotlight) + '  ' + (i + 1) + '/' + featured.length, 230, 1);
+        if (t < 0.4) { ctx.globalAlpha = 1; return; }
+        // a flash of colour on each cut
+        ctx.globalAlpha = a * (1 - clamp(lt / 0.25)) * 0.35; ctx.fillStyle = C.accent; ctx.fillRect(0, 0, S, S);
+        ctx.globalAlpha = a * Math.min(1, k * 1.5);
+        var dx = reduce ? 0 : (1 - ease(k)) * 80;
+        emojiAt(emoji(p), S / 2 + dx, 470, 200, pop(k));
+        text(p.project, S / 2 + dx, 690, { size: fitSize(p.project, S - PAD * 2, 84, 600), weight: 600, align: 'center' });
+        var sub = [p.appType, p.names].filter(Boolean).join(' · ');
+        if (sub) text(clip(sub, S - PAD * 2, 36, 400), S / 2 + dx, 760, { size: 36, weight: 400, color: C.muted, align: 'center' });
         ctx.globalAlpha = 1;
       } });
     }
 
+    // 4. The AI judge's podium, 3rd, 2nd, then 1st
     if (aiRanked.length) {
-      var podium = aiRanked.slice(0, 3);
-      list.push({ d: 6.4, hits: podium.map(function (r, idx) { return { t: 0.9 + (podium.length - 1 - idx) * 1.1, big: !idx }; }), say: 'Round one, the AI judge: ' + podium.map(function (r) { return place(r) + ', ' + r.p.project + ' (' + r.p.total + '/70)'; }).join('; ') + '.', draw: function (t, dd) {
+      var podium = aiRanked.slice(0, 3), at = function (idx) { return 0.7 + (podium.length - 1 - idx) * 0.9; };
+      list.push({ d: 5.2, hits: podium.map(function (r, idx) { return { t: at(idx), big: !idx }; }), say: plain(W.judge) + ': ' + podium.map(function (r) { return place(r) + ', ' + r.p.project + ' (' + r.p.total + '/70)'; }).join('; ') + '.', draw: function (t, dd) {
         var a = inout(t, dd);
-        ctx.globalAlpha = a * fadeIn(t); kicker('Round one', 210, 1);
-        line([['The AI ', {}], ['judge', { italic: true, weight: 400, color: C.accent }]], PAD, 300 + rise(t), { size: 88 });
+        ctx.globalAlpha = a * fadeIn(t); kicker('Round one', 210, 1); heading(W.judge, 300, t);
         var order = podium.length === 3 ? [1, 0, 2] : podium.length === 2 ? [1, 0] : [0];  // 2nd, 1st, 3rd from the left
         var cw = (S - PAD * 2) / order.length, base = 900;
         order.forEach(function (idx, col) {
-          var r = podium[idx], reveal = 0.9 + (podium.length - 1 - idx) * 1.1, k = clamp((t - reveal) / 0.6);
+          var r = podium[idx], k = clamp((t - at(idx)) / 0.5);
           var h = [360, 270, 200][idx] * ease(k), x = PAD + col * cw + 12, w = cw - 24;
           ctx.globalAlpha = a;
           ctx.fillStyle = idx === 0 ? C.accent : C.surface; rrect(x, base - h, w, h + 1, 18); ctx.fill();
@@ -390,14 +399,14 @@
       } });
     }
 
+    // 5. The people's choice
     if (peopleRanked.length) {
       var winners = peopleRanked.filter(function (r) { return r.rank === 1; }), pw = winners[0].p;
       var aiPlace = {}; aiRanked.forEach(function (r) { aiPlace[r.p.id] = r; });
       var agree = aiPlace[pw.id] ? (aiPlace[pw.id].rank === 1 ? 'The AI agreed.' : 'The AI had it ' + place(aiPlace[pw.id]).toLowerCase() + '.') : '';
-      list.push({ d: 5.2, hits: [{ t: 1, big: true }], say: 'Round two, the people’s choice: ' + winners.map(function (r) { return r.p.project; }).join(' and ') + ', with ' + pw.votes + (pw.votes === 1 ? ' vote' : ' votes') + '. ' + agree, draw: function (t, dd) {
-        var a = inout(t, dd), k = clamp((t - 1) / 0.6);
-        ctx.globalAlpha = a * fadeIn(t); kicker('Round two', 210, 1);
-        line([['The ', {}], ['people', { italic: true, weight: 400, color: C.accent }]], PAD, 300 + rise(t), { size: 88 });
+      list.push({ d: 4.4, hits: [{ t: 0.7, big: true }], say: plain(W.people) + ': ' + winners.map(function (r) { return r.p.project; }).join(' and ') + ', with ' + pw.votes + (pw.votes === 1 ? ' vote' : ' votes') + '. ' + agree, draw: function (t, dd) {
+        var a = inout(t, dd), k = clamp((t - 0.7) / 0.5);
+        ctx.globalAlpha = a * fadeIn(t); kicker('Round two', 210, 1); heading(W.people, 300, t);
         ctx.globalAlpha = a * Math.min(1, k * 2);
         winners.slice(0, 2).forEach(function (r, i) {
           var cx = winners.length > 1 ? PAD + (S - PAD * 2) * (i ? 0.75 : 0.25) : S / 2;
@@ -406,15 +415,15 @@
           text(r.p.project, cx, 650, { size: size, weight: 600, align: 'center' });
           if (r.p.names) text(r.p.names, cx, 706, { size: 34, weight: 400, color: C.muted, align: 'center' });
         });
-        ctx.globalAlpha = a * fadeIn(t, 1.6);
+        ctx.globalAlpha = a * fadeIn(t, 1.2);
         ctx.fillStyle = C.accent; rrect(S / 2 - 150, 760, 300, 72, 36); ctx.fill();
-        text(Math.round(pw.votes * ease((t - 1.6) / 1)) + (pw.votes === 1 ? ' vote' : ' votes'), S / 2, 808, { size: 36, weight: 600, color: C.ink, align: 'center' });
-        if (agree) { ctx.globalAlpha = a * fadeIn(t, 2.6); text(agree, S / 2, 910, { size: 36, weight: 400, italic: true, color: C.muted, align: 'center' }); }
+        text(Math.round(pw.votes * ease((t - 1.2) / 0.8)) + (pw.votes === 1 ? ' vote' : ' votes'), S / 2, 808, { size: 36, weight: 600, color: C.ink, align: 'center' });
+        if (agree) { ctx.globalAlpha = a * fadeIn(t, 2); text(agree, S / 2, 910, { size: 36, weight: 400, italic: true, color: C.muted, align: 'center' }); }
         ctx.globalAlpha = 1;
       } });
     }
 
-    // Prizes: one per project, people's choice first, then the AI's categories (same rule as summary.html)
+    // 6. Prizes: one per project, people's choice first, then the AI's categories (same rule as summary.html)
     var used = {}, prizes = [];
     peopleRanked.filter(function (r) { return r.rank === 1; }).forEach(function (r) { used[r.p.id] = true; prizes.push(['People’s choice', r.p]); });
     AWARDS.forEach(function (aw) {
@@ -423,25 +432,25 @@
       if (win) { used[win.id] = true; prizes.push([aw[1], win]); }
     });
     if (prizes.length) {
-      list.push({ d: 2.4 + prizes.length * 0.45, say: 'The prizes: ' + prizes.map(function (x) { return x[0] + ', ' + x[1].project; }).join('; ') + '.', draw: function (t, dd) {
+      list.push({ d: 1.8 + prizes.length * 0.3, say: plain(W.prizes) + ': ' + prizes.map(function (x) { return x[0] + ', ' + x[1].project; }).join('; ') + '.', draw: function (t, dd) {
         var a = inout(t, dd), rh = Math.min(84, 620 / prizes.length);
-        ctx.globalAlpha = a * fadeIn(t);
-        line([['The ', {}], ['prizes', { italic: true, weight: 400, color: C.accent }]], PAD, 230 + rise(t), { size: 88 });
+        ctx.globalAlpha = a * fadeIn(t); heading(W.prizes, 230, t);
         prizes.forEach(function (x, i) {
-          var y = 300 + i * rh, delay = 0.5 + i * 0.3, k = fadeIn(t, delay);
+          var y = 300 + i * rh, delay = 0.3 + i * 0.2, k = fadeIn(t, delay);
           ctx.globalAlpha = a * k;
           ctx.fillStyle = C.line; ctx.fillRect(PAD, y, S - PAD * 2, 2);
           text(x[0], PAD, y + rh * 0.62, { size: 30, weight: 600, color: i === 0 && x[0] === 'People’s choice' ? C.accent : C.muted });
-          emojiAt(emoji(x[1]), 470, y + rh * 0.5, 40, pop(clamp((t - delay) / 0.45)));
+          emojiAt(emoji(x[1]), 470, y + rh * 0.5, 40, pop(clamp((t - delay) / 0.4)));
           text(clip(x[1].project, S - PAD - 520, 36, 500), 515, y + rh * 0.64, { size: 36, weight: 500 });
         });
         ctx.globalAlpha = 1;
       } });
     }
 
+    // 7. Photos from the day: quick cuts with a slow push in
     photos.forEach(function (img, i) {
-      list.push({ d: 2.6, mood: 'calm', say: i ? '' : 'Photos from the day.', draw: function (t, dd) {
-        var a = Math.min(fadeIn(t, 0), 1 - ease((t - dd + 0.4) / 0.4)), z = reduce ? 1 : 1.06 + 0.06 * (t / dd);
+      list.push({ d: 1.9, say: i ? '' : plain(W.photos) + '.', draw: function (t, dd) {
+        var a = Math.min(fadeIn(t, 0) * 2, 1, 1 - ease((t - dd + 0.25) / 0.25)), z = reduce ? 1 : 1.04 + 0.08 * (t / dd);
         var sc = Math.max(S / img.width, S / img.height) * z, w = img.width * sc, h = img.height * sc;
         var dx = reduce ? 0 : (i % 2 ? -1 : 1) * 30 * (t / dd);
         ctx.globalAlpha = a;
@@ -453,19 +462,34 @@
         top.addColorStop(0, 'rgba(20, 23, 18, .7)'); top.addColorStop(1, 'rgba(20, 23, 18, 0)');
         ctx.fillStyle = top; ctx.fillRect(0, 0, S, 140);
         if (img.caption) text(clip(img.caption, S - PAD * 2, 40, 500), PAD, S - 110, { size: 40, weight: 500 });
-        else if (!i) text('From the day', PAD, S - 110, { size: 40, weight: 500 });
+        else if (!i) line(marked(W.photos), PAD, S - 110, { size: 52 });
         ctx.globalAlpha = 1;
       } });
     });
 
-    list.push({ d: 4.4, mood: 'end', say: 'Thank you to everyone who built something. The full summary is at ' + SITE + '.', draw: function (t) {
+    // 8. The numbers
+    var tiles = [[n.participants, 'people'], [n.projects, 'apps shared'], [n.appsLive, 'went live'], [n.voters, 'people voted']].filter(function (x) { return x[0]; });
+    list.push({ d: 3.4, say: plain(W.numbers) + ' ' + tiles.map(function (x) { return x[0] + ' ' + x[1]; }).join(', ') + '.', draw: function (t, dd) {
+      var a = inout(t, dd);
+      ctx.globalAlpha = a * fadeIn(t); heading(W.numbers, 250, t, 96);
+      tiles.forEach(function (x, i) {
+        var col = i % 2, row = Math.floor(i / 2), X = PAD + col * 452, Y = 340 + row * 290, delay = 0.2 + i * 0.15;
+        ctx.globalAlpha = a * fadeIn(t, delay);
+        ctx.fillStyle = C.line; ctx.fillRect(X, Y, 400, 2);
+        text(String(Math.round(x[0] * ease((t - delay) / 0.9))), X, Y + 150 + rise(t, delay), { size: 150, weight: 500, color: i ? C.text : C.accent });
+        text(x[1], X, Y + 205, { size: 36, weight: 400, color: C.muted });
+      });
+      ctx.globalAlpha = 1;
+    } });
+
+    // 9. Thank you
+    list.push({ d: 3.8, mood: 'end', say: plain(W.closing.title) + ' ' + W.closing.line, draw: function (t) {
       var a = fadeIn(t);
-      ctx.globalAlpha = a; kicker('Thank you', 380, 1);
-      line([['To everyone who ', {}], ['built', { italic: true, weight: 400, color: C.accent }]], PAD, 500 + rise(t), { size: 84 });
-      line([['something real.', {}]], PAD, 600 + rise(t), { size: 84 });
-      ctx.globalAlpha = a * fadeIn(t, 0.8);
-      text('The full summary, and the next one:', PAD, 710 + rise(t, 0.8), { size: 34, weight: 400, color: C.muted });
-      text(SITE, PAD, 770 + rise(t, 0.8), { size: 50, weight: 500 });
+      ctx.globalAlpha = a;
+      var ls = wrap(plain(W.closing.title), S - PAD * 2, 96, 500).length > 1 ? W.closing.title.split(/(?<=[.!?,])\s+/).slice(0, 2) : [W.closing.title];
+      ls.forEach(function (l, i) { line(marked(l), PAD, 480 + i * 110 + rise(t), { size: fitSize(plain(l), S - PAD * 2, 96, 500) }); });
+      ctx.globalAlpha = a * fadeIn(t, 0.6);
+      wrap(W.closing.line, S - PAD * 2, 40, 400).slice(0, 2).forEach(function (l, i) { text(l, PAD, 480 + ls.length * 110 + 30 + i * 52 + rise(t, 0.6), { size: 40, weight: 400, color: C.muted }); });
       ctx.globalAlpha = 1;
     } });
     return list;
@@ -478,7 +502,7 @@
     var AC = window.AudioContext || window.webkitAudioContext;
     var BEAT = 60 / 112, STEP = BEAT / 2, BAR = BEAT * 4;
     var CHORDS = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], ROOTS = [45, 41, 48, 43];
-    var ac = null, master = null, dest = null, bus = null, noise = null, acStart = 0, wall = 0, synced = false, step = 0, hitAt = 0, hits = [], muted = false;
+    var ac = null, master = null, dest = null, bus = null, noise = null, acStart = 0, wall = 0, synced = false, track = null, trackNode = null, fading = false, step = 0, hitAt = 0, hits = [], muted = false;
     function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
     function setup() {
       if (ac || !AC) return;
@@ -530,7 +554,8 @@
       if (pos % 4 === 0) kick(at);
       if (pos % 2 === 1) hiss(at, 0.05, 0.05 * fade, 'highpass', 7000);
     }
-    function chime(at, big) {
+    function chime(at, big, small) {
+      if (small) { tone('triangle', 88, at, 0.05, 0.003, 0.01, 0.18, 7000); return; }  // a light tick for quick cuts
       hiss(at - 0.9, 0.9, big ? 0.07 : 0.035, 'bandpass', 300, 5000);
       [76, 79, 84].slice(0, big ? 3 : 2).forEach(function (m, i) { tone('sine', m, at + i * 0.06, 0.09, 0.005, 0.05, big ? 1.6 : 0.9, 6000); tone('triangle', m + 12, at + i * 0.06, 0.025, 0.005, 0.02, 0.6, 8000); });
     }
@@ -538,7 +563,7 @@
     return {
       load: function (list) {
         hits = []; endFrom = 1e9;
-        list.forEach(function (s) { (s.hits || []).forEach(function (h) { hits.push({ at: s.at + h.t, big: h.big }); }); if (s.mood === 'end' && endFrom === 1e9) endFrom = s.at + 0.5; });
+        list.forEach(function (s) { (s.hits || []).forEach(function (h) { hits.push({ at: s.at + h.t, big: h.big, small: h.small }); }); if (s.mood === 'end' && endFrom === 1e9) endFrom = s.at + 0.5; });
       },
       moodAt: function (t) { var s = scenes.filter(function (x) { return t >= x.at && t < x.at + x.d; })[0] || scenes[scenes.length - 1]; return s && s.mood || 'full'; },
       start: function (t) {
@@ -546,10 +571,24 @@
         if (ac) {
           if (ac.state === 'suspended') ac.resume();
           bus = ac.createGain(); bus.connect(master.input);
+          if (track) {  // the organiser's own track, from the reel's start, looped if it's shorter
+            if (!trackNode) { trackNode = ac.createMediaElementSource(track); }
+            trackNode.disconnect(); trackNode.connect(bus);
+            try { track.currentTime = track.duration ? t % track.duration : t; } catch (e) {}
+            track.play().catch(function () {});
+          }
         }
-        wall = performance.now() / 1000 - t; synced = false;
+        wall = performance.now() / 1000 - t; synced = false; fading = false;
+      },
+      // An uploaded track (MP3) replaces the built-in loop; null goes back to it
+      setTrack: function (url) {
+        if (track) { track.pause(); if (trackNode) trackNode.disconnect(); }
+        track = null; trackNode = null;
+        if (!url) return;
+        track = new Audio(); track.crossOrigin = 'anonymous'; track.loop = true; track.preload = 'auto'; track.src = url;
       },
       stop: function () {
+        if (track) track.pause();
         if (!bus) return;
         var b = bus; bus = null;
         b.gain.setTargetAtTime(0, ac.currentTime, 0.03);
@@ -569,8 +608,12 @@
       // Schedule whatever falls in the next quarter of a second
       ahead: function (t) {
         if (!bus || !synced) return;
+        if (track) {  // fade the track out over the last two and a half seconds
+          if (!fading && t > total - 2.5) { fading = true; bus.gain.setTargetAtTime(0, ac.currentTime, 0.7); }
+          return;
+        }
         while (step * STEP < t + 0.25) { var st = step * STEP; if (st >= 0 && st < total) playStep(step, st, acStart + st, this.moodAt(st)); step++; }
-        while (hitAt < hits.length && hits[hitAt].at < t + 0.25) { chime(acStart + hits[hitAt].at, hits[hitAt].big); hitAt++; }
+        while (hitAt < hits.length && hits[hitAt].at < t + 0.25) { chime(acStart + hits[hitAt].at, hits[hitAt].big, hits[hitAt].small); hitAt++; }
       },
       stream: function () { setup(); return dest && dest.stream; },
       mute: function (on) { muted = on; if (master) master.gain.setTargetAtTime(on ? 0 : 1.5, ac.currentTime, 0.02); }
@@ -672,7 +715,7 @@
     a.href = after ? 'summary.html?event=' + encodeURIComponent(ev.id) : 'event.html';
     a.textContent = after ? 'See the full summary' : 'See the plan for the day';
     $('reel-for').append('For the hackathon on ' + ev.label + '. ', a);
-    load(after ? afterScenes(summary, photos, day) : beforeScenes(ev, lastEvent, day), ev.label);
+    load(after ? afterScenes(summary, photos) : beforeScenes(ev, lastEvent, day), ev.label);
     $('big-play').hidden = false;
   }
   $('reel-modes').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
@@ -689,16 +732,36 @@
     return fetch(API + '/summary' + (id ? '?event=' + encodeURIComponent(id) : '')).then(function (r) { return r.json(); }).catch(function () { return null; });
   }
 
+  var fonts = document.fonts ? document.fonts.load(font(100, 500)).then(function () { return Promise.all([document.fonts.load(font(100, 400, true)), document.fonts.load(font(100, 600))]); }) : Promise.resolve();
+  function photosOf(d) { return Promise.all((d.photos || []).filter(function (m) { return !m.hidden; }).slice(0, 8).map(loadImage)).then(function (imgs) { return imgs.filter(Boolean); }); }
+
+  if (PREVIEW) {
+    document.documentElement.classList.add('reel-embed', 'reel-tool');
+    window.addEventListener('message', function (e) {
+      if (e.origin !== location.origin || !e.data || !e.data.reel) return;
+      var d = e.data.reel;
+      fonts.then(function () { return photosOf(d); }).then(function (imgs) {
+        summary = d; photos = imgs;
+        ev = { id: d.event.id, label: new Date(d.event.held_on + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (d.event.location ? ' · ' + d.event.location : '') };
+        music.setTrack(d.reel && d.reel.music || null);
+        setMode('after');
+      });
+    });
+    parent.postMessage({ reelReady: true }, location.origin);
+    return;
+  }
+
   $('reel-event').textContent = 'The reel · ' + ev.label;
-  Promise.all([document.fonts ? document.fonts.load(font(100, 500)).then(function () { return Promise.all([document.fonts.load(font(100, 400, true)), document.fonts.load(font(100, 600))]); }) : null,
+  Promise.all([fonts,
     getSummary(ev.id), getSummary(''),
     fetch('assets/events/' + encodeURIComponent(ev.id) + '.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })]).then(function (r) {
     var mine = r[1], latest = r[2]; day = r[3] || {};
     if (mine && mine.ok && mine.published) summary = mine;
     if (latest && latest.ok && latest.published && latest.event.id !== ev.id) lastEvent = latest;
-    return summary ? Promise.all((summary.photos || []).slice(0, 6).map(loadImage)) : [];
+    if (summary && summary.reel && summary.reel.music) music.setTrack(API + summary.reel.music);
+    return summary ? photosOf(summary) : [];
   }).then(function (imgs) {
-    photos = imgs.filter(Boolean);
+    photos = imgs;
     $('reel-modes').hidden = !summary;
     var want = params.get('mode');
     setMode(summary && want !== 'before' ? 'after' : 'before');

@@ -958,3 +958,17 @@ html.reel-embed .reel-stage canvas { box-shadow: none; }
   .pv-actions .btn { flex: 1; justify-content: center; white-space: nowrap; padding: .55rem .6rem; }
   .pv-tools button { min-width: 1.9rem; height: 1.9rem; font-size: .8rem; padding: 0 .4rem; }
 }
+/* reel.html inside the summary preview: the player and its buttons, nothing else */
+html.reel-tool .reel-controls { display: flex; }
+html.reel-tool .reel-status { display: block; }
+/* the reel in the summary preview: the player beside its music, instructions and Generate */
+.pv-reel { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(1.2rem, 3vw, 2.5rem); align-items: start; }
+.pv-reel iframe { display: block; width: 100%; aspect-ratio: 1 / 1.16; border: 0; background: transparent; }
+.pv-reel-side h4 { margin: 1.4rem 0 .5rem; font-size: 1rem; font-weight: 600; }
+.pv-reel-side h4:first-of-type { margin-top: .8rem; }
+.pv-reel-side .pv-area { width: 100%; }
+.pv-reel-side .btn[hidden] { display: none; }
+.pv-music { margin: 0 0 .6rem; font-weight: 500; }
+.pv-file { cursor: pointer; }
+.pv-reel-go { margin: .7rem 0 .3rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+@media (max-width: 860px) { .pv-reel { grid-template-columns: 1fr; } }

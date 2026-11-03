@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=5f1109a3">
+<link rel="stylesheet" href="assets/style.css?v=499f14ad">
 <script src="assets/site.js?v=2f1ed5d7"></script>
 </head>
 <body data-event-page>
@@ -67,7 +67,7 @@
 <h3 class="sum-h3">Photos</h3>
 <div id="photos"></div>
 <h3 class="sum-h3">The reel</h3>
-<p class="sum-reel"><a class="btn ghost" href="reel.html" id="reel-link">Watch the reel</a> <span class="muted">Under a minute: what got built, the winners and photos from the day. Save it as a video to share.</span></p>
+<div id="reel-box"><p class="sum-reel"><a class="btn ghost" href="reel.html" id="reel-link">Watch the reel</a> <span class="muted">Under a minute: what got built, the winners and photos from the day. Save it as a video to share.</span></p></div>
 <p class="muted small sum-takedown">In a photo and would rather not be? Tell Phil and it comes down.</p>
 <dialog class="sum-lightbox" id="lightbox" aria-label="Image">
 <img id="lb-img" alt="">
@@ -183,7 +183,7 @@
         if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
         if (!PREVIEW && !d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
         ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
-        $('reel-link').href = 'reel.html?event=' + encodeURIComponent(d.event.id);
+        if ($('reel-link')) $('reel-link').href = 'reel.html?event=' + encodeURIComponent(d.event.id);
         data = d; restore(); render();
         if (PREVIEW) previewLoaded(version);
       })
@@ -205,6 +205,7 @@
     $('sum-body').hidden = false;
 
     renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderPictures(); renderThanks();
+    if (PREVIEW) renderReel();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
@@ -419,9 +420,9 @@
   var dirty = false, restoredFrom = null;
   function content() {
     var pics = function (set) { return (data[set] || []).map(function (m) { return { id: m.id, caption: m.caption || '', hidden: !!m.hidden }; }); };
-    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', photos: pics('photos'), feedback: pics('feedback') };
+    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', photos: pics('photos'), feedback: pics('feedback'), reel: data.content.reel || null };
   }
-  function changed() { dirty = true; pvStatus(); }
+  function changed() { dirty = true; pvStatus(); pushReel(); }
   function when(iso) { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
   function pvStatus() {
     var d = data, live = d.publishedAt ? 'Live' + (d.publishedVersion ? ': version ' + d.publishedVersion : '') + ' since ' + when(d.publishedAt) : 'Not published';
@@ -545,6 +546,66 @@
       load(+b.dataset.restore);
     });
     window.addEventListener('beforeunload', function (e) { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+    // ---- The reel (reel.html in a frame): your music, instructions for the AI, Generate. Saved with the draft.
+    var reelTimer = null, reelReady = false;
+    function reelState() { return data.content.reel || (data.content.reel = { instructions: '', music: null, musicName: '', words: null, generatedAt: null }); }
+    function renderReel() {
+      var r = reelState();
+      $('reel-box').innerHTML = '<div class="pv-reel">' +
+        '<iframe id="pv-reel-frame" src="reel.html?event=' + encodeURIComponent(data.event.id) + '" title="The reel"></iframe>' +
+        '<div class="pv-reel-side">' +
+        '<p class="muted small">Plays the draft as it stands: the visible photos in their order, the words and your track. “Save as video” under the player downloads an MP4 for LinkedIn or Viva Engage.</p>' +
+        '<h4>Music</h4><p class="pv-music" id="pv-music"></p>' +
+        '<label class="btn ghost small pv-file">Upload an MP3<input type="file" id="pv-music-file" accept="audio/mpeg,.mp3" hidden></label> <button class="btn ghost small" type="button" id="pv-music-remove">Use the built-in tune</button>' +
+        '<p class="muted small">Use a track your licence covers for social media and this site (an Epidemic Sound track, for example). Up to 15 MB.</p>' +
+        '<h4><label for="pv-reel-ask">Instructions for the words</label></h4>' +
+        '<textarea id="pv-reel-ask" class="pv-edit pv-area" rows="6" maxlength="2000" placeholder="Optional. For example: lean into Halloween, give the people’s choice a big moment, keep it playful.">' + esc(r.instructions || '') + '</textarea>' +
+        '<p class="pv-reel-go"><button class="btn small" type="button" id="pv-reel-gen">' + (r.words ? 'Regenerate the words' : 'Generate the words') + '</button> <button class="btn ghost small" type="button" id="pv-reel-reset"' + (r.words ? '' : ' hidden') + '>Standard words</button></p>' +
+        '<p class="muted small" id="pv-reel-status" role="status">' + (r.words ? 'Words by Claude' + (r.generatedAt ? ', ' + when(r.generatedAt) : '') + '.' : 'Standard words. Generate to have Claude write them from the facts and your instructions.') + '</p>' +
+        '</div></div>';
+      $('pv-music').textContent = r.music ? '♪ ' + (r.musicName || 'Your track') : 'The built-in tune (no track uploaded)';
+      $('pv-music-remove').hidden = !r.music;
+      pushReel(true);
+    }
+    function pushReel(now) {
+      clearTimeout(reelTimer);
+      reelTimer = setTimeout(function () {
+        var f = $('pv-reel-frame'), r = reelState();
+        if (!f || !reelReady || !f.contentWindow) return;
+        f.contentWindow.postMessage({ reel: { event: data.event, numbers: data.numbers, projects: data.projects, photos: data.photos,
+          reel: { words: r.words, music: r.music ? '/api/media/' + data.event.id + '/' + r.music + '.mp3' : null } } }, location.origin);
+      }, now ? 0 : 900);
+    }
+    window.addEventListener('message', function (e) {
+      if (e.origin === location.origin && e.data && e.data.reelReady) { reelReady = true; pushReel(true); }
+    });
+    document.addEventListener('input', function (e) { if (e.target.id === 'pv-reel-ask') { reelState().instructions = e.target.value; dirty = true; pvStatus(); } });
+    document.addEventListener('change', function (e) {
+      if (e.target.id !== 'pv-music-file' || !e.target.files[0]) return;
+      var file = e.target.files[0];
+      if (file.size > 15000000) { alert('That track is bigger than 15 MB.'); return; }
+      $('pv-music').textContent = 'Uploading ' + file.name + '…';
+      fetch('/api/reel/music?event=' + encodeURIComponent(data.event.id), { method: 'PUT', headers: { 'Content-Type': 'audio/mpeg' }, body: file })
+        .then(function (r) { return r.json().catch(function () { return { ok: false, message: 'The server answered ' + r.status + '.' }; }); })
+        .then(function (d) {
+          if (!d.ok) { alert(d.message || 'That didn’t upload.'); renderReel(); return; }
+          var r = reelState(); r.music = d.id; r.musicName = file.name.replace(/\.mp3$/i, ''); changed(); renderReel();
+        }).catch(function () { alert('Couldn’t reach the server.'); renderReel(); });
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target.id === 'pv-music-remove') { var r = reelState(); r.music = null; r.musicName = ''; changed(); renderReel(); }
+      if (e.target.id === 'pv-reel-reset') { reelState().words = null; reelState().generatedAt = null; changed(); renderReel(); }
+      if (e.target.id === 'pv-reel-gen') {
+        var btn = e.target; btn.disabled = true;
+        $('pv-reel-status').textContent = 'Claude is writing… about 20 seconds.';
+        send('/api/reel/generate', { event: data.event.id, content: content(), instructions: reelState().instructions || '' }).then(function (d) {
+          btn.disabled = false;
+          if (!d.ok) { $('pv-reel-status').textContent = d.message || 'That didn’t work. Try again.'; return; }
+          var r = reelState(); r.words = d.words; r.generatedAt = new Date().toISOString(); changed(); renderReel();
+        });
+      }
+    });
   }
 
   function celebrate(el) {
