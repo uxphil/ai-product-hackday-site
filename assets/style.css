@@ -645,6 +645,7 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .vote-card .open .icon { width: .95rem; height: .95rem; }
 .vote-card .no-link { font-size: .88rem; color: var(--muted); }
 .vote-bar { position: sticky; bottom: 1rem; z-index: 5; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: .8rem 1rem .8rem 1.2rem; box-shadow: 0 8px 28px rgba(0, 0, 0, .14); }
+.vote-bar[hidden] { display: none; }
 .vote-bar .count { font-weight: 600; font-variant-numeric: tabular-nums; margin-right: auto; }
 .vote-bar .count span { color: var(--muted); font-weight: 400; }
 .vote-bar .form-status { flex-basis: 100%; }

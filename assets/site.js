@@ -384,7 +384,7 @@
   }
   // Links to the event-specific pages carry the chosen event in their address
   function tagLinks() {
-    document.querySelectorAll('a[href^="vote.html"], a[href^="share.html"], a[href^="reel.html"]').forEach(function (a) {
+    document.querySelectorAll('a[href^="vote.html"], a[href^="share.html"], a[href^="reel.html"], a[href^="summary.html"]').forEach(function (a) {
       var u = new URL(a.getAttribute('href'), location.href); u.searchParams.set('event', eventId);
       a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);
     });
