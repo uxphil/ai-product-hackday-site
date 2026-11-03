@@ -85,7 +85,7 @@
   function dateLabel(iso) { return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
   function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
   function ease(x) { x = clamp(x); return 1 - Math.pow(1 - x, 3); }
-  function pop(x) { x = clamp(x); var c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }  // eases out with a small overshoot
+  function pop(x) { if (reduce) return 1; x = clamp(x); var c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }  // eases out with a small overshoot
   function emoji(p) { return p.emoji || '✨'; }
   function ranked(list, val) {  // equal scores share a place (1, 2, 2, 4), as on summary.html
     var sorted = list.slice().sort(function (a, b) { return val(b) - val(a) || a.project.localeCompare(b.project); });
@@ -146,7 +146,8 @@
   }
   // A scene's own fade and rise: in over the first 0.5s, out over the last 0.4s
   function inout(t, d) { return ease(t / 0.5) * (1 - ease((t - d + 0.4) / 0.4)); }
-  function rise(t, delay) { return (1 - ease((t - (delay || 0)) / 0.6)) * 36; }
+  // Reduced motion: things still fade in, but nothing slides or bounces
+  function rise(t, delay) { return reduce ? 0 : (1 - ease((t - (delay || 0)) / 0.6)) * 36; }
   function fadeIn(t, delay) { return ease((t - (delay || 0)) / 0.5); }
 
   // ---------- the frame around every scene ----------
@@ -383,9 +384,9 @@
 
     photos.forEach(function (img, i) {
       list.push({ d: 2.6, say: i ? '' : 'Photos from the day.', draw: function (t, dd) {
-        var a = Math.min(fadeIn(t, 0), 1 - ease((t - dd + 0.4) / 0.4)), z = 1.06 + 0.06 * (t / dd);
+        var a = Math.min(fadeIn(t, 0), 1 - ease((t - dd + 0.4) / 0.4)), z = reduce ? 1 : 1.06 + 0.06 * (t / dd);
         var sc = Math.max(S / img.width, S / img.height) * z, w = img.width * sc, h = img.height * sc;
-        var dx = (i % 2 ? -1 : 1) * 30 * (t / dd);
+        var dx = reduce ? 0 : (i % 2 ? -1 : 1) * 30 * (t / dd);
         ctx.globalAlpha = a;
         ctx.drawImage(img, (S - w) / 2 + dx, (S - h) / 2, w, h);
         var g = ctx.createLinearGradient(0, S * 0.55, 0, S);
