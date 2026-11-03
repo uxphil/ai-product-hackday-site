@@ -949,3 +949,30 @@ html.reel-embed .reel-screen video { box-shadow: none; }
   .pv-actions .btn { flex: 1; justify-content: center; white-space: nowrap; padding: .55rem .6rem; }
   .pv-tools button { min-width: 1.9rem; height: 1.9rem; font-size: .8rem; padding: 0 .4rem; }
 }
+
+/* summary: feedback highlights (big numbers, then a wall of anonymous quotes) */
+.hl-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: .7rem; margin: 0 0 1.4rem; }
+.hl-stats > div { background: var(--accent-soft); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.hl-stats dd { margin: 0; }
+.hl-stats b { display: block; font-size: clamp(2rem, 4.5vw, 2.8rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.05; color: var(--accent); }
+.hl-stats span { display: block; color: var(--muted); font-size: .92rem; margin-top: .35rem; line-height: 1.35; }
+.hl-quotes { list-style: none; margin: 0 0 1.6rem; padding: 0; columns: 3 15rem; column-gap: .8rem; }
+.hl-quotes li { break-inside: avoid; margin: 0 0 .8rem; padding: 1.2rem 1.25rem 1.1rem; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); position: relative; }
+.hl-quotes li::before { content: "“"; position: absolute; top: -.15rem; left: .85rem; font-size: 3.4rem; line-height: 1; color: var(--accent); opacity: .35; font-family: Georgia, serif; }
+.hl-quotes li:nth-child(4n+2) { background: var(--accent-soft); border-color: transparent; }
+.hl-quotes li:nth-child(5n+4) { background: color-mix(in srgb, var(--people) 10%, var(--surface)); border-color: transparent; }
+.hl-quotes li:nth-child(5n+4)::before { color: var(--people); }
+.hl-quotes blockquote { margin: 0; }
+.hl-quotes p { margin: .6rem 0 0; font-size: 1.02rem; line-height: 1.5; }
+.hl-quotes li.short p { font-size: 1.3rem; line-height: 1.3; font-weight: 500; letter-spacing: -.01em; }
+@media (prefers-reduced-motion: no-preference) {
+  .hl-quotes li { transition: transform .25s ease; }
+  .hl-quotes li:hover { transform: rotate(-.6deg) translateY(-2px); }
+  .hl-quotes li:nth-child(even):hover { transform: rotate(.6deg) translateY(-2px); }
+}
+.hl-edit { display: grid; gap: .4rem; max-width: 46rem; margin: 0 0 1rem; }
+.hl-edit label { font-weight: 600; margin-top: .6rem; }
+.hl-edit label span { font-weight: 400; color: var(--muted); font-size: .92rem; margin-left: .3rem; }
+.hl-edit code { font-size: .88em; }
+.hl-edit .pv-area { font-size: 1rem; }
+.hl-edit-note { margin: 1rem 0 0; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }

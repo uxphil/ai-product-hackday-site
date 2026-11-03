@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=a9657682">
+<link rel="stylesheet" href="assets/style.css?v=3abef02a">
 <script src="assets/site.js?v=4c77ce75"></script>
 </head>
 <body data-event-page>
@@ -63,6 +63,7 @@
 <section class="block" aria-labelledby="extras-h">
 <h2 id="extras-h">From the <em>day</em></h2>
 <h3 class="sum-h3">Your feedback</h3>
+<div id="highlights"></div>
 <div id="feedback"></div>
 <h3 class="sum-h3">Photos</h3>
 <div id="photos"></div>
@@ -204,7 +205,7 @@
     $('how-people').textContent = n.participantsCounted ? 'everyone named on a shared project or who joined the day on the site, whichever is more' : 'the organiser’s head count on the day';
     $('sum-body').hidden = false;
 
-    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderPictures(); renderThanks();
+    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderHighlights(); renderPictures(); renderThanks();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
@@ -226,6 +227,16 @@
     $('sum-stats').hidden = false;
   }
   function paras(text) { return text.split(/\n{2,}/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; }).join(''); }
+  // What people said in the feedback form: a few big numbers, then a wall of anonymous quotes
+  function renderHighlights() {
+    if (PREVIEW) return renderHighlightsEditor();
+    var h = data.highlights;
+    $('highlights').innerHTML = h ? highlightsHtml(h) : '';
+  }
+  function highlightsHtml(h) {
+    return (h.stats && h.stats.length ? '<dl class="hl-stats">' + h.stats.map(function (x) { return '<div><dt class="vh">' + esc(x.label) + '</dt><dd><b>' + esc(x.value) + '</b><span aria-hidden="true">' + esc(x.label) + '</span></dd></div>'; }).join('') + '</dl>' : '') +
+      (h.quotes && h.quotes.length ? '<ul class="hl-quotes">' + h.quotes.map(function (q, i) { return '<li class="' + (q.length < 48 ? 'short' : '') + '" style="--i:' + i + '"><blockquote><p>' + esc(q) + '</p></blockquote></li>'; }).join('') + '</ul>' : '');
+  }
   function renderThanks() {
     if (PREVIEW) return renderThanksEditor();
     $('thanks-wrap').hidden = !data.thanks;
@@ -365,7 +376,7 @@
   function renderPictures() {
     ['feedback', 'photos'].forEach(function (set) {
       var list = PREVIEW ? data[set] || [] : visible(set), vi = 0;
-      if (!list.length) { $(set).innerHTML = '<div class="sum-soon-line"><p>' + esc(SETS[set].soon) + '</p><span class="tbc">Coming soon</span></div>'; return; }
+      if (!list.length) { $(set).innerHTML = set === 'feedback' && (data.highlights || PREVIEW && data.content.highlights) ? '' : '<div class="sum-soon-line"><p>' + esc(SETS[set].soon) + '</p><span class="tbc">Coming soon</span></div>'; return; }
       var tiles = list.map(function (m, i) { var t = tile(set, m, i, m.hidden ? 0 : vi); if (!m.hidden) vi++; return t; });
       var count = visible(set).length;
       if (set === 'photos' && count > 3) tiles.splice(2, 0, '<div class="tile note" aria-hidden="true"><b>' + count + '</b><span>moments from the day</span></div>');
@@ -419,7 +430,7 @@
   var dirty = false, restoredFrom = null;
   function content() {
     var pics = function (set) { return (data[set] || []).map(function (m) { return { id: m.id, caption: m.caption || '', hidden: !!m.hidden }; }); };
-    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', photos: pics('photos'), feedback: pics('feedback') };
+    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', highlights: data.content.highlights || null, photos: pics('photos'), feedback: pics('feedback') };
   }
   function changed() { dirty = true; pvStatus(); }
   function when(iso) { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
@@ -449,6 +460,23 @@
     el.textContent = data.content.intro || '';
     el.classList.toggle('empty', !data.content.intro);
   }
+  // Typed as plain lines, so they're quick to edit: numbers as "value | label", one quote per line
+  function renderHighlightsEditor() {
+    var h = data.content.highlights || { stats: [], quotes: [] };
+    $('highlights').innerHTML = '<div class="hl-edit">' +
+      '<label for="pv-hl-stats">Numbers <span>one per line: <code>4.55 | out of 5, overall</code></span></label>' +
+      '<textarea id="pv-hl-stats" class="pv-edit pv-area" rows="4">' + esc((h.stats || []).map(function (x) { return x.value + ' | ' + x.label; }).join('\n')) + '</textarea>' +
+      '<label for="pv-hl-quotes">Quotes <span>one per line, shown without names</span></label>' +
+      '<textarea id="pv-hl-quotes" class="pv-edit pv-area" rows="8">' + esc((h.quotes || []).join('\n')) + '</textarea>' +
+      '<p class="hl-edit-note">Preview</p></div><div id="pv-hl-preview">' + highlightsHtml(h) + '</div>';
+  }
+  function readHighlights() {
+    var stats = $('pv-hl-stats').value.split('\n').map(function (l) { var i = l.indexOf('|'); return i < 0 ? null : { value: l.slice(0, i).trim(), label: l.slice(i + 1).trim() }; })
+      .filter(function (x) { return x && x.value && x.label; });
+    var quotes = $('pv-hl-quotes').value.split('\n').map(function (l) { return l.trim().replace(/^["“]|["”]$/g, ''); }).filter(Boolean);
+    data.content.highlights = stats.length || quotes.length ? { stats: stats, quotes: quotes } : null;
+    $('pv-hl-preview').innerHTML = data.content.highlights ? highlightsHtml(data.content.highlights) : '';
+  }
   function renderThanksEditor() {
     $('thanks-wrap').hidden = false;
     $('thanks').innerHTML = '<label class="vh" for="pv-thanks">A note from Phil</label><textarea id="pv-thanks" class="pv-edit pv-area" maxlength="1200" rows="4" placeholder="Optional. A thank-you or what happens next. Only shown when there’s something here.">' + esc(data.content.thanks || '') + '</textarea>';
@@ -461,6 +489,7 @@
     $('sum-lead').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
     document.addEventListener('input', function (e) {
       if (e.target.id === 'pv-thanks') { data.content.thanks = e.target.value; changed(); }
+      if (e.target.id === 'pv-hl-stats' || e.target.id === 'pv-hl-quotes') { readHighlights(); changed(); }
       if (e.target.id === 'pv-head') {
         var v = e.target.value.trim();
         data.content.headCount = v === '' ? null : Math.max(0, Math.round(+v) || 0);
