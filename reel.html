@@ -36,6 +36,7 @@
 <figcaption class="reel-controls">
 <button type="button" class="btn small" id="play">Play</button>
 <button type="button" class="btn ghost small" id="restart">From the start</button>
+<button type="button" class="btn ghost small" id="sound" aria-pressed="true">Sound on</button>
 <span class="reel-time" id="time" aria-hidden="true">0:00</span>
 <button type="button" class="btn ghost small reel-save" id="save">Save as video</button>
 </figcaption>
@@ -171,10 +172,10 @@
   }
 
   // ---------- before the day ----------
-  function beforeScenes(e, last) {
+  function beforeScenes(e, last, day) {
     var tbc = 'To be confirmed';
     var list = [
-      { d: 4, say: 'Build something real. Publish it. Take it home.', draw: function (t, d) {
+      { d: 4, mood: 'calm', say: 'Build something real. Publish it. Take it home.', draw: function (t, d) {
         var a = inout(t, d);
         ctx.globalAlpha = a; kicker(e.date || 'Date ' + tbc.toLowerCase(), 300, 1);
         [[['Build something ', {}], ['real.', { italic: true, color: C.accent, weight: 400 }]], [['Publish it.', {}]], [['Take it home.', {}]]].forEach(function (segs, i) {
@@ -218,6 +219,8 @@
         ctx.globalAlpha = 1;
       } }
     ];
+    // The briefs and talks go after the seven moves, before the numbers
+    list.splice.apply(list, [3, 0].concat(dayScenes(day || {}, { schedule: false }).reverse()));
     if (last) list.push({ d: 4, say: 'Last time: ' + last.numbers.participants + ' people, ' + last.numbers.projects + ' products shared' + (last.numbers.appsLive ? ', ' + last.numbers.appsLive + ' apps went live' : '') + '.', draw: function (t, d) {
       var a = inout(t, d), n = last.numbers;
       ctx.globalAlpha = a * fadeIn(t); kicker('Last time, in ' + (last.event.location || 'one room'), 300, 1);
@@ -244,7 +247,7 @@
       });
       ctx.globalAlpha = 1;
     } });
-    list.push({ d: 4, say: 'Get ready at ' + SITE + '.', draw: function (t, d) {
+    list.push({ d: 4, mood: 'end', hits: [{ t: 0.2, big: true }], say: 'Get ready at ' + SITE + '.', draw: function (t, d) {
       var a = Math.min(fadeIn(t), 1);
       ctx.globalAlpha = a; kicker('Come and build with us', 400, 1);
       line([['Get ', {}], ['ready', { italic: true, weight: 400, color: C.accent }], ['.', {}]], PAD, 540 + rise(t), { size: 132 });
@@ -256,15 +259,67 @@
     return list;
   }
 
+  // ---------- from the day: the timetable, talks and themes in assets/events/<id>.json (any of them can be left out) ----------
+  function dayScenes(day, which) {
+    var list = [];
+    if (which.schedule && day.schedule && day.schedule.length) list.push({ d: 4.6, say: 'The day: ' + day.schedule.map(function (r) { return r[0] + ' ' + r[1]; }).join(', ') + '.', draw: function (t, d) {
+      var a = inout(t, d), rows = day.schedule.slice(0, 8), rh = Math.min(84, 600 / rows.length), on = Math.min(rows.length - 1, Math.floor((t - 0.5) / (3.2 / rows.length)));
+      ctx.globalAlpha = a * fadeIn(t);
+      line([['The ', {}], ['day', { italic: true, weight: 400, color: C.accent }]], PAD, 230 + rise(t), { size: 88 });
+      ctx.fillStyle = C.line; ctx.fillRect(PAD + 170, 300, 3, rh * rows.length - 20);
+      rows.forEach(function (r, i) {
+        var y = 300 + i * rh, lit = i <= on;
+        ctx.globalAlpha = a * fadeIn(t, 0.2 + i * 0.06);
+        text(r[0], PAD, y + rh * 0.5, { size: 32, weight: 600, color: lit ? C.accent : C.muted });
+        ctx.fillStyle = lit ? C.accent : C.surface; ctx.beginPath(); ctx.arc(PAD + 171.5, y + rh * 0.5 - 10, i === on ? 13 : 9, 0, Math.PI * 2); ctx.fill();
+        text(clip(r[1], S - PAD * 2 - 220, 36, 500), PAD + 215, y + rh * 0.5, { size: i === on ? 38 : 34, weight: i === on ? 600 : 500, color: lit ? C.text : C.muted });
+      });
+      ctx.globalAlpha = 1;
+    } });
+    if (day.talks && day.talks.length) list.push({ d: 4.4, say: 'Short talks: ' + day.talks.map(function (k) { return k.title + (k.by ? ', ' + k.by : ''); }).join('; ') + '.', draw: function (t, d) {
+      var a = inout(t, d), rows = day.talks.slice(0, 4), rh = Math.min(150, 600 / rows.length);
+      ctx.globalAlpha = a * fadeIn(t); kicker(rows.length === 1 ? 'One short talk' : rows.length + ' short talks', 210, 1);
+      line([['Ideas from the ', {}], ['stage', { italic: true, weight: 400, color: C.accent }]], PAD, 300 + rise(t), { size: 84 });
+      rows.forEach(function (k, i) {
+        var y = 370 + i * rh, delay = 0.4 + i * 0.35;
+        ctx.globalAlpha = a * fadeIn(t, delay);
+        ctx.fillStyle = C.surface; rrect(PAD, y + rise(t, delay), S - PAD * 2, rh - 22, 20); ctx.fill();
+        ctx.fillStyle = C.accent; rrect(PAD, y + rise(t, delay), 8, rh - 22, 4); ctx.fill();
+        text(clip(k.title, S - PAD * 2 - 80, 38, 600), PAD + 44, y + rh * 0.42 + rise(t, delay), { size: 38, weight: 600 });
+        if (k.by) text(k.by, PAD + 44, y + rh * 0.42 + 46 + rise(t, delay), { size: 28, weight: 400, color: C.muted });
+      });
+      ctx.globalAlpha = 1;
+    } });
+    if (day.themes && day.themes.length) list.push({ d: 4.2, say: 'The briefs: ' + day.themes.map(function (k) { return k.name; }).join(', ') + '.', draw: function (t, d) {
+      var a = inout(t, d), cards = day.themes.slice(0, 4), cw = (S - PAD * 2 - 32) / 2, ch = 290;
+      ctx.globalAlpha = a * fadeIn(t);
+      line([['Pick a ', {}], ['brief', { italic: true, weight: 400, color: C.accent }]], PAD, 230 + rise(t), { size: 88 });
+      cards.forEach(function (k, i) {
+        var x = PAD + (i % 2) * (cw + 32), y = 300 + Math.floor(i / 2) * (ch + 32), delay = 0.35 + i * 0.25, k2 = clamp((t - delay) / 0.5);
+        if (k2 <= 0) return;
+        ctx.globalAlpha = a * k2;
+        ctx.save(); ctx.translate(x + cw / 2, y + ch / 2); var sc = 0.92 + 0.08 * pop(k2); ctx.scale(sc, sc); ctx.translate(-cw / 2, -ch / 2);
+        ctx.fillStyle = i === 3 ? C.accent : C.surface; rrect(0, 0, cw, ch, 24); ctx.fill();
+        text(String(i + 1).padStart(2, '0'), 36, 64, { size: 28, weight: 600, color: i === 3 ? C.ink : C.accent });
+        var names = wrap(k.name, cw - 72, 42, 600).slice(0, 2);
+        names.forEach(function (l, j) { text(l, 36, 124 + j * 48, { size: 42, weight: 600, color: i === 3 ? C.ink : C.text }); });
+        wrap(k.line || '', cw - 72, 27, 400).slice(0, 2).forEach(function (l, j) { text(l, 36, 124 + names.length * 48 + 8 + j * 34, { size: 27, weight: 400, color: i === 3 ? C.ink : C.muted }); });
+        ctx.restore();
+      });
+      ctx.globalAlpha = 1;
+    } });
+    return list;
+  }
+
   // ---------- after the day: the published summary ----------
-  function afterScenes(d, photos) {
+  function afterScenes(d, photos, day) {
     var n = d.numbers, P = d.projects;
     var aiRanked = ranked(P.filter(function (p) { return p.scores; }), function (p) { return p.total; });
     var peopleRanked = ranked(P.filter(function (p) { return p.inVote && p.votes > 0; }), function (p) { return p.votes; });
     var when = dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '');
     var list = [];
 
-    list.push({ d: 3.6, say: 'The day in review: ' + d.event.name + ', ' + when + '.', draw: function (t, dd) {
+    list.push({ d: 3.6, mood: 'calm', say: 'The day in review: ' + d.event.name + ', ' + when + '.', draw: function (t, dd) {
       var a = inout(t, dd);
       ctx.globalAlpha = a * fadeIn(t); kicker('The day in review', 360, 1);
       ctx.globalAlpha = a * fadeIn(t, 0.2);
@@ -290,6 +345,8 @@
       ctx.globalAlpha = 1;
     } });
 
+    list = list.concat(dayScenes(day || {}, { schedule: true }));
+
     if (P.length) {
       var shown = P.slice(0, 12), more = P.length - shown.length;
       list.push({ d: 5, say: 'What got built: ' + P.map(function (p) { return p.project; }).join(', ') + '.', draw: function (t, dd) {
@@ -310,7 +367,7 @@
 
     if (aiRanked.length) {
       var podium = aiRanked.slice(0, 3);
-      list.push({ d: 6.4, say: 'Round one, the AI judge: ' + podium.map(function (r) { return place(r) + ', ' + r.p.project + ' (' + r.p.total + '/70)'; }).join('; ') + '.', draw: function (t, dd) {
+      list.push({ d: 6.4, hits: podium.map(function (r, idx) { return { t: 0.9 + (podium.length - 1 - idx) * 1.1, big: !idx }; }), say: 'Round one, the AI judge: ' + podium.map(function (r) { return place(r) + ', ' + r.p.project + ' (' + r.p.total + '/70)'; }).join('; ') + '.', draw: function (t, dd) {
         var a = inout(t, dd);
         ctx.globalAlpha = a * fadeIn(t); kicker('Round one', 210, 1);
         line([['The AI ', {}], ['judge', { italic: true, weight: 400, color: C.accent }]], PAD, 300 + rise(t), { size: 88 });
@@ -337,7 +394,7 @@
       var winners = peopleRanked.filter(function (r) { return r.rank === 1; }), pw = winners[0].p;
       var aiPlace = {}; aiRanked.forEach(function (r) { aiPlace[r.p.id] = r; });
       var agree = aiPlace[pw.id] ? (aiPlace[pw.id].rank === 1 ? 'The AI agreed.' : 'The AI had it ' + place(aiPlace[pw.id]).toLowerCase() + '.') : '';
-      list.push({ d: 5.2, say: 'Round two, the people’s choice: ' + winners.map(function (r) { return r.p.project; }).join(' and ') + ', with ' + pw.votes + (pw.votes === 1 ? ' vote' : ' votes') + '. ' + agree, draw: function (t, dd) {
+      list.push({ d: 5.2, hits: [{ t: 1, big: true }], say: 'Round two, the people’s choice: ' + winners.map(function (r) { return r.p.project; }).join(' and ') + ', with ' + pw.votes + (pw.votes === 1 ? ' vote' : ' votes') + '. ' + agree, draw: function (t, dd) {
         var a = inout(t, dd), k = clamp((t - 1) / 0.6);
         ctx.globalAlpha = a * fadeIn(t); kicker('Round two', 210, 1);
         line([['The ', {}], ['people', { italic: true, weight: 400, color: C.accent }]], PAD, 300 + rise(t), { size: 88 });
@@ -383,7 +440,7 @@
     }
 
     photos.forEach(function (img, i) {
-      list.push({ d: 2.6, say: i ? '' : 'Photos from the day.', draw: function (t, dd) {
+      list.push({ d: 2.6, mood: 'calm', say: i ? '' : 'Photos from the day.', draw: function (t, dd) {
         var a = Math.min(fadeIn(t, 0), 1 - ease((t - dd + 0.4) / 0.4)), z = reduce ? 1 : 1.06 + 0.06 * (t / dd);
         var sc = Math.max(S / img.width, S / img.height) * z, w = img.width * sc, h = img.height * sc;
         var dx = reduce ? 0 : (i % 2 ? -1 : 1) * 30 * (t / dd);
@@ -401,7 +458,7 @@
       } });
     });
 
-    list.push({ d: 4.4, say: 'Thank you to everyone who built something. The full summary is at ' + SITE + '.', draw: function (t) {
+    list.push({ d: 4.4, mood: 'end', say: 'Thank you to everyone who built something. The full summary is at ' + SITE + '.', draw: function (t) {
       var a = fadeIn(t);
       ctx.globalAlpha = a; kicker('Thank you', 380, 1);
       line([['To everyone who ', {}], ['built', { italic: true, weight: 400, color: C.accent }]], PAD, 500 + rise(t), { size: 84 });
@@ -414,11 +471,118 @@
     return list;
   }
 
+  // ---------- the soundtrack: an original loop played with Web Audio, timed to the scenes (no recordings, nothing to license) ----------
+  // 112 bpm, A minor, F, C, G, one chord a bar. Calm scenes keep the pad and a slow arpeggio; the rest add bass, kick and hats.
+  // Reveals get a rising swish and a chime. The audio clock also drives the picture, so sound and scenes never drift apart.
+  var music = (function () {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    var BEAT = 60 / 112, STEP = BEAT / 2, BAR = BEAT * 4;
+    var CHORDS = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], ROOTS = [45, 41, 48, 43];
+    var ac = null, master = null, dest = null, bus = null, noise = null, acStart = 0, wall = 0, synced = false, step = 0, hitAt = 0, hits = [], muted = false;
+    function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+    function setup() {
+      if (ac || !AC) return;
+      ac = new AC();
+      var comp = ac.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+      master = ac.createGain(); master.gain.value = muted ? 0 : 1.5;
+      comp.connect(master); master.connect(ac.destination);
+      if (ac.createMediaStreamDestination) { dest = ac.createMediaStreamDestination(); master.connect(dest); }
+      master.input = comp;
+      noise = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+      var data = noise.getChannelData(0), seed = 7;
+      for (var i = 0; i < data.length; i++) { seed = (seed * 16807) % 2147483647; data[i] = seed / 1073741823.5 - 1; }
+    }
+    function env(g, at, peak, attack, hold, release) {
+      g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(peak, at + attack);
+      g.gain.setValueAtTime(peak, at + attack + hold); g.gain.exponentialRampToValueAtTime(0.0001, at + attack + hold + release);
+      return at + attack + hold + release + 0.05;
+    }
+    function tone(type, m, at, peak, attack, hold, release, cutoff, detune) {
+      var o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+      o.type = type; o.frequency.value = hz(m); if (detune) o.detune.value = detune;
+      f.type = 'lowpass'; f.frequency.value = cutoff || 2400;
+      o.connect(f); f.connect(g); g.connect(bus);
+      o.start(at); o.stop(env(g, at, peak, attack, hold, release));
+    }
+    function hiss(at, len, peak, type, from, to) {
+      var src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+      src.buffer = noise; f.type = type; f.frequency.setValueAtTime(from, at); if (to) f.frequency.exponentialRampToValueAtTime(to, at + len);
+      src.connect(f); f.connect(g); g.connect(bus);
+      g.gain.setValueAtTime(0.0001, at);
+      if (to) { g.gain.exponentialRampToValueAtTime(peak, at + len); g.gain.exponentialRampToValueAtTime(0.0001, at + len + 0.08); }
+      else { g.gain.linearRampToValueAtTime(peak, at + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, at + len); }
+      src.start(at); src.stop(at + len + 0.1);
+    }
+    function kick(at) {
+      var o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.setValueAtTime(130, at); o.frequency.exponentialRampToValueAtTime(42, at + 0.14);
+      o.connect(g); g.connect(bus); o.start(at); o.stop(env(g, at, 0.42, 0.004, 0.02, 0.22));
+    }
+    // One eighth-note step of the loop, at reel time t
+    function playStep(n, t, at, mood) {
+      var bar = Math.floor(n / 8), pos = n % 8, ch = CHORDS[bar % 4], fade = mood === 'end' ? Math.max(0, 1 - (t - endFrom) / 3) : 1;
+      if (fade <= 0) return;
+      if (pos === 0) ch.forEach(function (m) { tone('sawtooth', m, at, 0.022 * fade, 0.5, BAR - 0.9, 0.9, 900, -6); tone('sawtooth', m, at, 0.022 * fade, 0.5, BAR - 0.9, 0.9, 900, 6); });
+      var arp = [0, 1, 2, 1, 2, 0, 1, 2][pos];
+      if (mood !== 'calm' || pos % 2 === 0) tone('triangle', ch[arp] + 12, at, 0.05 * fade, 0.005, 0.02, 0.32, 3200);
+      if (mood === 'calm' || mood === 'end' && fade < 0.6) return;
+      tone('triangle', ROOTS[bar % 4] - 12 + (pos === 3 || pos === 7 ? 12 : 0), at, 0.14 * fade, 0.006, 0.05, 0.16, 700);
+      if (pos % 4 === 0) kick(at);
+      if (pos % 2 === 1) hiss(at, 0.05, 0.05 * fade, 'highpass', 7000);
+    }
+    function chime(at, big) {
+      hiss(at - 0.9, 0.9, big ? 0.07 : 0.035, 'bandpass', 300, 5000);
+      [76, 79, 84].slice(0, big ? 3 : 2).forEach(function (m, i) { tone('sine', m, at + i * 0.06, 0.09, 0.005, 0.05, big ? 1.6 : 0.9, 6000); tone('triangle', m + 12, at + i * 0.06, 0.025, 0.005, 0.02, 0.6, 8000); });
+    }
+    var endFrom = 1e9;
+    return {
+      load: function (list) {
+        hits = []; endFrom = 1e9;
+        list.forEach(function (s) { (s.hits || []).forEach(function (h) { hits.push({ at: s.at + h.t, big: h.big }); }); if (s.mood === 'end' && endFrom === 1e9) endFrom = s.at + 0.5; });
+      },
+      moodAt: function (t) { var s = scenes.filter(function (x) { return t >= x.at && t < x.at + x.d; })[0] || scenes[scenes.length - 1]; return s && s.mood || 'full'; },
+      start: function (t) {
+        setup();
+        if (ac) {
+          if (ac.state === 'suspended') ac.resume();
+          bus = ac.createGain(); bus.connect(master.input);
+        }
+        wall = performance.now() / 1000 - t; synced = false;
+      },
+      stop: function () {
+        if (!bus) return;
+        var b = bus; bus = null;
+        b.gain.setTargetAtTime(0, ac.currentTime, 0.03);
+        setTimeout(function () { b.disconnect(); }, 400);
+      },
+      // The picture runs on the wall clock until the browser lets audio play, then follows the audio clock from where it got to
+      now: function () {
+        var t = performance.now() / 1000 - wall;
+        if (!bus || ac.state !== 'running') return t;
+        if (!synced) {
+          synced = true; acStart = ac.currentTime + 0.05 - t;
+          step = Math.ceil(t / STEP - 1e-6); hitAt = 0;
+          while (hitAt < hits.length && hits[hitAt].at < t + 0.05) hitAt++;
+        }
+        return ac.currentTime - acStart;
+      },
+      // Schedule whatever falls in the next quarter of a second
+      ahead: function (t) {
+        if (!bus || !synced) return;
+        while (step * STEP < t + 0.25) { var st = step * STEP; if (st >= 0 && st < total) playStep(step, st, acStart + st, this.moodAt(st)); step++; }
+        while (hitAt < hits.length && hits[hitAt].at < t + 0.25) { chime(acStart + hits[hitAt].at, hits[hitAt].big); hitAt++; }
+      },
+      stream: function () { setup(); return dest && dest.stream; },
+      mute: function (on) { muted = on; if (master) master.gain.setTargetAtTime(on ? 0 : 1.5, ac.currentTime, 0.02); }
+    };
+  })();
+
   // ---------- the player ----------
-  var scenes = [], total = 0, label = '', T = 0, playing = false, last = 0, recorder = null, onEnd = null;
+  var scenes = [], total = 0, label = '', T = 0, playing = false, recorder = null, onEnd = null;
   function load(list, lab) {
     scenes = list; label = lab; total = 0;
     scenes.forEach(function (s) { s.at = total; total += s.d; });
+    music.load(scenes);
     $('script').innerHTML = scenes.filter(function (s) { return s.say; }).map(function (s) { var li = document.createElement('li'); li.textContent = s.say; return li.outerHTML; }).join('');
     canvas.setAttribute('aria-label', 'Hype reel, ' + Math.round(total) + ' seconds. The script is below the player.');
     seek(0);
@@ -437,29 +601,31 @@
     frame(Math.min(2.2, scenes[0].d - 0.6)); T = 0; $('time').textContent = '0:00 / ' + Math.floor(total / 60) + ':' + ('0' + Math.round(total % 60)).slice(-2);
   }
   canvas.reelFrame = frame;  // for checking single frames from the browser console
-  function tick(now) {
+  function tick() {
     if (!playing) return;
-    frame(T + Math.min(0.1, (now - last) / 1000)); last = now;
+    frame(music.now());
+    music.ahead(T);
     if (T >= total) { pause(); if (onEnd) { var f = onEnd; onEnd = null; f(); } return; }
     requestAnimationFrame(tick);
   }
   function play() {
     if (T >= total) T = 0;
-    playing = true; last = performance.now(); $('play').textContent = 'Pause'; $('big-play').hidden = true;
+    playing = true; music.start(T); $('play').textContent = 'Pause'; $('big-play').hidden = true;
     requestAnimationFrame(tick);
   }
-  function pause() { playing = false; $('play').textContent = T >= total ? 'Play again' : 'Play'; }
+  function pause() { playing = false; music.stop(); $('play').textContent = T >= total ? 'Play again' : 'Play'; }
   $('play').onclick = function () { playing ? pause() : play(); };
   $('big-play').onclick = play;
   canvas.addEventListener('click', function () { if (!recorder) playing ? pause() : play(); });
   $('restart').onclick = function () { seek(0); play(); };
 
   // ---------- save as video: records the canvas in real time (MP4 where the browser can, else WebM) ----------
-  var TYPES = ['video/mp4;codecs=avc1.640028', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  var TYPES = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
   var type = window.MediaRecorder && canvas.captureStream ? TYPES.filter(function (x) { return MediaRecorder.isTypeSupported(x); })[0] : null;
   if (!type) { $('save').disabled = true; $('save').title = 'This browser can’t record video. Try Chrome or Safari.'; }
   $('save').onclick = function () {
-    var chunks = [], stream = canvas.captureStream(30);
+    var chunks = [], stream = canvas.captureStream(30), sound = music.stream();
+    if (sound) sound.getAudioTracks().forEach(function (tr) { stream.addTrack(tr); });
     recorder = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 10000000 });
     recorder.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
     recorder.onstop = function () {
@@ -468,7 +634,7 @@
       a.download = 'hackday-reel-' + ev.id + '-' + mode + (type.indexOf('mp4') > -1 ? '.mp4' : '.webm');
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 10000);
-      stream.getTracks().forEach(function (tr) { tr.stop(); });
+      stream.getVideoTracks().forEach(function (tr) { tr.stop(); });  // the music's track stays, for the next recording
       recorder = null; busy(false);
       $('status').textContent = 'Saved ' + a.download + (type.indexOf('mp4') > -1 ? '.' : '. This browser saves WebM: LinkedIn takes it, or open the reel in Safari or a recent Chrome for MP4.');
     };
@@ -481,24 +647,32 @@
   // Browsers stop drawing in a hidden tab, so pause the recording too rather than save a frozen stretch
   document.addEventListener('visibilitychange', function () {
     if (!recorder || recorder.state === 'inactive') return;
-    if (document.hidden) { recorder.pause(); playing = false; }
+    if (document.hidden) { recorder.pause(); playing = false; music.stop(); }
     else { $('status').textContent = 'Recording again… keep this tab in front.'; recorder.resume(); play(); }
   });
+  // Sound on or off, remembered in this browser. Off still records a silent track.
+  function setSound(on) {
+    music.mute(!on);
+    $('sound').setAttribute('aria-pressed', String(on)); $('sound').textContent = on ? 'Sound on' : 'Sound off';
+    try { localStorage.setItem('hackday-reel-sound', on ? '1' : '0'); } catch (e) {}
+  }
+  try { if (localStorage.getItem('hackday-reel-sound') === '0') setSound(false); } catch (e) {}
+  $('sound').onclick = function () { setSound(this.getAttribute('aria-pressed') !== 'true'); };
   function busy(on) { ['play', 'restart', 'save'].forEach(function (id) { $(id).disabled = on; }); $('reel-modes').querySelectorAll('button').forEach(function (b) { b.disabled = on; }); }
 
   // ---------- which reel ----------
-  var mode, summary = null, lastEvent = null, photos = [];
+  var mode, summary = null, lastEvent = null, photos = [], day = {};
   function setMode(m) {
-    mode = m; playing = false; onEnd = null; $('play').textContent = 'Play';
+    mode = m; playing = false; music.stop(); onEnd = null; $('play').textContent = 'Play';
     $('reel-modes').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
     var after = m === 'after';
-    $('reel-lead').textContent = after ? 'How the day went, in under a minute.' : 'What’s coming up, in under a minute. Share it to get people excited.';
+    $('reel-lead').textContent = after ? 'How the day went, in about a minute, with music.' : 'What’s coming up, in under a minute, with music. Share it to get people excited.';
     $('reel-for').innerHTML = '';
     var a = document.createElement('a');
     a.href = after ? 'summary.html?event=' + encodeURIComponent(ev.id) : 'event.html';
     a.textContent = after ? 'See the full summary' : 'See the plan for the day';
     $('reel-for').append('For the hackathon on ' + ev.label + '. ', a);
-    load(after ? afterScenes(summary, photos) : beforeScenes(ev, lastEvent), ev.label);
+    load(after ? afterScenes(summary, photos, day) : beforeScenes(ev, lastEvent, day), ev.label);
     $('big-play').hidden = false;
   }
   $('reel-modes').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
@@ -517,8 +691,9 @@
 
   $('reel-event').textContent = 'The reel · ' + ev.label;
   Promise.all([document.fonts ? document.fonts.load(font(100, 500)).then(function () { return Promise.all([document.fonts.load(font(100, 400, true)), document.fonts.load(font(100, 600))]); }) : null,
-    getSummary(ev.id), getSummary('')]).then(function (r) {
-    var mine = r[1], latest = r[2];
+    getSummary(ev.id), getSummary(''),
+    fetch('assets/events/' + encodeURIComponent(ev.id) + '.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })]).then(function (r) {
+    var mine = r[1], latest = r[2]; day = r[3] || {};
     if (mine && mine.ok && mine.published) summary = mine;
     if (latest && latest.ok && latest.published && latest.event.id !== ev.id) lastEvent = latest;
     return summary ? Promise.all((summary.photos || []).slice(0, 6).map(loadImage)) : [];
