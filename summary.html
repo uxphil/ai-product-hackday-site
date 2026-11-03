@@ -7,8 +7,8 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=d3d5ac7a">
-<script src="assets/site.js?v=b9ec382b"></script>
+<link rel="stylesheet" href="assets/style.css?v=b1197d26">
+<script src="assets/site.js?v=897e84cd"></script>
 </head>
 <body data-event-page>
 <header class="site-header" id="top"><div class="wrap bar">
@@ -67,7 +67,7 @@
 <h3 class="sum-h3">Photos</h3>
 <div id="photos"></div>
 <h3 class="sum-h3">The reel</h3>
-<div class="sum-soon-line"><p>A short film of everything that got built.</p><span class="tbc">Coming soon</span></div>
+<p class="sum-reel"><a class="btn ghost" href="reel.html" id="reel-link">Watch the reel</a> <span class="muted">Under a minute: the numbers, what got built, the winners and photos from the day. Save it as a video to share.</span></p>
 <p class="muted small sum-takedown">In a photo and would rather not be? Tell Phil and it comes down.</p>
 <dialog class="sum-lightbox" id="lightbox" aria-label="Image">
 <img id="lb-img" alt="">
@@ -154,6 +154,7 @@
       if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
       if (!d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
       ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
+      $('reel-link').href = 'reel.html?event=' + encodeURIComponent(d.event.id);
       data = d; restore(); render();
     })
     .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });

@@ -846,3 +846,35 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
   .sum-gallery .pic { margin-bottom: .5rem; }
   .lb-prev, .lb-next { top: auto; bottom: 1rem; transform: none; }
 }
+
+/* the hype reel (reel.html): the film itself is a canvas, always dark */
+.reel-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+.reel-intro h1 { margin-top: .4rem; }
+.reel-for { color: var(--muted); }
+.reel-modes { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+.reel-modes .btn[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.reel-stage { margin: 0; }
+.reel-screen { position: relative; }
+.reel-stage canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: var(--radius); background: #141712; cursor: pointer; box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(0, 0, 0, .45); }
+.reel-big-play { position: absolute; right: 7%; bottom: 10%; width: 4.6rem; height: 4.6rem; border-radius: 50%; border: 0; background: #a9c98a; color: #141712; display: grid; place-items: center; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); transition: transform .15s; }
+.reel-big-play:hover { transform: scale(1.06); }
+.reel-big-play[hidden] { display: none; }
+.reel-big-play svg { width: 1.9rem; height: 1.9rem; fill: currentColor; margin-left: .25rem; }
+.reel-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .9rem; }
+.reel-time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: .9rem; margin-left: .25rem; }
+.reel-save { margin-left: auto; }
+.reel-status { min-height: 1.4em; margin: .6rem 0 0; }
+.reel-script { grid-column: 1 / -1; margin-top: .5rem; }
+.reel-script summary { cursor: pointer; font-weight: 500; }
+.reel-script ol { color: var(--muted); max-width: 46rem; }
+@media (max-width: 860px) { .reel-page { grid-template-columns: 1fr; } }
+/* reel.html?embed: just the player, for the homepage's frame */
+html.reel-embed body { background: transparent; }
+html.reel-embed .site-header, html.reel-embed footer, html.reel-embed .fab, html.reel-embed .theme-toggle, html.reel-embed .reel-intro, html.reel-embed .reel-script, html.reel-embed .reel-controls, html.reel-embed .reel-status, html.reel-embed .skip { display: none; }
+html.reel-embed main, html.reel-embed .wrap { padding: 0; max-width: none; }
+html.reel-embed .reel-page { display: block; padding: 0; border: 0; }
+html.reel-embed .reel-stage canvas { box-shadow: none; }
+.home-reel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+.home-reel iframe { display: block; width: 100%; aspect-ratio: 1; border: 0; border-radius: var(--radius); background: #141712; }
+@media (max-width: 860px) { .home-reel { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .reel-big-play { width: 3.6rem; height: 3.6rem; } .reel-big-play svg { width: 1.5rem; height: 1.5rem; } }
