@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=569c122b">
+<link rel="stylesheet" href="assets/style.css?v=950d151f">
 <script src="assets/site.js?v=54a8942f"></script>
 </head>
 <body data-event-page>
@@ -105,6 +105,13 @@
 <p class="muted">Restore one to bring it back into the preview. It isn’t saved or published until you say so.</p>
 <ol class="pv-list" id="pv-list"></ol>
 <div class="pv-dialog-actions"><button class="btn ghost small" type="button" data-close>Close</button></div>
+</dialog>
+<dialog class="pv-dialog pv-live-dialog" id="pv-live" aria-labelledby="pv-live-h">
+<div class="pv-live-tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+<h2 id="pv-live-h">It’s <em>live</em></h2>
+<p id="pv-live-text">The summary is published. Anyone with the site password can see it now.</p>
+<p class="pv-live-link"><a id="pv-live-url" href="#" target="_blank" rel="noopener"></a></p>
+<div class="pv-dialog-actions"><a class="btn small" id="pv-live-open" href="#" target="_blank" rel="noopener">Open the live page</a><button class="btn ghost small" type="button" id="pv-live-copy">Copy link</button><button class="btn ghost small" type="button" data-close>Keep editing</button></div>
 </dialog>
 <dialog class="pv-dialog" id="pv-caption" aria-labelledby="pv-caption-h">
 <h2 id="pv-caption-h">Caption</h2>
@@ -472,15 +479,35 @@
   }
   function changed() { dirty = true; pvStatus(); }
   function when(iso) { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  // Three states, so it's obvious whether what you see is what's public: live and up to date, changes not live
+  // yet, or never published
   function pvStatus() {
-    var d = data, live = d.publishedAt ? 'Live' + (d.publishedVersion ? ': version ' + d.publishedVersion : '') + ' since ' + when(d.publishedAt) : 'Not published';
-    var draft = dirty ? (restoredFrom ? 'Restored version ' + restoredFrom + ', not saved' : 'Unsaved changes') : d.draftVersion ? 'Draft saved, version ' + d.draftVersion + ', ' + when(d.savedAt) : 'No draft saved yet';
-    $('pv-title').textContent = draft;
-    $('pv-status').textContent = live + (d.votingOpen ? ' · Voting is still open, so it can’t be published yet' : '');
+    var d = data, upToDate = !dirty && d.publishedAt && d.publishedVersion && d.publishedVersion === d.draftVersion;
+    var state = upToDate ? 'live' : d.publishedAt ? 'changed' : 'unpublished';
+    var title = {
+      live: 'Live. This is what everyone sees',
+      changed: dirty ? (restoredFrom ? 'Restored version ' + restoredFrom + ': not saved or live' : 'Unsaved changes, not live yet') : 'Saved changes, not live yet',
+      unpublished: dirty ? 'Unsaved changes. Not published yet' : d.draftVersion ? 'Draft saved. Not published yet' : 'Not published yet'
+    }[state];
+    var sub = (d.publishedAt ? 'Live: version ' + (d.publishedVersion || '–') + ' since ' + when(d.publishedAt) : 'Nobody can see it yet') +
+      (d.draftVersion && !upToDate ? ' · Draft: version ' + d.draftVersion + ', ' + when(d.savedAt) : '') +
+      (d.votingOpen ? ' · Voting is still open, so it can’t be published yet' : '');
+    $('pv-title').textContent = title;
+    $('pv-status').textContent = sub;
+    $('pv-bar').dataset.state = state;
     $('pv-save').disabled = !dirty;
     $('pv-versions-btn').disabled = false;
-    $('pv-publish').disabled = !!d.votingOpen;
+    $('pv-publish').disabled = !!d.votingOpen || state === 'live';
+    $('pv-publish').textContent = state === 'live' ? 'Published ✓' : state === 'changed' ? 'Publish changes' : 'Publish';
     $('pv-bar').classList.toggle('dirty', dirty);
+  }
+  function liveUrl() { return 'https://hackday.bonhard.ai/summary.html?event=' + encodeURIComponent(data.event.id); }
+  function showLive() {
+    var u = liveUrl();
+    $('pv-live-url').href = $('pv-live-open').href = u;
+    $('pv-live-url').textContent = u.replace('https://', '');
+    $('pv-live-text').textContent = 'Version ' + (data.publishedVersion || '') + ' of the summary is published. Anyone with the site password can see it now.';
+    $('pv-live').showModal();
   }
   function previewLoaded(version) {
     document.documentElement.classList.add('is-preview');
@@ -593,8 +620,13 @@
       busy(true); $('pv-title').textContent = 'Publishing…';
       send('/api/summary/publish', { event: data.event.id, content: content() }).then(function (d) {
         if (!d.ok) { busy(false); alert(d.message || 'That didn’t publish.'); return; }
-        dirty = false; restoredFrom = null; load();
+        dirty = false; restoredFrom = null; load().then(function () { if (data.publishedAt) showLive(); });
       });
+    };
+    $('pv-live-copy').onclick = function () {
+      var b = this, done = function () { b.textContent = 'Copied ✓'; setTimeout(function () { b.textContent = 'Copy link'; }, 1800); };
+      if (navigator.clipboard) navigator.clipboard.writeText(liveUrl()).then(done, function () { prompt('Copy the link:', liveUrl()); });
+      else prompt('Copy the link:', liveUrl());
     };
     $('pv-versions-btn').onclick = function () {
       $('pv-list').innerHTML = data.versions.length ? data.versions.map(function (v) {

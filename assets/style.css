@@ -1012,3 +1012,26 @@ html.reel-embed .reel-screen video { box-shadow: none; }
 .hl-edit code { font-size: .88em; }
 .hl-edit .pv-area { font-size: 1rem; }
 .hl-edit-note { margin: 1rem 0 0; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* summary preview: live / changes-not-live states on the bar, and the "It's live" confirmation */
+.pv-bar[data-state="live"] { background: var(--accent); color: var(--accent-ink); }
+.pv-bar[data-state="live"] .btn { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--accent); }
+.pv-bar[data-state="live"] .btn.ghost { background: transparent; color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent-ink) 40%, transparent); }
+.pv-bar[data-state="live"] #pv-publish:disabled { opacity: 1; background: transparent; color: var(--accent-ink); border-color: transparent; font-weight: 600; }
+.pv-bar[data-state="live"] .pv-state b::before { content: ""; display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; background: var(--accent-ink); margin-right: .5rem; vertical-align: .08em; box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-ink) 20%, transparent); }
+.pv-bar[data-state="changed"] .pv-state b::before, .pv-bar[data-state="unpublished"] .pv-state b::before { content: ""; display: inline-block; width: .55rem; height: .55rem; border-radius: 50%; background: var(--gold); margin-right: .45rem; vertical-align: .1em; }
+.pv-bar.dirty .pv-state b::before { background: var(--gold); }
+.pv-live-dialog { text-align: center; padding: 2rem 1.6rem 1.6rem; }
+.pv-live-dialog h2 { font-size: 2.4rem; margin: .6rem 0 .4rem; }
+.pv-live-dialog p { margin: 0 auto .4rem; max-width: 26rem; color: var(--muted); }
+.pv-live-dialog .pv-live-link a { font-weight: 600; overflow-wrap: anywhere; }
+.pv-live-dialog .pv-dialog-actions { justify-content: center; flex-wrap: wrap; margin-top: 1.3rem; }
+.pv-live-tick { width: 4.2rem; height: 4.2rem; margin: 0 auto; border-radius: 50%; background: var(--accent); display: grid; place-items: center; }
+.pv-live-tick svg { width: 2.2rem; height: 2.2rem; fill: none; stroke: var(--accent-ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .pv-live-dialog[open] { animation: pv-pop .45s cubic-bezier(.2, 1.4, .4, 1); }
+  .pv-live-dialog[open] .pv-live-tick { animation: pv-pop .5s cubic-bezier(.2, 1.6, .4, 1) .1s both; }
+  .pv-live-dialog[open] .pv-live-tick path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: pv-draw .45s ease-out .35s forwards; }
+}
+@keyframes pv-pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes pv-draw { to { stroke-dashoffset: 0; } }
