@@ -7,8 +7,8 @@
 <meta name="description" content="Your board for the day: five stops and a call button.">
 <title>My day · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=b1197d26">
-<script src="assets/site.js?v=897e84cd"></script>
+<link rel="stylesheet" href="assets/style.css?v=5f1109a3">
+<script src="assets/site.js?v=2f1ed5d7"></script>
 </head>
 <body data-event-page>
 <a class="skip" href="#main">Skip to content</a>
@@ -43,9 +43,10 @@
 </div>
 
 <div class="pass">
-<dl><dt>Passenger</dt><dd id="b-name"></dd><dt>Day job</dt><dd id="b-job"></dd></dl>
+<dl><dt>Passenger</dt><dd id="b-name"></dd><dt>Day job</dt><dd id="b-job"></dd><dt>Email for materials</dt><dd class="pass-email"><span id="b-email"></span> <button class="linkish" type="button" id="email-edit" aria-expanded="false" aria-controls="email-form"></button></dd></dl>
 <dl class="stub"><dt>Board code</dt><dd class="code" id="b-code"></dd></dl>
 </div>
+<form class="find-code" id="email-form" novalidate hidden><div class="field" style="flex:1 1 14rem"><label class="vh" for="email">Personal email</label><input type="email" id="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.com"><p class="hint">Optional. Phil uses it only to send you this event’s materials, and deletes it 30 days after the event. Leave it empty to remove it.</p><p class="msg" aria-live="polite"></p></div><button class="btn small" type="submit">Save</button></form>
 <div class="pass-actions">
 <button class="btn small" type="button" id="copy-link"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-link"/></svg><span>Copy my link</span></button>
 <button class="btn small ghost" type="button" id="phone-btn" aria-expanded="false" aria-controls="phone"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-smartphone"/></svg>Open on my phone</button>
@@ -71,7 +72,7 @@
 </section></div>
 </main>
 <footer><div class="wrap">
-<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 29 October 2026.</p>
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 3 November 2026.</p>
 <p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page keeps your board with the organiser; see <a href="join.html">Join the day</a> for what we keep and when we delete it.</p>
 </div></footer>
 <div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html" aria-current="page">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">My day</span></button></div>
@@ -170,6 +171,9 @@
     $('b-event').hidden = false;
     $('b-name').textContent = b.name;
     $('b-job').textContent = b.jobTitle;
+    $('b-email').textContent = b.email || 'None given';
+    $('b-email').classList.toggle('muted', !b.email);
+    $('email-edit').textContent = b.email ? 'Change' : 'Add';
     $('b-code').textContent = pretty(b.code);
     $('phone-url').textContent = location.host + location.pathname.replace(/[^/]*$/, '') + 'me.html';
     $('phone-code').textContent = pretty(b.code);
@@ -227,6 +231,22 @@
   $('call-btn').addEventListener('click', function () { setCall(!(board && board.call)); });
   $('call-off').addEventListener('click', function () { setCall(false); });
   $('note').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); setCall(true); } });
+
+  $('email-edit').addEventListener('click', function () {
+    var f = $('email-form'), open = f.hidden;
+    f.hidden = !open; this.setAttribute('aria-expanded', String(open));
+    if (open) { $('email').value = board.email || ''; $('email').focus(); }
+  });
+  $('email-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = this, field = f.querySelector('.field'), v = $('email').value.trim();
+    field.classList.remove('bad'); field.querySelector('.msg').textContent = '';
+    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { field.classList.add('bad'); field.querySelector('.msg').textContent = 'That doesn’t look like an email address.'; return; }
+    post({ email: v }).then(function (d) {
+      if (!d.ok) { field.classList.add('bad'); field.querySelector('.msg').textContent = d.message; return; }
+      f.hidden = true; $('email-edit').setAttribute('aria-expanded', 'false'); render(d.board);
+    }).catch(function () { status('That didn’t save. Check your connection and try again.', true); });
+  });
 
   $('copy-link').addEventListener('click', function () {
     var label = this.querySelector('span');

@@ -7,8 +7,8 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=b1197d26">
-<script src="assets/site.js?v=897e84cd"></script>
+<link rel="stylesheet" href="assets/style.css?v=5f1109a3">
+<script src="assets/site.js?v=2f1ed5d7"></script>
 </head>
 <body data-event-page>
 <header class="site-header" id="top"><div class="wrap bar">
@@ -72,10 +72,16 @@
 <dialog class="sum-lightbox" id="lightbox" aria-label="Image">
 <img id="lb-img" alt="">
 <p id="lb-cap"></p>
+<p class="lb-count" id="lb-count"></p>
 <button type="button" class="lb-btn lb-close" id="lb-close" aria-label="Close">✕</button>
 <button type="button" class="lb-btn lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
 <button type="button" class="lb-btn lb-next" id="lb-next" aria-label="Next image">›</button>
 </dialog>
+</section>
+
+<section class="block sum-thanks" id="thanks-wrap" aria-labelledby="thanks-h" hidden>
+<h2 id="thanks-h">A note from <em>Phil</em></h2>
+<div id="thanks"></div>
 </section>
 
 <section class="block" aria-labelledby="how-h">
@@ -89,6 +95,22 @@
 </section>
 </div>
 </div>
+<div class="pv-bar" id="pv-bar" hidden>
+<div class="pv-state"><b id="pv-title">Preview</b><span id="pv-status"></span></div>
+<div class="pv-actions"><button class="btn ghost small" type="button" id="pv-versions-btn">Versions</button><button class="btn ghost small" type="button" id="pv-save">Save draft</button><button class="btn small" type="button" id="pv-publish">Publish</button></div>
+</div>
+<dialog class="pv-dialog" id="pv-versions" aria-labelledby="pv-versions-h">
+<h2 id="pv-versions-h">Saved <em>versions</em></h2>
+<p class="muted">Restore one to bring it back into the preview. It isn’t saved or published until you say so.</p>
+<ol class="pv-list" id="pv-list"></ol>
+<div class="pv-dialog-actions"><button class="btn ghost small" type="button" data-close>Close</button></div>
+</dialog>
+<dialog class="pv-dialog" id="pv-caption" aria-labelledby="pv-caption-h">
+<h2 id="pv-caption-h">Caption</h2>
+<p class="muted">Shown under the photo when it’s opened. Leave empty for none.</p>
+<label class="vh" for="pv-caption-text">Caption</label><input id="pv-caption-text" maxlength="200" autocomplete="off">
+<div class="pv-dialog-actions"><button class="btn small" type="button" id="pv-caption-ok">Done</button><button class="btn ghost small" type="button" data-close>Cancel</button></div>
+</dialog>
 </main>
 <footer><div class="wrap">
 <p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 2 November 2026.</p>
@@ -99,10 +121,14 @@
 <script>
 /* The event summary, from the organiser's Worker (GET /summary, worker/src/summary.js in the planning repository).
    Round one reveals the AI judge's top five one place at a time; round two, the people's choice, unlocks once the
-   AI's winner is out. How far this browser has revealed is remembered here only, per event. */
+   AI's winner is out. How far this browser has revealed is remembered here only, per event.
+   Preview: the demo control serves this same page at /preview/summary.html?event=<id>, behind Cloudflare Access. There
+   it reads the draft from the control (/api/summary/draft) and the organiser can edit the intro, head count, a
+   thank-you note and the photos' order, captions and visibility, save drafts, restore older versions and publish. */
 (function () {
-  var API = 'https://hackday-api.bonhard.ai';
-  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794
+  var PREVIEW = /^\/preview\//.test(location.pathname);
+  var API = PREVIEW ? '' : 'https://hackday-api.bonhard.ai';
+  if (!PREVIEW && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794
     try { var q = new URLSearchParams(location.search).get('api'); if (q) sessionStorage.setItem('hackday-api', q); API = sessionStorage.getItem('hackday-api') || API; } catch (e) {}
   }
   var CAT = { complexity: 'Complexity', creativity: 'Creativity', breadth: 'Breadth', clarity: 'Clarity', focus: 'Focus', testability: 'Testability', usefulness: 'Usefulness' };
@@ -130,7 +156,7 @@
   var eventId = new URLSearchParams(location.search).get('event') || '';
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var data, aiRanked, peopleRanked, state = { ai: 0, people: false };
-  function key() { return 'hackday-summary:' + data.event.id; }
+  function key() { return (PREVIEW ? 'hackday-summary-preview:' : 'hackday-summary:') + data.event.id; }
   function save() { try { localStorage.setItem(key(), JSON.stringify(state)); } catch (e) {} }
   function restore() { try { var s = JSON.parse(localStorage.getItem(key()) || 'null'); if (s) state = { ai: Math.min(+s.ai || 0, TOP), people: !!s.people }; } catch (e) {} }
 
@@ -147,16 +173,23 @@
     return 'Best at ' + CAT[k].toLowerCase() + ', ' + p.scores[k] + '/10';
   }
 
-  fetch(API + '/summary' + (eventId ? '?event=' + encodeURIComponent(eventId) : ''))
-    .then(function (r) { return r.json(); })
-    .then(function (d) {
-      if (d.event) $('sum-event').textContent = 'Event summary · ' + d.event.name + ' · ' + dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '');
-      if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
-      if (!d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
-      ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
-      data = d; restore(); render();
-    })
-    .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });
+  function load(version) {
+    var url = PREVIEW ? '/api/summary/draft?event=' + encodeURIComponent(eventId) + (version ? '&version=' + version : '')
+      : API + '/summary' + (eventId ? '?event=' + encodeURIComponent(eventId) : '');
+    return fetch(url, { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.event) $('sum-event').textContent = (PREVIEW ? 'Preview · ' : 'Event summary · ') + d.event.name + ' · ' + dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '');
+        if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
+        if (!PREVIEW && !d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
+        ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
+        data = d; restore(); render();
+        if (PREVIEW) previewLoaded(version);
+      })
+      .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });
+  }
+  if (PREVIEW && !eventId) $('sum-lead').textContent = 'Open the preview from the demo control’s Summary tab.';
+  else load();
 
   function render() {
     var n = data.numbers, P = data.projects;
@@ -165,18 +198,37 @@
     aiRanked = ranked(rated, function (p) { return p.total; });
     peopleRanked = ranked(voted, function (p) { return p.votes; });
 
-    $('sum-lead').textContent = cap(word(n.participants)) + ' people, one day, ' + word(n.projects) + ' products planned and built with AI. Here’s how it went.';
-    var tiles = [[n.participants, 'participants'], [n.projects, 'projects shared'], [n.voters, n.voters === 1 ? 'person voted' : 'people voted']];
-    if (n.appsLive) tiles.push([n.appsLive, 'said their app went live']);
-    $('sum-stats').innerHTML = tiles.map(function (t) { return '<div class="stat"><dt class="vh">' + esc(t[1]) + '</dt><dd><b>' + t[0] + '</b><span aria-hidden="true">' + esc(t[1]) + '</span></dd></div>'; }).join('');
-    $('sum-stats').hidden = false;
+    renderIntro();
+    renderStats();
     $('how-people').textContent = n.participantsCounted ? 'everyone named on a shared project or who joined the day on the site, whichever is more' : 'the organiser’s head count on the day';
     $('sum-body').hidden = false;
 
-    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderPictures();
+    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderPictures(); renderThanks();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
+  }
+
+  function autoIntro() { return cap(word(data.numbers.participants)) + ' people, one day, ' + word(data.numbers.projects) + ' products planned and built with AI. Here’s how it went.'; }
+  function renderIntro() {
+    if (PREVIEW) return renderIntroEditor();
+    $('sum-lead').textContent = data.intro || autoIntro();
+  }
+  function renderStats() {
+    var n = data.numbers;
+    var tiles = [[n.participants, 'participants', 'head'], [n.projects, 'projects shared'], [n.voters, n.voters === 1 ? 'person voted' : 'people voted']];
+    if (n.appsLive) tiles.push([n.appsLive, 'said their app went live']);
+    $('sum-stats').innerHTML = tiles.map(function (t) {
+      var num = PREVIEW && t[2] ? '<input class="pv-num" id="pv-head" type="number" min="0" max="10000" inputmode="numeric" value="' + (data.content.headCount == null ? '' : data.content.headCount) + '" placeholder="' + n.counted + '" aria-label="Head count">' : '<b>' + t[0] + '</b>';
+      return '<div class="stat"><dt class="vh">' + esc(t[1]) + '</dt><dd>' + num + '<span aria-hidden="true">' + esc(t[1]) + (PREVIEW && t[2] ? ' · empty uses the site’s count, ' + n.counted : '') + '</span></dd></div>';
+    }).join('');
+    $('sum-stats').hidden = false;
+  }
+  function paras(text) { return text.split(/\n{2,}/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; }).join(''); }
+  function renderThanks() {
+    if (PREVIEW) return renderThanksEditor();
+    $('thanks-wrap').hidden = !data.thanks;
+    $('thanks').innerHTML = data.thanks ? paras(data.thanks) : '';
   }
 
   // ---- Round one: the AI judge. Places 6 and below show at once; the top five are revealed 5th, 4th … 1st.
@@ -281,36 +333,218 @@
     }).join('') + '</ul>' : '<p class="muted">Nothing was scored, so there’s nothing to sort.</p>';
   }
 
-  // ---- Feedback sheets and photos, with a lightbox. Images come from the Worker, only while the summary is published.
-  var shown = [], at = 0;
-  function renderPictures() {
-    [['feedback', 'What you said about the day, from the feedback sheets.', 'Feedback sheet'], ['photos', 'A few pictures from the day.', 'Photo from the day']].forEach(function (x) {
-      var list = data[x[0]] || [];
-      $(x[0]).innerHTML = list.length ? '<div class="sum-gallery ' + x[0] + '">' + list.map(function (m, i) {
-        var alt = m.caption || x[2] + ' ' + (i + 1);
-        return '<button type="button" class="pic" data-set="' + x[0] + '" data-i="' + i + '" aria-label="Open ' + esc(alt) + '"><img src="' + esc(m.url) + '" alt="' + esc(alt) + '" loading="lazy"' +
-          (m.width && m.height ? ' width="' + m.width + '" height="' + m.height + '"' : '') + '></button>';
-      }).join('') + '</div>' : '<div class="sum-soon-line"><p>' + esc(x[1]) + '</p><span class="tbc">Coming soon</span></div>';
-    });
+  // ---- Feedback sheets and photos. Photos are a mosaic: the first one large, landscape ones wide, portrait ones tall,
+  // with a little "moments" tile for fun. Clicking opens a lightbox (✕, arrows, swipe, keys). Images come from the
+  // Worker only while the summary is published (or from the control, in the preview).
+  var SETS = {
+    photos: { soon: 'A few pictures from the day.', alt: 'Photo from the day' },
+    feedback: { soon: 'What you said about the day, from the feedback sheets.', alt: 'Feedback sheet' }
+  };
+  function visible(set) { return (data[set] || []).filter(function (m) { return !m.hidden; }); }
+  function tileShape(m, i) {
+    var r = m.width && m.height ? m.width / m.height : 1;
+    if (i === 0) return ' big';
+    if (r > 1.35) return ' wide';
+    if (r < 0.8) return ' tall';
+    return i % 6 === 4 ? ' wide' : '';
   }
-  function openPic(set, i) {
-    shown = data[set]; at = i;
-    var m = shown[at];
-    $('lb-img').src = m.url; $('lb-img').alt = m.caption || '';
-    $('lb-cap').textContent = m.caption || (at + 1) + ' of ' + shown.length;
-    $('lb-prev').hidden = $('lb-next').hidden = shown.length < 2;
+  function tile(set, m, i, vi) {
+    var alt = m.caption || SETS[set].alt + ' ' + (vi + 1);
+    var tools = PREVIEW ? '<div class="pv-tools">' +
+      '<button type="button" data-pv="left" aria-label="Move earlier" title="Move earlier">‹</button>' +
+      '<button type="button" data-pv="right" aria-label="Move later" title="Move later">›</button>' +
+      '<button type="button" data-pv="caption" aria-label="Caption" title="Caption">Aa</button>' +
+      '<button type="button" data-pv="hide" aria-label="' + (m.hidden ? 'Show on the page' : 'Hide from the page') + '" title="' + (m.hidden ? 'Show' : 'Hide') + '">' + (m.hidden ? 'Show' : 'Hide') + '</button></div>' +
+      (m.hidden ? '<span class="pv-flag">Hidden</span>' : m.isNew ? '<span class="pv-flag new">New</span>' : '') : '';
+    return '<figure class="tile' + (set === 'photos' ? tileShape(m, i) : '') + (m.hidden ? ' is-hidden' : '') + '" data-set="' + set + '" data-id="' + m.id + '"' + (PREVIEW ? ' draggable="true"' : '') + ' style="--i:' + i + '">' +
+      '<button type="button" class="pic" data-set="' + set + '" data-id="' + m.id + '" aria-label="Open ' + esc(alt) + '"' + (m.hidden ? ' disabled' : '') + '>' +
+      '<img src="' + esc(m.url) + '" alt="' + esc(alt) + '" loading="lazy"' + (m.width && m.height ? ' width="' + m.width + '" height="' + m.height + '"' : '') + '></button>' +
+      (m.caption ? '<figcaption>' + esc(m.caption) + '</figcaption>' : '') + tools + '</figure>';
+  }
+  function renderPictures() {
+    ['feedback', 'photos'].forEach(function (set) {
+      var list = PREVIEW ? data[set] || [] : visible(set), vi = 0;
+      if (!list.length) { $(set).innerHTML = '<div class="sum-soon-line"><p>' + esc(SETS[set].soon) + '</p><span class="tbc">Coming soon</span></div>'; return; }
+      var tiles = list.map(function (m, i) { var t = tile(set, m, i, m.hidden ? 0 : vi); if (!m.hidden) vi++; return t; });
+      var count = visible(set).length;
+      if (set === 'photos' && count > 3) tiles.splice(2, 0, '<div class="tile note" aria-hidden="true"><b>' + count + '</b><span>moments from the day</span></div>');
+      $(set).innerHTML = '<div class="' + (set === 'photos' ? 'mosaic' : 'sum-gallery feedback') + '">' + tiles.join('') + '</div>';
+    });
+    revealTiles();
+  }
+  // Tiles drift in as they scroll into view
+  var seen;
+  function revealTiles() {
+    var tiles = document.querySelectorAll('.mosaic .tile, .sum-gallery .tile');
+    if (reduce || !window.IntersectionObserver) { tiles.forEach(function (t) { t.classList.add('in'); }); return; }
+    if (seen) seen.disconnect();
+    seen = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); seen.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+    tiles.forEach(function (t) { seen.observe(t); });
+  }
+
+  var shown = [], at = 0;
+  function openPic(set, id) {
+    shown = visible(set);
+    at = Math.max(0, shown.findIndex(function (m) { return m.id === id; }));
+    showPic();
     if (!$('lightbox').open) $('lightbox').showModal();
   }
+  function showPic() {
+    var m = shown[at];
+    $('lb-img').src = m.url; $('lb-img').alt = m.caption || '';
+    $('lb-cap').textContent = m.caption || '';
+    $('lb-count').textContent = shown.length > 1 ? (at + 1) + ' of ' + shown.length : '';
+    $('lb-prev').hidden = $('lb-next').hidden = shown.length < 2;
+  }
+  function step(d) { if (shown.length > 1) { at = (at + d + shown.length) % shown.length; showPic(); } }
   document.addEventListener('click', function (e) {
     var p = e.target.closest('.pic');
-    if (p) openPic(p.dataset.set, +p.dataset.i);
+    if (p && !e.target.closest('.pv-tools')) openPic(p.dataset.set, p.dataset.id);
   });
-  function step(d) { openPic(shown === data.feedback ? 'feedback' : 'photos', (at + d + shown.length) % shown.length); }
   $('lb-close').onclick = function () { $('lightbox').close(); };
   $('lb-prev').onclick = function () { step(-1); };
   $('lb-next').onclick = function () { step(1); };
   $('lightbox').addEventListener('click', function (e) { if (e.target === this) this.close(); });
   $('lightbox').addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
+  var touchX = null;
+  $('lightbox').addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+  $('lightbox').addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX; touchX = null;
+    if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+  });
+
+  // ---- Preview only: edit, save drafts, restore versions, publish (worker/src/control.js)
+  var dirty = false, restoredFrom = null;
+  function content() {
+    var pics = function (set) { return (data[set] || []).map(function (m) { return { id: m.id, caption: m.caption || '', hidden: !!m.hidden }; }); };
+    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', photos: pics('photos'), feedback: pics('feedback') };
+  }
+  function changed() { dirty = true; pvStatus(); }
+  function when(iso) { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  function pvStatus() {
+    var d = data, live = d.publishedAt ? 'Live' + (d.publishedVersion ? ': version ' + d.publishedVersion : '') + ' since ' + when(d.publishedAt) : 'Not published';
+    var draft = dirty ? (restoredFrom ? 'Restored version ' + restoredFrom + ', not saved' : 'Unsaved changes') : d.draftVersion ? 'Draft saved, version ' + d.draftVersion + ', ' + when(d.savedAt) : 'No draft saved yet';
+    $('pv-title').textContent = draft;
+    $('pv-status').textContent = live + (d.votingOpen ? ' · Voting is still open, so it can’t be published yet' : '');
+    $('pv-save').disabled = !dirty;
+    $('pv-versions-btn').disabled = false;
+    $('pv-publish').disabled = !!d.votingOpen;
+    $('pv-bar').classList.toggle('dirty', dirty);
+  }
+  function previewLoaded(version) {
+    document.documentElement.classList.add('is-preview');
+    $('pv-bar').hidden = false;
+    dirty = !!version; restoredFrom = version || null;
+    pvStatus();
+  }
+  function renderIntroEditor() {
+    var el = $('sum-lead');
+    el.contentEditable = 'plaintext-only';
+    if (el.contentEditable !== 'plaintext-only') el.contentEditable = 'true';
+    el.classList.add('pv-edit');
+    el.setAttribute('role', 'textbox'); el.setAttribute('aria-label', 'Intro');
+    el.dataset.auto = autoIntro();
+    el.textContent = data.content.intro || '';
+    el.classList.toggle('empty', !data.content.intro);
+  }
+  function renderThanksEditor() {
+    $('thanks-wrap').hidden = false;
+    $('thanks').innerHTML = '<label class="vh" for="pv-thanks">A note from Phil</label><textarea id="pv-thanks" class="pv-edit pv-area" maxlength="1200" rows="4" placeholder="Optional. A thank-you or what happens next. Only shown when there’s something here.">' + esc(data.content.thanks || '') + '</textarea>';
+  }
+  if (PREVIEW) {
+    $('sum-lead').addEventListener('input', function () {
+      var t = this.textContent.trim();
+      data.content.intro = t; this.classList.toggle('empty', !t); changed();
+    });
+    $('sum-lead').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
+    document.addEventListener('input', function (e) {
+      if (e.target.id === 'pv-thanks') { data.content.thanks = e.target.value; changed(); }
+      if (e.target.id === 'pv-head') {
+        var v = e.target.value.trim();
+        data.content.headCount = v === '' ? null : Math.max(0, Math.round(+v) || 0);
+        data.numbers.participants = data.content.headCount == null ? data.numbers.counted : data.content.headCount;
+        data.numbers.participantsCounted = data.content.headCount == null;
+        if (!data.content.intro) $('sum-lead').dataset.auto = autoIntro();
+        changed();
+      }
+    });
+    // Photo tools: move, caption, hide or show
+    var capFor = null;
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-pv]');
+      if (!b) return;
+      var t = b.closest('.tile'), list = data[t.dataset.set], i = list.findIndex(function (m) { return m.id === t.dataset.id; });
+      var act = b.dataset.pv;
+      if (act === 'left' || act === 'right') {
+        var j = act === 'left' ? i - 1 : i + 1;
+        if (j < 0 || j >= list.length) return;
+        list.splice(j, 0, list.splice(i, 1)[0]); changed(); renderPictures();
+        var again = document.querySelector('.tile[data-id="' + t.dataset.id + '"] [data-pv="' + act + '"]'); if (again) again.focus();
+      }
+      if (act === 'hide') { list[i].hidden = !list[i].hidden; changed(); renderPictures(); }
+      if (act === 'caption') { capFor = list[i]; $('pv-caption-text').value = capFor.caption || ''; $('pv-caption').showModal(); }
+    });
+    $('pv-caption-ok').onclick = function () { if (capFor) { capFor.caption = $('pv-caption-text').value.trim(); changed(); renderPictures(); } $('pv-caption').close(); };
+    $('pv-caption-text').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('pv-caption-ok').click(); } });
+    document.querySelectorAll('.pv-dialog [data-close]').forEach(function (b) { b.onclick = function () { b.closest('dialog').close(); }; });
+    // Drag to reorder, with a mouse
+    var dragId = null;
+    document.addEventListener('dragstart', function (e) { var t = e.target.closest && e.target.closest('.tile[draggable]'); if (t) { dragId = t.dataset.id; t.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; } });
+    document.addEventListener('dragend', function () { dragId = null; document.querySelectorAll('.dragging, .drop').forEach(function (x) { x.classList.remove('dragging', 'drop'); }); });
+    document.addEventListener('dragover', function (e) {
+      var t = e.target.closest && e.target.closest('.tile[draggable]');
+      if (!dragId || !t) return;
+      e.preventDefault();
+      document.querySelectorAll('.drop').forEach(function (x) { x.classList.remove('drop'); }); t.classList.add('drop');
+    });
+    document.addEventListener('drop', function (e) {
+      var t = e.target.closest && e.target.closest('.tile[draggable]');
+      if (!dragId || !t || t.dataset.id === dragId) return;
+      e.preventDefault();
+      var list = data[t.dataset.set], from = list.findIndex(function (m) { return m.id === dragId; }), to = list.findIndex(function (m) { return m.id === t.dataset.id; });
+      if (from < 0) return;
+      list.splice(to, 0, list.splice(from, 1)[0]); changed(); renderPictures();
+    });
+
+    function send(path, body) {
+      return fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        .then(function (r) { return r.json().catch(function () { return { ok: false, message: r.status === 200 || r.status === 302 || r.status === 403 ? 'Your sign-in has expired. Reload the page and sign in again (your changes are still here until you do).' : 'The server answered ' + r.status + '.' }; }); })
+        .catch(function () { return { ok: false, message: 'Couldn’t reach the server. Check the connection and try again.' }; });
+    }
+    function busy(on) { ['pv-save', 'pv-publish', 'pv-versions-btn'].forEach(function (id) { $(id).disabled = on; }); if (!on) pvStatus(); }
+    $('pv-save').onclick = function () {
+      busy(true); $('pv-title').textContent = 'Saving…';
+      send('/api/summary/save', { event: data.event.id, content: content() }).then(function (d) {
+        if (!d.ok) { busy(false); alert(d.message || 'That didn’t save.'); return; }
+        dirty = false; restoredFrom = null; load();
+      });
+    };
+    $('pv-publish').onclick = function () {
+      if (!confirm('Publish this version? Anyone with the site password will see it at hackday.bonhard.ai/summary.html.' + (dirty ? ' Your unsaved changes are saved as a new version first.' : ''))) return;
+      busy(true); $('pv-title').textContent = 'Publishing…';
+      send('/api/summary/publish', { event: data.event.id, content: content() }).then(function (d) {
+        if (!d.ok) { busy(false); alert(d.message || 'That didn’t publish.'); return; }
+        dirty = false; restoredFrom = null; load();
+      });
+    };
+    $('pv-versions-btn').onclick = function () {
+      $('pv-list').innerHTML = data.versions.length ? data.versions.map(function (v) {
+        var live = data.publishedVersion === v.version;
+        return '<li><span><b>Version ' + v.version + '</b> · saved ' + when(v.saved_at) + (live ? ' <span class="pv-live">Live</span>' : v.published_at ? ' <span class="pv-was">Was published</span>' : '') + '</span>' +
+          '<button class="btn ghost small" type="button" data-restore="' + v.version + '">Restore</button></li>';
+      }).join('') : '<li class="muted">Nothing saved yet. “Save draft” keeps a version here.</li>';
+      $('pv-versions').showModal();
+    };
+    $('pv-list').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-restore]');
+      if (!b) return;
+      if (dirty && !confirm('Replace your unsaved changes with version ' + b.dataset.restore + '?')) return;
+      $('pv-versions').close();
+      load(+b.dataset.restore);
+    });
+    window.addEventListener('beforeunload', function (e) { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+  }
 
   function celebrate(el) {
     if (!el || reduce) return;
