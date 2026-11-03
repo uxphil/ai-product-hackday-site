@@ -569,7 +569,7 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 .field { display: grid; gap: .35rem; }
 .field > label { font-weight: 600; }
 .field .hint { color: var(--muted); font-size: .92rem; margin: 0; }
-.field input[type="text"], .field input[type="url"], .field textarea { font: inherit; font-size: 1rem; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: calc(var(--radius) - 4px); padding: .75rem .9rem; width: 100%; box-sizing: border-box; }
+.field input[type="text"], .field input[type="url"], .field input[type="email"], .field textarea { font: inherit; font-size: 1rem; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: calc(var(--radius) - 4px); padding: .75rem .9rem; width: 100%; box-sizing: border-box; }
 .field textarea { min-height: 14rem; resize: vertical; font-size: .95rem; line-height: 1.5; }
 .field input:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
 .field .msg { margin: 0; font-size: .95rem; font-weight: 500; color: var(--warn-text); background: var(--warn-bg); border-left: 3px solid var(--warn-line); padding: .55rem .8rem; border-radius: 0 8px 8px 0; }
@@ -846,3 +846,9 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
   .sum-gallery .pic { margin-bottom: .5rem; }
   .lb-prev, .lb-next { top: auto; bottom: 1rem; transform: none; }
 }
+.optional { font-weight: 400; color: var(--muted); }
+.pass dd.pass-email { font-size: 1rem; font-weight: 500; }
+.pass-email .linkish { font-size: .9rem; color: var(--accent); margin-left: .3rem; }
+#email-form { margin: 0 0 1rem; }
+#email-form[hidden] { display: none; }
+#email-form input { font-family: inherit; letter-spacing: normal; text-transform: none; }
