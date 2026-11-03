@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=353992a3">
+<link rel="stylesheet" href="assets/style.css?v=9088e93e">
 <script src="assets/site.js?v=4c77ce75"></script>
 </head>
 <body data-event-page>
@@ -68,7 +68,7 @@
 <h3 class="sum-h3">Photos</h3>
 <div id="photos"></div>
 <h3 class="sum-h3">The reel</h3>
-<div id="reel-box"><p class="sum-reel"><a class="btn ghost" href="reel.html" id="reel-link">Watch the reel</a> <span class="muted">Under a minute: what got built, the winners and photos from the day. Save it as a video to share.</span></p></div>
+<div id="reel-box"><div class="sum-soon-line"><p>Loading the reel…</p></div></div>
 <p class="muted small sum-takedown">In a photo and would rather not be? Tell Phil and it comes down.</p>
 <dialog class="sum-lightbox" id="lightbox" aria-label="Image">
 <img id="lb-img" alt="">
@@ -191,9 +191,8 @@
         if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
         if (!PREVIEW && !d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
         ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
-        if ($('reel-link')) $('reel-link').href = 'reel.html?event=' + encodeURIComponent(d.event.id);
-        data = d; restore(); render();
-        if (PREVIEW) { previewLoaded(version); $('reel-box').innerHTML = '<p class="muted">The reel is chosen in the demo control’s Summary tab (the video made in Claude Code, or one you upload), and goes out when you publish.</p>'; }
+        data = d; restore(); render(); renderReel();
+        if (PREVIEW) previewLoaded(version);
       })
       .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });
   }
@@ -281,6 +280,21 @@
       });
     }, { threshold: .6 });
     els.forEach(function (el) { el.closest('div').classList.add('ready'); io.observe(el); });
+  }
+  // The reel, played right here. Same choice as reel.html: the organiser's upload (GET /summary's reel.video) or the
+  // one made in Claude Code (assets/reels/<event>.mp4). reel.html stays as its own page, to send on its own.
+  var SITE = PREVIEW ? 'https://hackday.bonhard.ai/' : '';  // the preview runs on the control's address
+  function renderReel() {
+    var id = data.event.id, page = SITE + 'reel.html?event=' + encodeURIComponent(id), made = SITE + 'assets/reels/' + encodeURIComponent(id) + '.mp4';
+    var src = data.reel && data.reel.video ? API + data.reel.video : null;
+    (src ? Promise.resolve(src) : fetch(made, { method: 'HEAD', cache: 'no-store' }).then(function (r) { return r.ok ? made : null; }, function () { return null; }))
+      .then(function (url) {
+        if (!url) { $('reel-box').innerHTML = '<div class="sum-soon-line"><p>A short film of everything that got built.</p><span class="tbc">Coming soon</span></div>'; return; }
+        $('reel-box').innerHTML = '<figure class="sum-reel-player"><video controls playsinline preload="metadata" aria-label="The day in review, a video"></video>' +
+          '<figcaption><span>Under a minute: what got built, the winners and photos from the day.</span> <a href="' + esc(page) + '"' + (PREVIEW ? ' target="_blank" rel="noopener"' : '') + '>Open it on its own page to share</a></figcaption></figure>' +
+          (PREVIEW ? '<p class="muted small">This is the reel chosen in the demo control’s Summary tab. It goes out with the page when you publish.</p>' : '');
+        $('reel-box').querySelector('video').src = url;
+      });
   }
   function renderThanks() {
     if (PREVIEW) return renderThanksEditor();
