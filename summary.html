@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=3abef02a">
+<link rel="stylesheet" href="assets/style.css?v=3ca125a6">
 <script src="assets/site.js?v=4c77ce75"></script>
 </head>
 <body data-event-page>
@@ -29,8 +29,8 @@
 <p class="sum-kicker">Round one</p>
 <h2 id="round-ai-h">The AI <em>judge</em></h2>
 <p class="muted sum-intro">Claude read every PRD and scored it out of 10 in seven categories, so out of 70 in all. It’s just for fun: the AI never saw the apps, and re-scoring the same PRD can move it by a few points.</p>
-<ol class="sum-board" id="ai-board" aria-live="polite"></ol>
 <div class="sum-actions"><button class="btn" type="button" id="ai-next"></button> <button class="btn ghost small" type="button" id="skip">Show everything</button></div>
+<ol class="sum-board" id="ai-board" aria-live="polite"></ol>
 </section>
 
 <section class="block sum-round" id="round-people" aria-labelledby="round-people-h">
@@ -39,7 +39,7 @@
 <div class="sum-curtain" id="people-curtain">
 <p><strong>The AI has had its say.</strong> <span id="curtain-text">After the event, everyone voted for up to three favourites. Did they agree with the machine?</span></p>
 <button class="btn" type="button" id="people-go" disabled>Reveal the people’s choice</button>
-<p class="muted small" id="people-hint">Reveal the AI’s winner first.</p>
+<p class="muted small" id="people-hint">Unlocks once the AI’s top five are revealed in round one, or <button class="linkish" type="button" id="people-skip">skip straight to the results</button>.</p>
 </div>
 <div id="people-result" hidden>
 <p class="muted sum-intro" id="people-intro"></p>
@@ -208,6 +208,7 @@
     renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderHighlights(); renderPictures(); renderThanks();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
+    $('people-skip').onclick = function () { $('skip').click(); $('round-people').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
   }
 
@@ -232,10 +233,47 @@
     if (PREVIEW) return renderHighlightsEditor();
     var h = data.highlights;
     $('highlights').innerHTML = h ? highlightsHtml(h) : '';
+    countUp($('highlights'));
   }
   function highlightsHtml(h) {
-    return (h.stats && h.stats.length ? '<dl class="hl-stats">' + h.stats.map(function (x) { return '<div><dt class="vh">' + esc(x.label) + '</dt><dd><b>' + esc(x.value) + '</b><span aria-hidden="true">' + esc(x.label) + '</span></dd></div>'; }).join('') + '</dl>' : '') +
-      (h.quotes && h.quotes.length ? '<ul class="hl-quotes">' + h.quotes.map(function (q, i) { return '<li class="' + (q.length < 48 ? 'short' : '') + '" style="--i:' + i + '"><blockquote><p>' + esc(q) + '</p></blockquote></li>'; }).join('') + '</ul>' : '');
+    var nums = (h.stats || []).map(function (x) { var m = /^(\d+(?:\.\d+)?)(%?)$/.exec(x.value); return m ? { v: +m[1], pct: !!m[2], dec: (m[1].split('.')[1] || '').length } : null; });
+    var best = -1, bestV = -1;
+    nums.forEach(function (n, i) { if (n && n.pct && n.v > bestV) { bestV = n.v; best = i; } });
+    var stats = (h.stats || []).map(function (x, i) {
+      var n = nums[i], meter = '';
+      if (n && n.pct) meter = '<span class="hl-meter" aria-hidden="true"><i style="--w:' + Math.min(100, n.v) + '%"></i></span>';
+      else if (n && /^out of 5\b/i.test(x.label)) meter = '<span class="hl-stars" aria-hidden="true" style="--w:' + Math.min(100, n.v / 5 * 100) + '%">★★★★★<i>★★★★★</i></span>';
+      return '<div class="' + (i === best ? 'hero' : '') + '"><dt class="vh">' + esc(x.label) + '</dt><dd><b class="hl-num"' +
+        (n ? ' data-to="' + n.v + '" data-dec="' + n.dec + '" data-suf="' + (n.pct ? '%' : '') + '"' : '') + '>' + esc(x.value) + '</b>' + meter +
+        '<span class="hl-label" aria-hidden="true">' + esc(x.label) + '</span></dd></div>';
+    }).join('');
+    var pops = 0;
+    var quotes = (h.quotes || []).map(function (q, i) {
+      // The first quote is large, and every fourth after it (so put the best ones there); short ones pop on solid colour
+      var size = i % 4 === 0 && q.length > 40 ? 'q-feature' : q.length < 40 ? 'q-pop' + (pops++ % 2 ? ' alt' : '') : 'q-mid';
+      return '<li class="' + size + '" style="--i:' + i + '"><blockquote><p>' + esc(q) + '</p></blockquote></li>';
+    }).join('');
+    return (stats ? '<dl class="hl-stats">' + stats + '</dl>' : '') + (quotes ? '<ul class="hl-quotes">' + quotes + '</ul>' : '');
+  }
+  // The big numbers count up from 0 the first time they scroll into view
+  function countUp(root) {
+    var els = (root || document).querySelectorAll('.hl-num[data-to]');
+    if (reduce || !window.IntersectionObserver || !els.length) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        var el = e.target, to = +el.dataset.to, dec = +el.dataset.dec, suf = el.dataset.suf, t0 = null;
+        (function tick(t) {
+          if (!t0) t0 = t;
+          var k = Math.min(1, (t - t0) / 1100), ease = 1 - Math.pow(1 - k, 3);
+          el.textContent = (to * ease).toFixed(dec) + suf;
+          if (k < 1) requestAnimationFrame(tick);
+        })(performance.now());
+        el.closest('div').classList.add('in');
+      });
+    }, { threshold: .6 });
+    els.forEach(function (el) { el.closest('div').classList.add('ready'); io.observe(el); });
   }
   function renderThanks() {
     if (PREVIEW) return renderThanksEditor();
