@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-event-default="last">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
 <title>Vote for favourites · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/style.css?v=a102f3a4">
-<script src="assets/site.js?v=54a8942f"></script>
+<script src="assets/site.js?v=3edde7a5"></script>
 </head>
 <body data-event-page>
 <a class="skip" href="#main">Skip to content</a>
@@ -171,8 +171,8 @@
     // Which event this vote is for, so nobody votes in the wrong one. Picks are kept per event.
     if (d.event) {
       event = d.event;
-      // The picker at the top chose a different event: don't take votes for the one the Worker has open
-      if (window.hackdayEvent && window.hackdayEvent !== event.id) {
+      // Someone chose a different event (picker or link): don't take votes for the one the Worker has open
+      if (window.hackdayEventChosen && window.hackdayEvent !== event.id) {
         open = false; d.open = 'elsewhere';
         setStatus('warn', '<strong>Voting is open for ' + esc(event.name) + ', not the event chosen at the top.</strong><p>Switch the event at the top of the page to vote.</p>');
       }

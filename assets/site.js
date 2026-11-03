@@ -350,16 +350,46 @@
     });
   }
 
-  /* ---------- event picker: which hackathon the event-specific pages (share, vote) are for ---------- */
-  // Newest first; the first is the default. Add the next event here (see site/README.md).
-  var EVENTS = [
-    { id: '2026-10-28', label: '28 Oct 2026 · Manchester' },
-  ];
-  var EVENT_KEY = 'hackday-event';
-  function known(id) { return EVENTS.some(function (e) { return e.id === id; }) ? id : null; }
+  /* ---------- event picker: which hackathon the event-specific pages (share, vote, summary…) are for ---------- */
+  // The list is the events the organiser has shown on the site (the demo control's "Show on the site"), from the
+  // Worker's GET /events, kept in this browser for the next page. FALLBACK is used until that has loaded once.
+  // Which event: ?event= in the address, else the one picked during this visit, else the page's default: the next
+  // event (today or later), or the last one (today or earlier) on pages with <html data-event-default="last">.
+  var FALLBACK = [{ id: '2026-10-28', held_on: '2026-10-28', location: 'Manchester' }];
+  var API = 'https://hackday-api.bonhard.ai', EVENT_KEY = 'hackday-event', LIST_KEY = 'hackday-events';
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794, kept for the visit
+    var q = new URLSearchParams(location.search).get('api');
+    if (q) store('sessionStorage', 'hackday-api', q);
+    API = store('sessionStorage', 'hackday-api') || API;
+  }
+  var events = FALLBACK;
+  try { var cached = JSON.parse(store('localStorage', LIST_KEY) || 'null'); if (cached && cached.length) events = cached; } catch (e) {}
   var param = new URLSearchParams(location.search).get('event');
-  var eventId = known(param) || known(store('localStorage', EVENT_KEY)) || EVENTS[0].id;
-  window.hackdayEvent = eventId; // read by vote.html
+  if (param && !/^\d{4}-\d{2}-\d{2}(-\d+)?$/.test(param)) param = null;
+  if (param) store('sessionStorage', EVENT_KEY, param);
+  var chosen = param || store('sessionStorage', EVENT_KEY);
+  function today() { return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/London' }); }
+  function byDefault(list) {
+    var t = today(), last = root.getAttribute('data-event-default') === 'last';
+    var pick = last ? list.filter(function (e) { return e.held_on <= t; })[0]               // newest first: the latest past one
+      : list.filter(function (e) { return e.held_on >= t; }).pop();                         // the soonest still to come
+    return (pick || list[0]).id;
+  }
+  var eventId = chosen || byDefault(events);
+  window.hackdayEvent = eventId;           // read by the event pages' own scripts
+  window.hackdayEventChosen = !!chosen;    // false: the page's default, not someone's choice
+
+  function label(e) {
+    var d = new Date((e.held_on || e.id.slice(0, 10)) + 'T12:00:00');
+    return [d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), e.location].filter(Boolean).join(' · ');
+  }
+  function options(select) {
+    var list = events.some(function (e) { return e.id === eventId; }) ? events : [{ id: eventId }].concat(events);  // a link can name an event that isn't listed
+    select.innerHTML = list.map(function (e) {
+      var o = document.createElement('option'); o.value = e.id; o.textContent = label(e); return o.outerHTML;
+    }).join('');
+    select.value = eventId;
+  }
 
   function initEventPicker() {
     var bar = document.querySelector('.site-header .bar'), nav = bar && bar.querySelector('nav');
@@ -367,23 +397,33 @@
     var wrap = document.createElement('label');
     wrap.className = 'event-pick';
     wrap.innerHTML = '<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-calendar"/></svg>' +
-      '<span class="vh">Event</span><select>' + EVENTS.map(function (e) {
-        return '<option value="' + e.id + '"' + (e.id === eventId ? ' selected' : '') + '>' + e.label + '</option>';
-      }).join('') + '</select>';
+      '<span class="vh">Event</span><select></select>';
+    var select = wrap.querySelector('select');
+    options(select);
     bar.insertBefore(wrap, nav);
     tagLinks();
-    wrap.querySelector('select').addEventListener('change', function () {
-      eventId = this.value;
-      store('localStorage', EVENT_KEY, eventId);
+    select.addEventListener('change', function () {
+      eventId = this.value; chosen = eventId;
+      store('sessionStorage', EVENT_KEY, eventId);
       if (param || document.body.hasAttribute('data-event-page')) {
         var u = new URL(location.href); u.searchParams.set('event', eventId); location.href = u.toString();
       } else {
-        window.hackdayEvent = eventId; tagLinks();
+        window.hackdayEvent = eventId; window.hackdayEventChosen = true; tagLinks();
       }
     });
+    fetch(API + '/events').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.ok || !d.events || !d.events.length) return;
+      events = d.events;
+      store('localStorage', LIST_KEY, JSON.stringify(events));
+      var id = chosen || byDefault(events);
+      if (id !== eventId && document.body.hasAttribute('data-event-page')) { location.reload(); return; }  // the default moved: the list is saved now
+      eventId = window.hackdayEvent = id;
+      options(select); tagLinks();
+    }).catch(function () {});
   }
   // Links to the event-specific pages carry the chosen event in their address
   function tagLinks() {
+    if (!chosen) return;  // each page then picks its own default
     document.querySelectorAll('a[href^="vote.html"], a[href^="share.html"], a[href^="reel.html"], a[href^="summary.html"]').forEach(function (a) {
       var u = new URL(a.getAttribute('href'), location.href); u.searchParams.set('event', eventId);
       a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);

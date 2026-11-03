@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-event-default="last">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/style.css?v=a102f3a4">
-<script src="assets/site.js?v=54a8942f"></script>
+<script src="assets/site.js?v=3edde7a5"></script>
 </head>
 <body data-event-page>
 <header class="site-header" id="top"><div class="wrap bar">
@@ -161,7 +161,7 @@
   function emoji(p) { return p.emoji || '✨'; }
   function who(p) { return p.names ? '<span class="names">' + esc(p.names) + '</span>' : ''; }
 
-  var eventId = new URLSearchParams(location.search).get('event') || '';
+  var eventId = new URLSearchParams(location.search).get('event') || window.hackdayEvent || '';  // site.js: the last event by default
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var data, aiRanked, peopleRanked, state = { ai: 0, people: false };
   function key() { return (PREVIEW ? 'hackday-summary-preview:' : 'hackday-summary:') + data.event.id; }
