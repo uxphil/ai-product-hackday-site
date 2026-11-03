@@ -352,12 +352,9 @@
 
   /* ---------- event picker: which hackathon the event-specific pages (share, vote) are for ---------- */
   // Newest first; the first is the default. Add the next event here (see site/README.md).
-  // The rest of each entry is for the hype reel (reel.html): leave out what isn't confirmed and it says "To be confirmed"
   var EVENTS = [
-    { id: '2026-10-28', label: '28 Oct 2026 · Manchester', date: 'Wednesday 28 October 2026', time: '10:00–17:00',
-      place: 'Westminster House, Manchester', people: '50–60' },
+    { id: '2026-10-28', label: '28 Oct 2026 · Manchester' },
   ];
-  window.hackdayEvents = EVENTS; // read by reel.html
   var EVENT_KEY = 'hackday-event';
   function known(id) { return EVENTS.some(function (e) { return e.id === id; }) ? id : null; }
   var param = new URLSearchParams(location.search).get('event');

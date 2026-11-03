@@ -7,8 +7,8 @@
 <meta name="description" content="A short hype reel for the AI Enabled Product Hackathon: what’s coming up, or how the day went.">
 <title>The reel · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=a962a397">
-<script src="assets/site.js?v=2f1ed5d7"></script>
+<link rel="stylesheet" href="assets/style.css?v=a9657682">
+<script src="assets/site.js?v=4c77ce75"></script>
 </head>
 <body data-event-page>
 <header class="site-header" id="top"><div class="wrap bar">
@@ -29,744 +29,70 @@
 </div>
 </div>
 <figure class="reel-stage">
-<div class="reel-screen">
-<canvas id="reel" width="1080" height="1080" role="img" aria-label="Hype reel"></canvas>
-<button type="button" class="reel-big-play" id="big-play" aria-label="Play the reel" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
-</div>
-<figcaption class="reel-controls">
-<button type="button" class="btn small" id="play">Play</button>
-<button type="button" class="btn ghost small" id="restart">From the start</button>
-<button type="button" class="btn ghost small" id="sound" aria-pressed="true">Sound on</button>
-<span class="reel-time" id="time" aria-hidden="true">0:00</span>
-<button type="button" class="btn ghost small reel-save" id="save">Save as video</button>
-</figcaption>
-<p class="muted small reel-status" id="status" role="status"></p>
+<div class="reel-screen" id="reel-screen"></div>
+<figcaption class="reel-controls" id="reel-controls" hidden><a class="btn ghost small" id="reel-download" download>Download the video</a></figcaption>
 </figure>
-<details class="reel-script">
-<summary>What the reel says</summary>
-<ol id="script"></ol>
-</details>
 </section>
 </div>
 </main>
 <footer><div class="wrap">
 <p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 3 November 2026.</p>
-<p>No cookies, no analytics, no external fonts, no music. After an event, the reel reads the published summary from the organiser’s server: first names and project names only, never PRDs. “Save as video” records the reel in your browser; nothing is uploaded.</p>
+<p>No cookies, no analytics, no external fonts. The reel is a video file: made on this site, or uploaded by the organiser and served from the organiser’s server once the event summary is published. First names and project names only, never PRDs.</p>
 </div></footer>
 <div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Reel</span></button></div>
 
 <script>
-/* The hype reel, drawn on a canvas so the same frames play on the page and save as a video file.
-   Before an event: the event's details from EVENTS in assets/site.js. After it: the published summary from the
-   organiser's Worker (GET /summary, worker/src/summary.js in the planning repository), the same public data as summary.html. */
-(function () {
+/* The event's reel, as a video. Before the day: assets/reels/<event>-before.mp4. The day in review, once the summary is
+   published: the video the organiser chose in the demo control's Summary tab, either an upload (GET /summary's
+   reel.video, worker/src/reel.js) or the one made in Claude Code, assets/reels/<event>.mp4. Both are made with
+   reel/maker.html in the planning repository. */
+document.addEventListener('DOMContentLoaded', function () {  // after site.js has drawn the event picker
   var API = 'https://hackday-api.bonhard.ai';
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794
     try { var q = new URLSearchParams(location.search).get('api'); if (q) sessionStorage.setItem('hackday-api', q); API = sessionStorage.getItem('hackday-api') || API; } catch (e) {}
   }
-  // In the demo control's summary preview (/preview/reel.html, behind Access) the page sends the draft over postMessage
-  var PREVIEW = /^\/preview\//.test(location.pathname);
-  if (PREVIEW) API = '';
-  var SITE = 'hackday.bonhard.ai';
-  var CAT = { complexity: 'Complexity', creativity: 'Creativity', breadth: 'Breadth', clarity: 'Clarity', focus: 'Focus', testability: 'Testability', usefulness: 'Usefulness' };
-  // Same prizes, order and rule as summary.html and the demo control's Awards view
-  var AWARDS = [['creativity', 'Most creative'], ['complexity', 'Most ambitious'], ['usefulness', 'Most useful'], ['clarity', 'Sharpest PRD'],
-    ['focus', 'Best scoped'], ['breadth', 'Widest reach'], ['testability', 'Most testable']];
-  var MOVES = ['Converse', 'Define', 'Build', 'Publish', 'Test', 'Improve', 'Continue'];
-  // The reel is always dark sage, whatever the site's theme: it's a film, and it's the same film when saved
-  var C = { bg: '#141712', surface: '#1c2019', line: '#30362b', text: '#eceee8', muted: '#a6ad9f', accent: '#a9c98a', ink: '#141712' };
-  var S = 1080, PAD = 96;
-
   var $ = function (id) { return document.getElementById(id); };
-  var canvas = $('reel'), ctx = canvas.getContext('2d');
   var params = new URLSearchParams(location.search);
   if (params.has('embed')) document.documentElement.classList.add('reel-embed');  // the homepage shows just the player, in a frame
-  var events = window.hackdayEvents || [];
-  var ev = events.filter(function (e) { return e.id === (params.get('event') || window.hackdayEvent); })[0] || events[0] || { id: '', label: '' };
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var id = window.hackdayEvent, label = (document.querySelector('.event-pick option:checked') || {}).textContent || id;
+  var videos = {};
 
-  function ordinal(n) { var s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
-  function dateLabel(iso) { return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
-  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
-  function ease(x) { x = clamp(x); return 1 - Math.pow(1 - x, 3); }
-  function pop(x) { if (reduce) return 1; x = clamp(x); var c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }  // eases out with a small overshoot
-  function emoji(p) { return p.emoji || '✨'; }
-  function ranked(list, val) {  // equal scores share a place (1, 2, 2, 4), as on summary.html
-    var sorted = list.slice().sort(function (a, b) { return val(b) - val(a) || a.project.localeCompare(b.project); });
-    var out = [];
-    sorted.forEach(function (p, i) { out.push({ p: p, rank: i && val(p) === val(sorted[i - 1]) ? out[i - 1].rank : i + 1 }); });
-    out.forEach(function (r) { r.tie = out.filter(function (o) { return o.rank === r.rank; }).length > 1; });
-    return out;
-  }
-  function place(r) { return (r.tie ? 'Joint ' : '') + ordinal(r.rank); }
-
-  // ---------- drawing helpers ----------
-  function font(size, weight, italic) { return (italic ? 'italic ' : '') + (weight || 500) + ' ' + size + 'px "DM Sans", system-ui, sans-serif'; }
-  // A line of segments: [['Build something ', {}], ['real', {italic: true, color: accent}]]
-  function line(segs, x, y, o) {
-    o = o || {};
-    var size = o.size || 64, w = 0;
-    segs = segs.map(function (s) { var st = s[1] || {}; ctx.font = font(size, st.weight || o.weight, st.italic); var m = ctx.measureText(s[0]).width; w += m; return [s[0], st, m]; });
-    var cx = o.align === 'center' ? x - w / 2 : o.align === 'right' ? x - w : x;
-    ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
-    segs.forEach(function (s) {
-      ctx.font = font(size, s[1].weight || o.weight, s[1].italic);
-      ctx.fillStyle = s[1].color || o.color || C.text;
-      ctx.fillText(s[0], cx, y); cx += s[2];
-    });
-    return w;
-  }
-  function text(str, x, y, o) { return line([[str, {}]], x, y, o); }
-  function wrap(str, maxW, size, weight) {
-    ctx.font = font(size, weight);
-    var words = String(str).split(/\s+/), lines = [], cur = '';
-    words.forEach(function (w) { var t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; });
-    if (cur) lines.push(cur);
-    return lines;
-  }
-  function fitSize(str, maxW, size, weight) {  // shrink until it fits on one line
-    ctx.font = font(size, weight);
-    while (size > 18 && ctx.measureText(str).width > maxW) { size -= 2; ctx.font = font(size, weight); }
-    return size;
-  }
-  function clip(str, maxW, size, weight) {
-    ctx.font = font(size, weight);
-    if (ctx.measureText(str).width <= maxW) return str;
-    while (str.length > 1 && ctx.measureText(str + '…').width > maxW) str = str.slice(0, -1);
-    return str.trim() + '…';
-  }
-  function kicker(str, y, alpha) { ctx.globalAlpha = alpha; text(str.toUpperCase(), PAD, y, { size: 26, weight: 600, color: C.accent }); ctx.globalAlpha = 1; }
-  function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-  function star(x, y, r) {
-    ctx.beginPath(); ctx.moveTo(x, y - r);
-    ctx.quadraticCurveTo(x, y, x + r, y); ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y); ctx.quadraticCurveTo(x, y, x, y - r);
-    ctx.fill();
-  }
-  function emojiAt(e, x, y, size, scale) {
-    ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
-    ctx.font = size + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = C.text; ctx.fillText(e, 0, 0);
-    ctx.restore();
-  }
-  // A scene's own fade and rise: in over the first 0.5s, out over the last 0.4s
-  function inout(t, d) { return ease(t / 0.5) * (1 - ease((t - d + 0.4) / 0.4)); }
-  // Reduced motion: things still fade in, but nothing slides or bounces
-  function rise(t, delay) { return reduce ? 0 : (1 - ease((t - (delay || 0)) / 0.6)) * 36; }
-  function fadeIn(t, delay) { return ease((t - (delay || 0)) / 0.5); }
-
-  // ---------- the frame around every scene ----------
-  var SPARKS = [[0.88, 0.12, 22], [0.08, 0.9, 14], [0.93, 0.78, 10], [0.14, 0.2, 9], [0.72, 0.93, 12]];
-  function backdrop(T) {
-    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, S, S);
-    var gx = S * (0.62 + 0.08 * Math.sin(T * 0.25)), gy = S * (0.48 + 0.06 * Math.cos(T * 0.2));
-    var g = ctx.createRadialGradient(gx, gy, 0, gx, gy, S * 0.62);
-    g.addColorStop(0, 'rgba(169, 201, 138, .16)'); g.addColorStop(1, 'rgba(169, 201, 138, 0)');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
-    ctx.fillStyle = C.accent;
-    SPARKS.forEach(function (s, i) { ctx.globalAlpha = 0.35 + 0.35 * Math.sin(T * 1.3 + i * 1.7); star(s[0] * S, s[1] * S, s[2]); });
-    ctx.globalAlpha = 1;
-  }
-  function chrome(T, total, label) {
-    line([['ai product ', { color: C.text }], ['hackday', { color: C.accent }]], PAD, 78, { size: 28, weight: 600 });
-    text(label, S - PAD, 78, { size: 24, color: C.muted, align: 'right' });
-    text(SITE, PAD, S - 52, { size: 24, color: C.muted });
-    ctx.fillStyle = C.line; ctx.fillRect(PAD, S - 32, S - PAD * 2, 3);
-    ctx.fillStyle = C.accent; ctx.fillRect(PAD, S - 32, (S - PAD * 2) * clamp(T / total), 3);
-  }
-
-  // ---------- before the day ----------
-  function beforeScenes(e, last, day) {
-    var tbc = 'To be confirmed';
-    var list = [
-      { d: 4, mood: 'calm', say: 'Build something real. Publish it. Take it home.', draw: function (t, d) {
-        var a = inout(t, d);
-        ctx.globalAlpha = a; kicker(e.date || 'Date ' + tbc.toLowerCase(), 300, 1);
-        [[['Build something ', {}], ['real.', { italic: true, color: C.accent, weight: 400 }]], [['Publish it.', {}]], [['Take it home.', {}]]].forEach(function (segs, i) {
-          ctx.globalAlpha = a * fadeIn(t, 0.2 + i * 0.7); line(segs, PAD, 430 + i * 118 + rise(t, 0.2 + i * 0.7), { size: 100, weight: 500 });
-        });
-        ctx.globalAlpha = 1;
-      } },
-      { d: 4, say: 'One day to turn an idea into a live product, with AI doing the building while you steer.', draw: function (t, d) {
-        var a = inout(t, d);
-        ctx.globalAlpha = a * fadeIn(t); kicker('The AI Enabled Product Hackathon', 330, 1);
-        ctx.globalAlpha = a * fadeIn(t, 0.2);
-        line([['One day', { color: C.accent }], [' to turn an idea', {}]], PAD, 450 + rise(t, 0.2), { size: 76 });
-        line([['into a ', {}], ['live product', { italic: true, weight: 400, color: C.accent }], ['.', {}]], PAD, 545 + rise(t, 0.2), { size: 76 });
-        ctx.globalAlpha = a * fadeIn(t, 1.1);
-        wrap('AI does the building. You steer, with good design thinking. No AI features needed in the product itself.', S - PAD * 2, 38, 400).forEach(function (l, i) { text(l, PAD, 680 + i * 54 + rise(t, 1.1), { size: 38, weight: 400, color: C.muted }); });
-        ctx.globalAlpha = 1;
-      } },
-      { d: 5.4, say: 'Seven moves: ' + MOVES.join(', ') + '.', draw: function (t, d) {
-        var a = inout(t, d), on = Math.min(MOVES.length - 1, Math.floor((t - 0.6) / 0.55));
-        ctx.globalAlpha = a * fadeIn(t); kicker('Seven moves, one day', 220, 1);
-        MOVES.forEach(function (m, i) {
-          var y = 300 + i * 92, lit = i <= on;
-          ctx.globalAlpha = a * fadeIn(t, 0.1 + i * 0.08);
-          ctx.fillStyle = lit ? C.accent : C.surface; ctx.beginPath(); ctx.arc(PAD + 28, y + 2, 28, 0, Math.PI * 2); ctx.fill();
-          text(String(i + 1), PAD + 28, y + 13, { size: 28, weight: 600, color: lit ? C.ink : C.muted, align: 'center' });
-          if (i < MOVES.length - 1) { ctx.fillStyle = i < on ? C.accent : C.line; ctx.fillRect(PAD + 26, y + 32, 4, 32); }
-          text(m, PAD + 84, y + 20, { size: i === on ? 60 : 48, weight: i === on ? 600 : 500, color: lit ? C.text : C.muted });
-        });
-        ctx.globalAlpha = 1;
-      } },
-      { d: 4.2, say: 'One day. ' + (e.people || tbc) + ' people. £0 extra beyond your own AI plan. One live URL you keep.', draw: function (t, d) {
-        var a = inout(t, d);
-        var tiles = [['1', 'day of building'], [e.people || '?', 'people, first-timers to builders'], ['£0', 'extra beyond your own AI plan'], ['1', 'live URL that you keep']];
-        tiles.forEach(function (tl, i) {
-          var x = PAD + (i % 2) * 452, y = 250 + Math.floor(i / 2) * 330, k = fadeIn(t, 0.15 + i * 0.25);
-          ctx.globalAlpha = a * k;
-          ctx.fillStyle = C.line; ctx.fillRect(x, y, 400, 2);
-          text(tl[0], x, y + 150 + rise(t, 0.15 + i * 0.25), { size: fitSize(tl[0], 400, 132, 500), weight: 500, color: i % 3 ? C.text : C.accent });
-          wrap(tl[1], 380, 32, 400).forEach(function (l, j) { text(l, x, y + 210 + j * 42, { size: 32, weight: 400, color: C.muted }); });
-        });
-        ctx.globalAlpha = 1;
-      } }
-    ];
-    // The briefs go after the seven moves, before the numbers
-    list.splice.apply(list, [3, 0].concat(briefScenes(day || {})));
-    if (last) list.push({ d: 4, say: 'Last time: ' + last.numbers.participants + ' people, ' + last.numbers.projects + ' products shared' + (last.numbers.appsLive ? ', ' + last.numbers.appsLive + ' apps went live' : '') + '.', draw: function (t, d) {
-      var a = inout(t, d), n = last.numbers;
-      ctx.globalAlpha = a * fadeIn(t); kicker('Last time, in ' + (last.event.location || 'one room'), 300, 1);
-      [[n.participants, 'people'], [n.projects, 'products shared'], [n.appsLive, 'apps went live']].filter(function (r) { return r[0]; }).forEach(function (r, i) {
-        var k = fadeIn(t, 0.3 + i * 0.4);
-        ctx.globalAlpha = a * k;
-        var w = text(String(Math.round(r[0] * ease((t - 0.3 - i * 0.4) / 1.1))), PAD, 450 + i * 150 + rise(t, 0.3 + i * 0.4), { size: 128, weight: 500, color: C.accent });
-        text(r[1], PAD + Math.max(w, 160) + 30, 450 + i * 150 + rise(t, 0.3 + i * 0.4), { size: 48, color: C.text });
-      });
-      ctx.globalAlpha = 1;
-    } });
-    list.push({ d: 4.4, say: 'Save the date: ' + [e.date || 'date ' + tbc.toLowerCase(), e.time, e.place || 'venue ' + tbc.toLowerCase()].filter(Boolean).join(', ') + '.', draw: function (t, d) {
-      var a = inout(t, d);
-      ctx.globalAlpha = a * fadeIn(t);
-      line([['Save the ', {}], ['date', { italic: true, weight: 400, color: C.accent }]], PAD, 330 + rise(t), { size: 96 });
-      var rows = [[e.date, 'Date'], [e.time, 'Time'], [e.place, 'Venue']];
-      rows.forEach(function (r, i) {
-        var y = 470 + i * 120, k = fadeIn(t, 0.5 + i * 0.3);
-        ctx.globalAlpha = a * k;
-        ctx.fillStyle = C.line; ctx.fillRect(PAD, y - 62, S - PAD * 2, 2);
-        text(r[1].toUpperCase(), PAD, y - 18, { size: 22, weight: 600, color: C.muted });
-        if (r[0]) text(r[0], PAD, y + 30, { size: fitSize(r[0], S - PAD * 2, 50, 500), weight: 500 });
-        else { ctx.fillStyle = '#28254a'; rrect(PAD, y - 6, 300, 52, 26); ctx.fill(); text(tbc, PAD + 150, y + 30, { size: 28, weight: 600, color: '#d4cbff', align: 'center' }); }
-      });
-      ctx.globalAlpha = 1;
-    } });
-    list.push({ d: 4, mood: 'end', hits: [{ t: 0.2, big: true }], say: 'Get ready at ' + SITE + '.', draw: function (t, d) {
-      var a = Math.min(fadeIn(t), 1);
-      ctx.globalAlpha = a; kicker('Come and build with us', 400, 1);
-      line([['Get ', {}], ['ready', { italic: true, weight: 400, color: C.accent }], ['.', {}]], PAD, 540 + rise(t), { size: 132 });
-      ctx.globalAlpha = a * fadeIn(t, 0.6);
-      text(SITE, PAD, 650 + rise(t, 0.6), { size: 52, weight: 500, color: C.text });
-      text('Start with the 30-minute warm-up before the day.', PAD, 720 + rise(t, 0.6), { size: 32, weight: 400, color: C.muted });
-      ctx.globalAlpha = 1;
-    } });
-    return list;
-  }
-
-  // ---------- the briefs, from assets/events/<id>.json (optional) ----------
-  function briefScenes(day) {
-    var list = [];
-    if (day.themes && day.themes.length) list.push({ d: 4.2, say: 'The briefs: ' + day.themes.map(function (k) { return k.name; }).join(', ') + '.', draw: function (t, d) {
-      var a = inout(t, d), cards = day.themes.slice(0, 4), cw = (S - PAD * 2 - 32) / 2, ch = 290;
-      ctx.globalAlpha = a * fadeIn(t);
-      line([['Pick a ', {}], ['brief', { italic: true, weight: 400, color: C.accent }]], PAD, 230 + rise(t), { size: 88 });
-      cards.forEach(function (k, i) {
-        var x = PAD + (i % 2) * (cw + 32), y = 300 + Math.floor(i / 2) * (ch + 32), delay = 0.35 + i * 0.25, k2 = clamp((t - delay) / 0.5);
-        if (k2 <= 0) return;
-        ctx.globalAlpha = a * k2;
-        ctx.save(); ctx.translate(x + cw / 2, y + ch / 2); var sc = 0.92 + 0.08 * pop(k2); ctx.scale(sc, sc); ctx.translate(-cw / 2, -ch / 2);
-        ctx.fillStyle = i === 3 ? C.accent : C.surface; rrect(0, 0, cw, ch, 24); ctx.fill();
-        text(String(i + 1).padStart(2, '0'), 36, 64, { size: 28, weight: 600, color: i === 3 ? C.ink : C.accent });
-        var names = wrap(k.name, cw - 72, 42, 600).slice(0, 2);
-        names.forEach(function (l, j) { text(l, 36, 124 + j * 48, { size: 42, weight: 600, color: i === 3 ? C.ink : C.text }); });
-        wrap(k.line || '', cw - 72, 27, 400).slice(0, 2).forEach(function (l, j) { text(l, 36, 124 + names.length * 48 + 8 + j * 34, { size: 27, weight: 400, color: i === 3 ? C.ink : C.muted }); });
-        ctx.restore();
-      });
-      ctx.globalAlpha = 1;
-    } });
-    return list;
-  }
-
-  // ---------- after the day: the published summary ----------
-  // The words can be written by the AI in the preview page (content.reel.words, see worker/src/reel.js); anything it
-  // leaves out uses these. *Stars* mark the word shown in green italics.
-  function reelWords(d) {
-    var n = d.numbers, w = (d.reel && d.reel.words) || {};
-    var def = {
-      opener: { kicker: 'The day in review', title: n.projects + (n.projects === 1 ? ' app.' : ' apps.') + ' *One day.*', line: dateLabel(d.event.held_on) + (d.event.location ? ' · ' + d.event.location : '') },
-      built: 'What got *built*', spotlight: 'Quick look', judge: 'The AI *judge*', people: 'The *people* chose', prizes: 'The *prizes*',
-      photos: 'From the *day*', numbers: 'One *day*.', closing: { title: 'Thank you for *building*.', line: 'The full summary is at ' + SITE }, featured: []
-    };
-    var pick = function (a, b) { return typeof a === 'string' && a.trim() ? a.trim() : b; };
-    return {
-      opener: { kicker: pick((w.opener || {}).kicker, def.opener.kicker), title: pick((w.opener || {}).title, def.opener.title), line: pick((w.opener || {}).line, def.opener.line) },
-      built: pick(w.built, def.built), spotlight: pick(w.spotlight, def.spotlight), judge: pick(w.judge, def.judge), people: pick(w.people, def.people),
-      prizes: pick(w.prizes, def.prizes), photos: pick(w.photos, def.photos), numbers: pick(w.numbers, def.numbers),
-      closing: { title: pick((w.closing || {}).title, def.closing.title), line: pick((w.closing || {}).line, def.closing.line) },
-      featured: Array.isArray(w.featured) ? w.featured : []
-    };
-  }
-  function marked(str) {  // 'What got *built*' -> segments for line()
-    return String(str).split('*').map(function (part, i) { return [part, i % 2 ? { italic: true, weight: 400, color: C.accent } : {}]; }).filter(function (s) { return s[0]; });
-  }
-  function plain(str) { return String(str).replace(/\*/g, ''); }
-  function heading(str, y, t, size) {
-    var segs = marked(str), sz = fitSize(plain(str), S - PAD * 2, size || 88, 500);
-    line(segs, PAD, y + rise(t), { size: sz });
-  }
-
-  function afterScenes(d, photos) {
-    var n = d.numbers, P = d.projects, W = reelWords(d);
-    var aiRanked = ranked(P.filter(function (p) { return p.scores; }), function (p) { return p.total; });
-    var peopleRanked = ranked(P.filter(function (p) { return p.inVote && p.votes > 0; }), function (p) { return p.votes; });
-    var list = [];
-
-    // 1. Straight in: how many apps, in one day
-    list.push({ d: 2.8, say: plain(W.opener.title) + ' ' + plain(W.opener.kicker) + ', ' + W.opener.line + '.', draw: function (t, dd) {
-      var a = inout(t, dd), k = clamp(t / 0.55);
-      ctx.globalAlpha = a * fadeIn(t); kicker(plain(W.opener.kicker), 380, 1);
-      ctx.save(); ctx.globalAlpha = a * Math.min(1, k * 1.6);
-      var sc = reduce ? 1 : 0.86 + 0.14 * pop(k); ctx.translate(PAD, 540); ctx.scale(sc, sc);
-      var lines = W.opener.title.split(/(?<=[.!?])\s+/).slice(0, 2);  // one sentence a line
-      lines.forEach(function (l, i) { line(marked(l), 0, i * 140, { size: fitSize(plain(l), S - PAD * 2, 140, 500) }); });
-      ctx.restore();
-      ctx.globalAlpha = a * fadeIn(t, 0.7);
-      text(W.opener.line, PAD, 540 + lines.length * 140 + 10, { size: 36, weight: 400, color: C.muted });
-      ctx.globalAlpha = 1;
-    } });
-
-    // 2. Every app, popping in
-    if (P.length) {
-      var shown = P.slice(0, 12), more = P.length - shown.length;
-      list.push({ d: 4.4, say: plain(W.built) + ': ' + P.map(function (p) { return p.project; }).join(', ') + '.', draw: function (t, dd) {
-        var a = inout(t, dd), cols = 3, cw = (S - PAD * 2) / cols, rows = Math.ceil(shown.length / cols), rh = Math.min(170, 640 / rows);
-        ctx.globalAlpha = a * fadeIn(t); heading(W.built, 230, t);
-        shown.forEach(function (p, i) {
-          var x = PAD + (i % cols) * cw + cw / 2, y = 300 + Math.floor(i / cols) * rh, delay = 0.25 + i * 0.09, k = clamp((t - delay) / 0.4);
-          if (k <= 0) return;
-          ctx.globalAlpha = a * Math.min(1, k * 2);
-          emojiAt(emoji(p), x, y + rh * 0.32, Math.min(76, rh * 0.48), pop(k));
-          text(clip(p.project, cw - 24, 28, 500), x, y + rh * 0.78, { size: 28, weight: 500, align: 'center' });
-        });
-        if (more > 0) { ctx.globalAlpha = a * fadeIn(t, 1.6); text('and ' + more + ' more', S / 2, 960, { size: 30, color: C.muted, align: 'center' }); }
-        ctx.globalAlpha = 1;
-      } });
-
-      // 3. Quick-fire spotlight: one app at a time, the AI's picks first, then the highest scores
-      var byId = {}; P.forEach(function (p) { byId[p.id] = p; });
-      var featured = W.featured.map(function (id) { return byId[id]; }).filter(Boolean);
-      aiRanked.concat(P.map(function (p) { return { p: p }; })).forEach(function (r) { if (featured.indexOf(r.p) < 0) featured.push(r.p); });
-      featured = featured.slice(0, 6);
-      var each = 0.75;
-      list.push({ d: 0.5 + featured.length * each, hits: featured.map(function (p, i) { return { t: 0.4 + i * each, small: true }; }),
-        say: plain(W.spotlight) + ': ' + featured.map(function (p) { return p.project + (p.appType ? ' (' + p.appType + ')' : ''); }).join(', ') + '.', draw: function (t, dd) {
-        var a = inout(t, dd), i = Math.max(0, Math.min(featured.length - 1, Math.floor((t - 0.4) / each))), p = featured[i], lt = t - 0.4 - i * each, k = clamp(lt / 0.3);
-        ctx.globalAlpha = a; kicker(plain(W.spotlight) + '  ' + (i + 1) + '/' + featured.length, 230, 1);
-        if (t < 0.4) { ctx.globalAlpha = 1; return; }
-        // a flash of colour on each cut
-        ctx.globalAlpha = a * (1 - clamp(lt / 0.25)) * 0.35; ctx.fillStyle = C.accent; ctx.fillRect(0, 0, S, S);
-        ctx.globalAlpha = a * Math.min(1, k * 1.5);
-        var dx = reduce ? 0 : (1 - ease(k)) * 80;
-        emojiAt(emoji(p), S / 2 + dx, 470, 200, pop(k));
-        text(p.project, S / 2 + dx, 690, { size: fitSize(p.project, S - PAD * 2, 84, 600), weight: 600, align: 'center' });
-        var sub = [p.appType, p.names].filter(Boolean).join(' · ');
-        if (sub) text(clip(sub, S - PAD * 2, 36, 400), S / 2 + dx, 760, { size: 36, weight: 400, color: C.muted, align: 'center' });
-        ctx.globalAlpha = 1;
-      } });
-    }
-
-    // 4. The AI judge's podium, 3rd, 2nd, then 1st
-    if (aiRanked.length) {
-      var podium = aiRanked.slice(0, 3), at = function (idx) { return 0.7 + (podium.length - 1 - idx) * 0.9; };
-      list.push({ d: 5.2, hits: podium.map(function (r, idx) { return { t: at(idx), big: !idx }; }), say: plain(W.judge) + ': ' + podium.map(function (r) { return place(r) + ', ' + r.p.project + ' (' + r.p.total + '/70)'; }).join('; ') + '.', draw: function (t, dd) {
-        var a = inout(t, dd);
-        ctx.globalAlpha = a * fadeIn(t); kicker('Round one', 210, 1); heading(W.judge, 300, t);
-        var order = podium.length === 3 ? [1, 0, 2] : podium.length === 2 ? [1, 0] : [0];  // 2nd, 1st, 3rd from the left
-        var cw = (S - PAD * 2) / order.length, base = 900;
-        order.forEach(function (idx, col) {
-          var r = podium[idx], k = clamp((t - at(idx)) / 0.5);
-          var h = [360, 270, 200][idx] * ease(k), x = PAD + col * cw + 12, w = cw - 24;
-          ctx.globalAlpha = a;
-          ctx.fillStyle = idx === 0 ? C.accent : C.surface; rrect(x, base - h, w, h + 1, 18); ctx.fill();
-          if (k <= 0) return;
-          ctx.globalAlpha = a * k;
-          text(place(r), x + w / 2, base - h + 56, { size: 34, weight: 600, color: idx === 0 ? C.ink : C.muted, align: 'center' });
-          text(r.p.total + '/70', x + w / 2, base - h + 110, { size: 44, weight: 600, color: idx === 0 ? C.ink : C.text, align: 'center' });
-          emojiAt(emoji(r.p), x + w / 2, base - h - 170, 72, pop(k));
-          wrap(r.p.project, w, 32, 600).slice(0, 2).forEach(function (l, j) { text(l, x + w / 2, base - h - 92 + j * 38, { size: 32, weight: 600, align: 'center' }); });
-          if (r.p.names) text(clip(r.p.names, w, 26, 400), x + w / 2, base - h - 16, { size: 26, weight: 400, color: C.muted, align: 'center' });
-        });
-        ctx.globalAlpha = 1;
-      } });
-    }
-
-    // 5. The people's choice
-    if (peopleRanked.length) {
-      var winners = peopleRanked.filter(function (r) { return r.rank === 1; }), pw = winners[0].p;
-      var aiPlace = {}; aiRanked.forEach(function (r) { aiPlace[r.p.id] = r; });
-      var agree = aiPlace[pw.id] ? (aiPlace[pw.id].rank === 1 ? 'The AI agreed.' : 'The AI had it ' + place(aiPlace[pw.id]).toLowerCase() + '.') : '';
-      list.push({ d: 4.4, hits: [{ t: 0.7, big: true }], say: plain(W.people) + ': ' + winners.map(function (r) { return r.p.project; }).join(' and ') + ', with ' + pw.votes + (pw.votes === 1 ? ' vote' : ' votes') + '. ' + agree, draw: function (t, dd) {
-        var a = inout(t, dd), k = clamp((t - 0.7) / 0.5);
-        ctx.globalAlpha = a * fadeIn(t); kicker('Round two', 210, 1); heading(W.people, 300, t);
-        ctx.globalAlpha = a * Math.min(1, k * 2);
-        winners.slice(0, 2).forEach(function (r, i) {
-          var cx = winners.length > 1 ? PAD + (S - PAD * 2) * (i ? 0.75 : 0.25) : S / 2;
-          emojiAt(emoji(r.p), cx, 480, winners.length > 1 ? 110 : 150, pop(k));
-          var size = fitSize(r.p.project, winners.length > 1 ? 400 : S - PAD * 2, winners.length > 1 ? 52 : 76, 600);
-          text(r.p.project, cx, 650, { size: size, weight: 600, align: 'center' });
-          if (r.p.names) text(r.p.names, cx, 706, { size: 34, weight: 400, color: C.muted, align: 'center' });
-        });
-        ctx.globalAlpha = a * fadeIn(t, 1.2);
-        ctx.fillStyle = C.accent; rrect(S / 2 - 150, 760, 300, 72, 36); ctx.fill();
-        text(Math.round(pw.votes * ease((t - 1.2) / 0.8)) + (pw.votes === 1 ? ' vote' : ' votes'), S / 2, 808, { size: 36, weight: 600, color: C.ink, align: 'center' });
-        if (agree) { ctx.globalAlpha = a * fadeIn(t, 2); text(agree, S / 2, 910, { size: 36, weight: 400, italic: true, color: C.muted, align: 'center' }); }
-        ctx.globalAlpha = 1;
-      } });
-    }
-
-    // 6. Prizes: one per project, people's choice first, then the AI's categories (same rule as summary.html)
-    var used = {}, prizes = [];
-    peopleRanked.filter(function (r) { return r.rank === 1; }).forEach(function (r) { used[r.p.id] = true; prizes.push(['People’s choice', r.p]); });
-    AWARDS.forEach(function (aw) {
-      var win = aiRanked.map(function (r) { return r.p; }).filter(function (p) { return !used[p.id]; })
-        .sort(function (x, y) { return y.scores[aw[0]] - x.scores[aw[0]] || y.total - x.total; })[0];
-      if (win) { used[win.id] = true; prizes.push([aw[1], win]); }
-    });
-    if (prizes.length) {
-      list.push({ d: 1.8 + prizes.length * 0.3, say: plain(W.prizes) + ': ' + prizes.map(function (x) { return x[0] + ', ' + x[1].project; }).join('; ') + '.', draw: function (t, dd) {
-        var a = inout(t, dd), rh = Math.min(84, 620 / prizes.length);
-        ctx.globalAlpha = a * fadeIn(t); heading(W.prizes, 230, t);
-        prizes.forEach(function (x, i) {
-          var y = 300 + i * rh, delay = 0.3 + i * 0.2, k = fadeIn(t, delay);
-          ctx.globalAlpha = a * k;
-          ctx.fillStyle = C.line; ctx.fillRect(PAD, y, S - PAD * 2, 2);
-          text(x[0], PAD, y + rh * 0.62, { size: 30, weight: 600, color: i === 0 && x[0] === 'People’s choice' ? C.accent : C.muted });
-          emojiAt(emoji(x[1]), 470, y + rh * 0.5, 40, pop(clamp((t - delay) / 0.4)));
-          text(clip(x[1].project, S - PAD - 520, 36, 500), 515, y + rh * 0.64, { size: 36, weight: 500 });
-        });
-        ctx.globalAlpha = 1;
-      } });
-    }
-
-    // 7. Photos from the day: quick cuts with a slow push in
-    photos.forEach(function (img, i) {
-      list.push({ d: 1.9, say: i ? '' : plain(W.photos) + '.', draw: function (t, dd) {
-        var a = Math.min(fadeIn(t, 0) * 2, 1, 1 - ease((t - dd + 0.25) / 0.25)), z = reduce ? 1 : 1.04 + 0.08 * (t / dd);
-        var sc = Math.max(S / img.width, S / img.height) * z, w = img.width * sc, h = img.height * sc;
-        var dx = reduce ? 0 : (i % 2 ? -1 : 1) * 30 * (t / dd);
-        ctx.globalAlpha = a;
-        ctx.drawImage(img, (S - w) / 2 + dx, (S - h) / 2, w, h);
-        var g = ctx.createLinearGradient(0, S * 0.55, 0, S);
-        g.addColorStop(0, 'rgba(20, 23, 18, 0)'); g.addColorStop(1, 'rgba(20, 23, 18, .85)');
-        ctx.fillStyle = g; ctx.fillRect(0, S * 0.55, S, S * 0.45);
-        var top = ctx.createLinearGradient(0, 0, 0, 140);
-        top.addColorStop(0, 'rgba(20, 23, 18, .7)'); top.addColorStop(1, 'rgba(20, 23, 18, 0)');
-        ctx.fillStyle = top; ctx.fillRect(0, 0, S, 140);
-        if (img.caption) text(clip(img.caption, S - PAD * 2, 40, 500), PAD, S - 110, { size: 40, weight: 500 });
-        else if (!i) line(marked(W.photos), PAD, S - 110, { size: 52 });
-        ctx.globalAlpha = 1;
-      } });
-    });
-
-    // 8. The numbers
-    var tiles = [[n.participants, 'people'], [n.projects, 'apps shared'], [n.appsLive, 'went live'], [n.voters, 'people voted']].filter(function (x) { return x[0]; });
-    list.push({ d: 3.4, say: plain(W.numbers) + ' ' + tiles.map(function (x) { return x[0] + ' ' + x[1]; }).join(', ') + '.', draw: function (t, dd) {
-      var a = inout(t, dd);
-      ctx.globalAlpha = a * fadeIn(t); heading(W.numbers, 250, t, 96);
-      tiles.forEach(function (x, i) {
-        var col = i % 2, row = Math.floor(i / 2), X = PAD + col * 452, Y = 340 + row * 290, delay = 0.2 + i * 0.15;
-        ctx.globalAlpha = a * fadeIn(t, delay);
-        ctx.fillStyle = C.line; ctx.fillRect(X, Y, 400, 2);
-        text(String(Math.round(x[0] * ease((t - delay) / 0.9))), X, Y + 150 + rise(t, delay), { size: 150, weight: 500, color: i ? C.text : C.accent });
-        text(x[1], X, Y + 205, { size: 36, weight: 400, color: C.muted });
-      });
-      ctx.globalAlpha = 1;
-    } });
-
-    // 9. Thank you
-    list.push({ d: 3.8, mood: 'end', say: plain(W.closing.title) + ' ' + W.closing.line, draw: function (t) {
-      var a = fadeIn(t);
-      ctx.globalAlpha = a;
-      var ls = wrap(plain(W.closing.title), S - PAD * 2, 96, 500).length > 1 ? W.closing.title.split(/(?<=[.!?,])\s+/).slice(0, 2) : [W.closing.title];
-      ls.forEach(function (l, i) { line(marked(l), PAD, 480 + i * 110 + rise(t), { size: fitSize(plain(l), S - PAD * 2, 96, 500) }); });
-      ctx.globalAlpha = a * fadeIn(t, 0.6);
-      wrap(W.closing.line, S - PAD * 2, 40, 400).slice(0, 2).forEach(function (l, i) { text(l, PAD, 480 + ls.length * 110 + 30 + i * 52 + rise(t, 0.6), { size: 40, weight: 400, color: C.muted }); });
-      ctx.globalAlpha = 1;
-    } });
-    return list;
-  }
-
-  // ---------- the soundtrack: an original loop played with Web Audio, timed to the scenes (no recordings, nothing to license) ----------
-  // 112 bpm, A minor, F, C, G, one chord a bar. Calm scenes keep the pad and a slow arpeggio; the rest add bass, kick and hats.
-  // Reveals get a rising swish and a chime. The audio clock also drives the picture, so sound and scenes never drift apart.
-  var music = (function () {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    var BEAT = 60 / 112, STEP = BEAT / 2, BAR = BEAT * 4;
-    var CHORDS = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], ROOTS = [45, 41, 48, 43];
-    var ac = null, master = null, dest = null, bus = null, noise = null, acStart = 0, wall = 0, synced = false, track = null, trackNode = null, fading = false, step = 0, hitAt = 0, hits = [], muted = false;
-    function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
-    function setup() {
-      if (ac || !AC) return;
-      ac = new AC();
-      var comp = ac.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
-      master = ac.createGain(); master.gain.value = muted ? 0 : 1.5;
-      comp.connect(master); master.connect(ac.destination);
-      if (ac.createMediaStreamDestination) { dest = ac.createMediaStreamDestination(); master.connect(dest); }
-      master.input = comp;
-      noise = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
-      var data = noise.getChannelData(0), seed = 7;
-      for (var i = 0; i < data.length; i++) { seed = (seed * 16807) % 2147483647; data[i] = seed / 1073741823.5 - 1; }
-    }
-    function env(g, at, peak, attack, hold, release) {
-      g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(peak, at + attack);
-      g.gain.setValueAtTime(peak, at + attack + hold); g.gain.exponentialRampToValueAtTime(0.0001, at + attack + hold + release);
-      return at + attack + hold + release + 0.05;
-    }
-    function tone(type, m, at, peak, attack, hold, release, cutoff, detune) {
-      var o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
-      o.type = type; o.frequency.value = hz(m); if (detune) o.detune.value = detune;
-      f.type = 'lowpass'; f.frequency.value = cutoff || 2400;
-      o.connect(f); f.connect(g); g.connect(bus);
-      o.start(at); o.stop(env(g, at, peak, attack, hold, release));
-    }
-    function hiss(at, len, peak, type, from, to) {
-      var src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
-      src.buffer = noise; f.type = type; f.frequency.setValueAtTime(from, at); if (to) f.frequency.exponentialRampToValueAtTime(to, at + len);
-      src.connect(f); f.connect(g); g.connect(bus);
-      g.gain.setValueAtTime(0.0001, at);
-      if (to) { g.gain.exponentialRampToValueAtTime(peak, at + len); g.gain.exponentialRampToValueAtTime(0.0001, at + len + 0.08); }
-      else { g.gain.linearRampToValueAtTime(peak, at + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, at + len); }
-      src.start(at); src.stop(at + len + 0.1);
-    }
-    function kick(at) {
-      var o = ac.createOscillator(), g = ac.createGain();
-      o.frequency.setValueAtTime(130, at); o.frequency.exponentialRampToValueAtTime(42, at + 0.14);
-      o.connect(g); g.connect(bus); o.start(at); o.stop(env(g, at, 0.42, 0.004, 0.02, 0.22));
-    }
-    // One eighth-note step of the loop, at reel time t
-    function playStep(n, t, at, mood) {
-      var bar = Math.floor(n / 8), pos = n % 8, ch = CHORDS[bar % 4], fade = mood === 'end' ? Math.max(0, 1 - (t - endFrom) / 3) : 1;
-      if (fade <= 0) return;
-      if (pos === 0) ch.forEach(function (m) { tone('sawtooth', m, at, 0.022 * fade, 0.5, BAR - 0.9, 0.9, 900, -6); tone('sawtooth', m, at, 0.022 * fade, 0.5, BAR - 0.9, 0.9, 900, 6); });
-      var arp = [0, 1, 2, 1, 2, 0, 1, 2][pos];
-      if (mood !== 'calm' || pos % 2 === 0) tone('triangle', ch[arp] + 12, at, 0.05 * fade, 0.005, 0.02, 0.32, 3200);
-      if (mood === 'calm' || mood === 'end' && fade < 0.6) return;
-      tone('triangle', ROOTS[bar % 4] - 12 + (pos === 3 || pos === 7 ? 12 : 0), at, 0.14 * fade, 0.006, 0.05, 0.16, 700);
-      if (pos % 4 === 0) kick(at);
-      if (pos % 2 === 1) hiss(at, 0.05, 0.05 * fade, 'highpass', 7000);
-    }
-    function chime(at, big, small) {
-      if (small) { tone('triangle', 88, at, 0.05, 0.003, 0.01, 0.18, 7000); return; }  // a light tick for quick cuts
-      hiss(at - 0.9, 0.9, big ? 0.07 : 0.035, 'bandpass', 300, 5000);
-      [76, 79, 84].slice(0, big ? 3 : 2).forEach(function (m, i) { tone('sine', m, at + i * 0.06, 0.09, 0.005, 0.05, big ? 1.6 : 0.9, 6000); tone('triangle', m + 12, at + i * 0.06, 0.025, 0.005, 0.02, 0.6, 8000); });
-    }
-    var endFrom = 1e9;
-    return {
-      load: function (list) {
-        hits = []; endFrom = 1e9;
-        list.forEach(function (s) { (s.hits || []).forEach(function (h) { hits.push({ at: s.at + h.t, big: h.big, small: h.small }); }); if (s.mood === 'end' && endFrom === 1e9) endFrom = s.at + 0.5; });
-      },
-      moodAt: function (t) { var s = scenes.filter(function (x) { return t >= x.at && t < x.at + x.d; })[0] || scenes[scenes.length - 1]; return s && s.mood || 'full'; },
-      start: function (t) {
-        setup();
-        if (ac) {
-          if (ac.state === 'suspended') ac.resume();
-          bus = ac.createGain(); bus.connect(master.input);
-          if (track) {  // the organiser's own track, from the reel's start, looped if it's shorter
-            if (!trackNode) { trackNode = ac.createMediaElementSource(track); }
-            trackNode.disconnect(); trackNode.connect(bus);
-            try { track.currentTime = track.duration ? t % track.duration : t; } catch (e) {}
-            track.play().catch(function () {});
-          }
-        }
-        wall = performance.now() / 1000 - t; synced = false; fading = false;
-      },
-      // An uploaded track (MP3) replaces the built-in loop; null goes back to it
-      setTrack: function (url) {
-        if (track) { track.pause(); if (trackNode) trackNode.disconnect(); }
-        track = null; trackNode = null;
-        if (!url) return;
-        track = new Audio(); track.crossOrigin = 'anonymous'; track.loop = true; track.preload = 'auto'; track.src = url;
-      },
-      stop: function () {
-        if (track) track.pause();
-        if (!bus) return;
-        var b = bus; bus = null;
-        b.gain.setTargetAtTime(0, ac.currentTime, 0.03);
-        setTimeout(function () { b.disconnect(); }, 400);
-      },
-      // The picture runs on the wall clock until the browser lets audio play, then follows the audio clock from where it got to
-      now: function () {
-        var t = performance.now() / 1000 - wall;
-        if (!bus || ac.state !== 'running') return t;
-        if (!synced) {
-          synced = true; acStart = ac.currentTime + 0.05 - t;
-          step = Math.ceil(t / STEP - 1e-6); hitAt = 0;
-          while (hitAt < hits.length && hits[hitAt].at < t + 0.05) hitAt++;
-        }
-        return ac.currentTime - acStart;
-      },
-      // Schedule whatever falls in the next quarter of a second
-      ahead: function (t) {
-        if (!bus || !synced) return;
-        if (track) {  // fade the track out over the last two and a half seconds
-          if (!fading && t > total - 2.5) { fading = true; bus.gain.setTargetAtTime(0, ac.currentTime, 0.7); }
-          return;
-        }
-        while (step * STEP < t + 0.25) { var st = step * STEP; if (st >= 0 && st < total) playStep(step, st, acStart + st, this.moodAt(st)); step++; }
-        while (hitAt < hits.length && hits[hitAt].at < t + 0.25) { chime(acStart + hits[hitAt].at, hits[hitAt].big, hits[hitAt].small); hitAt++; }
-      },
-      stream: function () { setup(); return dest && dest.stream; },
-      mute: function (on) { muted = on; if (master) master.gain.setTargetAtTime(on ? 0 : 1.5, ac.currentTime, 0.02); }
-    };
-  })();
-
-  // ---------- the player ----------
-  var scenes = [], total = 0, label = '', T = 0, playing = false, recorder = null, onEnd = null;
-  function load(list, lab) {
-    scenes = list; label = lab; total = 0;
-    scenes.forEach(function (s) { s.at = total; total += s.d; });
-    music.load(scenes);
-    $('script').innerHTML = scenes.filter(function (s) { return s.say; }).map(function (s) { var li = document.createElement('li'); li.textContent = s.say; return li.outerHTML; }).join('');
-    canvas.setAttribute('aria-label', 'Hype reel, ' + Math.round(total) + ' seconds. The script is below the player.');
-    seek(0);
-  }
-  function frame(t) {
-    T = Math.max(0, Math.min(t, total));
-    backdrop(T);
-    var s = scenes.filter(function (x) { return T >= x.at && T < x.at + x.d; })[0] || scenes[scenes.length - 1];
-    if (s) s.draw(T - s.at, s.d);
-    chrome(T, total, label);
-    $('time').textContent = Math.floor(T / 60) + ':' + ('0' + Math.floor(T % 60)).slice(-2) + ' / ' + Math.floor(total / 60) + ':' + ('0' + Math.round(total % 60)).slice(-2);
-  }
-  // Paused at the start, show a frame where the opening has faded in, not an empty one
-  function seek(t) {
-    if (t || !scenes.length) return frame(t);
-    frame(Math.min(2.2, scenes[0].d - 0.6)); T = 0; $('time').textContent = '0:00 / ' + Math.floor(total / 60) + ':' + ('0' + Math.round(total % 60)).slice(-2);
-  }
-  canvas.reelFrame = frame;  // for checking single frames from the browser console
-  function tick() {
-    if (!playing) return;
-    frame(music.now());
-    music.ahead(T);
-    if (T >= total) { pause(); if (onEnd) { var f = onEnd; onEnd = null; f(); } return; }
-    requestAnimationFrame(tick);
-  }
-  function play() {
-    if (T >= total) T = 0;
-    playing = true; music.start(T); $('play').textContent = 'Pause'; $('big-play').hidden = true;
-    requestAnimationFrame(tick);
-  }
-  function pause() { playing = false; music.stop(); $('play').textContent = T >= total ? 'Play again' : 'Play'; }
-  $('play').onclick = function () { playing ? pause() : play(); };
-  $('big-play').onclick = play;
-  canvas.addEventListener('click', function () { if (!recorder) playing ? pause() : play(); });
-  $('restart').onclick = function () { seek(0); play(); };
-
-  // ---------- save as video: records the canvas in real time (MP4 where the browser can, else WebM) ----------
-  var TYPES = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
-  var type = window.MediaRecorder && canvas.captureStream ? TYPES.filter(function (x) { return MediaRecorder.isTypeSupported(x); })[0] : null;
-  if (!type) { $('save').disabled = true; $('save').title = 'This browser can’t record video. Try Chrome or Safari.'; }
-  $('save').onclick = function () {
-    var chunks = [], stream = canvas.captureStream(30), sound = music.stream();
-    if (sound) sound.getAudioTracks().forEach(function (tr) { stream.addTrack(tr); });
-    recorder = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 10000000 });
-    recorder.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
-    recorder.onstop = function () {
-      var blob = new Blob(chunks, { type: type.split(';')[0] }), a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'hackday-reel-' + ev.id + '-' + mode + (type.indexOf('mp4') > -1 ? '.mp4' : '.webm');
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 10000);
-      stream.getVideoTracks().forEach(function (tr) { tr.stop(); });  // the music's track stays, for the next recording
-      recorder = null; busy(false);
-      $('status').textContent = 'Saved ' + a.download + (type.indexOf('mp4') > -1 ? '.' : '. This browser saves WebM: LinkedIn takes it, or open the reel in Safari or a recent Chrome for MP4.');
-    };
-    busy(true);
-    $('status').textContent = 'Recording… keep this tab open and in front until it finishes (about ' + Math.round(total) + ' seconds).';
-    seek(0); recorder.start(1000);
-    onEnd = function () { setTimeout(function () { recorder.stop(); }, 300); };  // hold the last frame briefly
-    play();
-  };
-  // Browsers stop drawing in a hidden tab, so pause the recording too rather than save a frozen stretch
-  document.addEventListener('visibilitychange', function () {
-    if (!recorder || recorder.state === 'inactive') return;
-    if (document.hidden) { recorder.pause(); playing = false; music.stop(); }
-    else { $('status').textContent = 'Recording again… keep this tab in front.'; recorder.resume(); play(); }
-  });
-  // Sound on or off, remembered in this browser. Off still records a silent track.
-  function setSound(on) {
-    music.mute(!on);
-    $('sound').setAttribute('aria-pressed', String(on)); $('sound').textContent = on ? 'Sound on' : 'Sound off';
-    try { localStorage.setItem('hackday-reel-sound', on ? '1' : '0'); } catch (e) {}
-  }
-  try { if (localStorage.getItem('hackday-reel-sound') === '0') setSound(false); } catch (e) {}
-  $('sound').onclick = function () { setSound(this.getAttribute('aria-pressed') !== 'true'); };
-  function busy(on) { ['play', 'restart', 'save'].forEach(function (id) { $(id).disabled = on; }); $('reel-modes').querySelectorAll('button').forEach(function (b) { b.disabled = on; }); }
-
-  // ---------- which reel ----------
-  var mode, summary = null, lastEvent = null, photos = [], day = {};
-  function setMode(m) {
-    mode = m; playing = false; music.stop(); onEnd = null; $('play').textContent = 'Play';
-    $('reel-modes').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
-    var after = m === 'after';
-    $('reel-lead').textContent = after ? 'How the day went, in about a minute, with music.' : 'What’s coming up, in under a minute, with music. Share it to get people excited.';
+  function exists(url) { return fetch(url, { method: 'HEAD', cache: 'no-store' }).then(function (r) { return r.ok; }, function () { return false; }); }
+  function show(mode) {
+    $('reel-modes').querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); });
+    var after = mode === 'after';
+    $('reel-lead').textContent = after ? 'How the day went, in under a minute.' : 'What’s coming up, in under a minute. Share it to get people excited.';
     $('reel-for').innerHTML = '';
     var a = document.createElement('a');
-    a.href = after ? 'summary.html?event=' + encodeURIComponent(ev.id) : 'event.html';
+    a.href = after ? 'summary.html?event=' + encodeURIComponent(id) : 'event.html';
     a.textContent = after ? 'See the full summary' : 'See the plan for the day';
-    $('reel-for').append('For the hackathon on ' + ev.label + '. ', a);
-    load(after ? afterScenes(summary, photos) : beforeScenes(ev, lastEvent, day), ev.label);
-    $('big-play').hidden = false;
+    $('reel-for').append('For the hackathon on ' + label + '. ', a);
+    var v = document.createElement('video');
+    v.src = videos[mode]; v.controls = true; v.playsInline = true; v.preload = 'metadata';
+    v.setAttribute('aria-label', after ? 'The day in review, a video' : 'Before the day, a video');
+    $('reel-screen').replaceChildren(v);
+    $('reel-download').href = videos[mode];
+    $('reel-controls').hidden = false;
   }
-  $('reel-modes').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
+  $('reel-modes').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) show(b.dataset.mode); });
 
-  function loadImage(m) {
-    return new Promise(function (res) {
-      var img = new Image(); img.crossOrigin = 'anonymous';  // the Worker allows this site, so the canvas can still be recorded
-      img.onload = function () { img.caption = m.caption || ''; res(img); };
-      img.onerror = function () { res(null); };
-      img.src = API + m.url;
-    });
-  }
-  function getSummary(id) {
-    return fetch(API + '/summary' + (id ? '?event=' + encodeURIComponent(id) : '')).then(function (r) { return r.json(); }).catch(function () { return null; });
-  }
-
-  var fonts = document.fonts ? document.fonts.load(font(100, 500)).then(function () { return Promise.all([document.fonts.load(font(100, 400, true)), document.fonts.load(font(100, 600))]); }) : Promise.resolve();
-  function photosOf(d) { return Promise.all((d.photos || []).filter(function (m) { return !m.hidden; }).slice(0, 8).map(loadImage)).then(function (imgs) { return imgs.filter(Boolean); }); }
-
-  if (PREVIEW) {
-    document.documentElement.classList.add('reel-embed', 'reel-tool');
-    window.addEventListener('message', function (e) {
-      if (e.origin !== location.origin || !e.data || !e.data.reel) return;
-      var d = e.data.reel;
-      fonts.then(function () { return photosOf(d); }).then(function (imgs) {
-        summary = d; photos = imgs;
-        ev = { id: d.event.id, label: new Date(d.event.held_on + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (d.event.location ? ' · ' + d.event.location : '') };
-        music.setTrack(d.reel && d.reel.music || null);
-        setMode('after');
-      });
-    });
-    parent.postMessage({ reelReady: true }, location.origin);
-    return;
-  }
-
-  $('reel-event').textContent = 'The reel · ' + ev.label;
-  Promise.all([fonts,
-    getSummary(ev.id), getSummary(''),
-    fetch('assets/events/' + encodeURIComponent(ev.id) + '.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })]).then(function (r) {
-    var mine = r[1], latest = r[2]; day = r[3] || {};
-    if (mine && mine.ok && mine.published) summary = mine;
-    if (latest && latest.ok && latest.published && latest.event.id !== ev.id) lastEvent = latest;
-    if (summary && summary.reel && summary.reel.music) music.setTrack(API + summary.reel.music);
-    return summary ? photosOf(summary) : [];
-  }).then(function (imgs) {
-    photos = imgs;
-    $('reel-modes').hidden = !summary;
+  $('reel-event').textContent = 'The reel · ' + label;
+  var mine = 'assets/reels/' + encodeURIComponent(id);
+  Promise.all([
+    fetch(API + '/summary?event=' + encodeURIComponent(id)).then(function (r) { return r.json(); }).catch(function () { return null; }),
+    exists(mine + '.mp4'), exists(mine + '-before.mp4'),
+  ]).then(function (r) {
+    var s = r[0], published = s && s.ok && s.published;
+    if (published && s.reel && s.reel.video) videos.after = API + s.reel.video;
+    else if (published && r[1]) videos.after = mine + '.mp4';
+    if (r[2]) videos.before = mine + '-before.mp4';
+    $('reel-modes').hidden = !(videos.after && videos.before);
     var want = params.get('mode');
-    setMode(summary && want !== 'before' ? 'after' : 'before');
+    if (videos.after || videos.before) return show(videos[want] ? want : videos.after ? 'after' : 'before');
+    $('reel-lead').textContent = 'There’s no reel for this event yet.';
+    $('reel-screen').innerHTML = '<div class="reel-empty">The reel is on its way.</div>';
   });
-})();
+});
 </script>
 </body>
 </html>
