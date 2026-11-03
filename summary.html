@@ -7,13 +7,13 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=24d7db05">
-<script src="assets/site.js?v=2f1ed5d7"></script>
+<link rel="stylesheet" href="assets/style.css?v=a102f3a4">
+<script src="assets/site.js?v=54a8942f"></script>
 </head>
 <body data-event-page>
 <header class="site-header" id="top"><div class="wrap bar">
 <a class="brand" href="index.html">ai product <span>hackday</span></a>
-<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li class="cta has-sub"><a href="get-ready.html">Get ready</a><ul class="sub"><li><a href="hello-world.html">Warm-up</a></li><li><a href="themes.html">Themes</a></li><li><a href="theme-personal-website.html">Personal website</a></li><li><a href="theme-elf-help.html">Elf Help</a></li><li><a href="theme-mortgage-journey.html">Mortgage journey</a></li></ul></li><li class="has-sub"><a href="event.html">The day</a><ul class="sub"><li><a href="me.html">My day</a></li><li><a href="plan.html">Plan your product</a></li><li><a href="vote.html">Vote for favourites</a></li></ul></li><li><a href="stay-safe.html">Stay safe</a></li><li class="has-sub"><a href="help.html">Get help</a><ul class="sub"><li><a href="resources.html">Resources</a></li></ul></li></ul></nav>
+<nav aria-label="Main"><ul><li><a href="index.html">Home</a></li><li class="cta has-sub"><a href="get-ready.html">Get ready</a><ul class="sub"><li><a href="hello-world.html">Warm-up</a></li><li><a href="themes.html">Themes</a></li><li><a href="theme-personal-website.html">Personal website</a></li><li><a href="theme-elf-help.html">Elf Help</a></li><li><a href="theme-mortgage-journey.html">Mortgage journey</a></li></ul></li><li class="has-sub"><a href="event.html">The day</a><ul class="sub"><li><a href="me.html">My day</a></li><li><a href="plan.html">Plan your product</a></li><li><a href="vote.html">Vote for favourites</a></li><li><a href="summary.html" aria-current="page">Event summary</a></li></ul></li><li><a href="stay-safe.html">Stay safe</a></li><li class="has-sub"><a href="help.html">Get help</a><ul class="sub"><li><a href="resources.html">Resources</a></li></ul></li></ul></nav>
 </div></header>
 <main id="main">
 <div class="wrap">
@@ -29,8 +29,8 @@
 <p class="sum-kicker">Round one</p>
 <h2 id="round-ai-h">The AI <em>judge</em></h2>
 <p class="muted sum-intro">Claude read every PRD and scored it out of 10 in seven categories, so out of 70 in all. It’s just for fun: the AI never saw the apps, and re-scoring the same PRD can move it by a few points.</p>
-<ol class="sum-board" id="ai-board" aria-live="polite"></ol>
 <div class="sum-actions"><button class="btn" type="button" id="ai-next"></button> <button class="btn ghost small" type="button" id="skip">Show everything</button></div>
+<ol class="sum-board" id="ai-board" aria-live="polite"></ol>
 </section>
 
 <section class="block sum-round" id="round-people" aria-labelledby="round-people-h">
@@ -39,7 +39,7 @@
 <div class="sum-curtain" id="people-curtain">
 <p><strong>The AI has had its say.</strong> <span id="curtain-text">After the event, everyone voted for up to three favourites. Did they agree with the machine?</span></p>
 <button class="btn" type="button" id="people-go" disabled>Reveal the people’s choice</button>
-<p class="muted small" id="people-hint">Reveal the AI’s winner first.</p>
+<p class="muted small" id="people-hint">Unlocks once the AI’s top five are revealed in round one, or <button class="linkish" type="button" id="people-skip">skip straight to the results</button>.</p>
 </div>
 <div id="people-result" hidden>
 <p class="muted sum-intro" id="people-intro"></p>
@@ -63,11 +63,12 @@
 <section class="block" aria-labelledby="extras-h">
 <h2 id="extras-h">From the <em>day</em></h2>
 <h3 class="sum-h3">Your feedback</h3>
+<div id="highlights"></div>
 <div id="feedback"></div>
 <h3 class="sum-h3">Photos</h3>
 <div id="photos"></div>
 <h3 class="sum-h3">The reel</h3>
-<div id="reel-box"><p class="sum-reel"><a class="btn ghost" href="reel.html" id="reel-link">Watch the reel</a> <span class="muted">Under a minute: what got built, the winners and photos from the day. Save it as a video to share.</span></p></div>
+<div id="reel-box"><div class="sum-soon-line"><p>Loading the reel…</p></div></div>
 <p class="muted small sum-takedown">In a photo and would rather not be? Tell Phil and it comes down.</p>
 <dialog class="sum-lightbox" id="lightbox" aria-label="Image">
 <img id="lb-img" alt="">
@@ -105,6 +106,13 @@
 <ol class="pv-list" id="pv-list"></ol>
 <div class="pv-dialog-actions"><button class="btn ghost small" type="button" data-close>Close</button></div>
 </dialog>
+<dialog class="pv-dialog pv-live-dialog" id="pv-live" aria-labelledby="pv-live-h">
+<div class="pv-live-tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+<h2 id="pv-live-h">It’s <em>live</em></h2>
+<p id="pv-live-text">The summary is published. Anyone with the site password can see it now.</p>
+<p class="pv-live-link"><a id="pv-live-url" href="#" target="_blank" rel="noopener"></a></p>
+<div class="pv-dialog-actions"><a class="btn small" id="pv-live-open" href="#" target="_blank" rel="noopener">Open the live page</a><button class="btn ghost small" type="button" id="pv-live-copy">Copy link</button><button class="btn ghost small" type="button" data-close>Keep editing</button></div>
+</dialog>
 <dialog class="pv-dialog" id="pv-caption" aria-labelledby="pv-caption-h">
 <h2 id="pv-caption-h">Caption</h2>
 <p class="muted">Shown under the photo when it’s opened. Leave empty for none.</p>
@@ -116,7 +124,7 @@
 <p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 2 November 2026.</p>
 <p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page reads the summary from the organiser’s server and remembers in this browser how far you’ve revealed.</p>
 </div></footer>
-<div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Vote</span></button></div>
+<div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li class="sub"><a href="summary.html" aria-current="page">Event summary</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Summary</span></button></div>
 
 <script>
 /* The event summary, from the organiser's Worker (GET /summary, worker/src/summary.js in the planning repository).
@@ -183,9 +191,8 @@
         if (!d.ok) { $('sum-lead').textContent = d.message || 'We couldn’t load the summary.'; return; }
         if (!PREVIEW && !d.published) { $('sum-lead').innerHTML = 'The summary isn’t out yet. Phil publishes it once voting has closed and the scores are in. <a href="vote.html">Vote for your favourites</a> while you wait.'; return; }
         ['feedback', 'photos'].forEach(function (k) { (d[k] || []).forEach(function (m) { m.url = API + m.url; }); });
-        if ($('reel-link')) $('reel-link').href = 'reel.html?event=' + encodeURIComponent(d.event.id);
-        data = d; restore(); render();
-        if (PREVIEW) { previewLoaded(version); $('reel-box').innerHTML = '<p class="muted">The reel is set up in the demo control’s Summary tab (music, words, preview and Save as video), and goes out when you publish.</p>'; }
+        data = d; restore(); render(); renderReel();
+        if (PREVIEW) previewLoaded(version);
       })
       .catch(function () { $('sum-lead').innerHTML = 'We couldn’t reach the server. Check your connection and <a href="">try again</a>.'; });
   }
@@ -204,9 +211,10 @@
     $('how-people').textContent = n.participantsCounted ? 'everyone named on a shared project or who joined the day on the site, whichever is more' : 'the organiser’s head count on the day';
     $('sum-body').hidden = false;
 
-    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderPictures(); renderThanks();
+    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderHighlights(); renderPictures(); renderThanks();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
+    $('people-skip').onclick = function () { $('skip').click(); $('round-people').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
   }
 
@@ -226,6 +234,68 @@
     $('sum-stats').hidden = false;
   }
   function paras(text) { return text.split(/\n{2,}/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; }).join(''); }
+  // What people said in the feedback form: a few big numbers, then a wall of anonymous quotes
+  function renderHighlights() {
+    if (PREVIEW) return renderHighlightsEditor();
+    var h = data.highlights;
+    $('highlights').innerHTML = h ? highlightsHtml(h) : '';
+    countUp($('highlights'));
+  }
+  function highlightsHtml(h) {
+    var nums = (h.stats || []).map(function (x) { var m = /^(\d+(?:\.\d+)?)(%?)$/.exec(x.value); return m ? { v: +m[1], pct: !!m[2], dec: (m[1].split('.')[1] || '').length } : null; });
+    var best = -1, bestV = -1;
+    nums.forEach(function (n, i) { if (n && n.pct && n.v > bestV) { bestV = n.v; best = i; } });
+    var stats = (h.stats || []).map(function (x, i) {
+      var n = nums[i], meter = '';
+      if (n && n.pct) meter = '<span class="hl-meter" aria-hidden="true"><i style="--w:' + Math.min(100, n.v) + '%"></i></span>';
+      else if (n && /^out of 5\b/i.test(x.label)) meter = '<span class="hl-stars" aria-hidden="true" style="--w:' + Math.min(100, n.v / 5 * 100) + '%">★★★★★<i>★★★★★</i></span>';
+      return '<div class="' + (i === best ? 'hero' : '') + '"><dt class="vh">' + esc(x.label) + '</dt><dd><b class="hl-num"' +
+        (n ? ' data-to="' + n.v + '" data-dec="' + n.dec + '" data-suf="' + (n.pct ? '%' : '') + '"' : '') + '>' + esc(x.value) + '</b>' + meter +
+        '<span class="hl-label" aria-hidden="true">' + esc(x.label) + '</span></dd></div>';
+    }).join('');
+    var pops = 0;
+    var quotes = (h.quotes || []).map(function (q, i) {
+      // The first quote is large, and every fourth after it (so put the best ones there); short ones pop on solid colour
+      var size = i % 4 === 0 && q.length > 40 ? 'q-feature' : q.length < 40 ? 'q-pop' + (pops++ % 2 ? ' alt' : '') : 'q-mid';
+      return '<li class="' + size + '" style="--i:' + i + '"><blockquote><p>' + esc(q) + '</p></blockquote></li>';
+    }).join('');
+    return (stats ? '<dl class="hl-stats">' + stats + '</dl>' : '') + (quotes ? '<ul class="hl-quotes">' + quotes + '</ul>' : '');
+  }
+  // The big numbers count up from 0 the first time they scroll into view
+  function countUp(root) {
+    var els = (root || document).querySelectorAll('.hl-num[data-to]');
+    if (reduce || !window.IntersectionObserver || !els.length) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        var el = e.target, to = +el.dataset.to, dec = +el.dataset.dec, suf = el.dataset.suf, t0 = null;
+        (function tick(t) {
+          if (!t0) t0 = t;
+          var k = Math.min(1, (t - t0) / 1100), ease = 1 - Math.pow(1 - k, 3);
+          el.textContent = (to * ease).toFixed(dec) + suf;
+          if (k < 1) requestAnimationFrame(tick);
+        })(performance.now());
+        el.closest('div').classList.add('in');
+      });
+    }, { threshold: .6 });
+    els.forEach(function (el) { el.closest('div').classList.add('ready'); io.observe(el); });
+  }
+  // The reel, played right here. Same choice as reel.html: the organiser's upload (GET /summary's reel.video) or the
+  // one made in Claude Code (assets/reels/<event>.mp4). reel.html stays as its own page, to send on its own.
+  var SITE = PREVIEW ? 'https://hackday.bonhard.ai/' : '';  // the preview runs on the control's address
+  function renderReel() {
+    var id = data.event.id, page = SITE + 'reel.html?event=' + encodeURIComponent(id), made = SITE + 'assets/reels/' + encodeURIComponent(id) + '.mp4';
+    var src = data.reel && data.reel.video ? API + data.reel.video : null;
+    (src ? Promise.resolve(src) : fetch(made, { method: 'HEAD', cache: 'no-store' }).then(function (r) { return r.ok ? made : null; }, function () { return null; }))
+      .then(function (url) {
+        if (!url) { $('reel-box').innerHTML = '<div class="sum-soon-line"><p>A short film of everything that got built.</p><span class="tbc">Coming soon</span></div>'; return; }
+        $('reel-box').innerHTML = '<figure class="sum-reel-player"><video controls playsinline preload="metadata" aria-label="The day in review, a video"></video>' +
+          '<figcaption><span>Under a minute: what got built, the winners and photos from the day.</span> <a href="' + esc(page) + '"' + (PREVIEW ? ' target="_blank" rel="noopener"' : '') + '>Open it on its own page to share</a></figcaption></figure>' +
+          (PREVIEW ? '<p class="muted small">This is the reel chosen in the demo control’s Summary tab. It goes out with the page when you publish.</p>' : '');
+        $('reel-box').querySelector('video').src = url;
+      });
+  }
   function renderThanks() {
     if (PREVIEW) return renderThanksEditor();
     $('thanks-wrap').hidden = !data.thanks;
@@ -365,7 +435,7 @@
   function renderPictures() {
     ['feedback', 'photos'].forEach(function (set) {
       var list = PREVIEW ? data[set] || [] : visible(set), vi = 0;
-      if (!list.length) { $(set).innerHTML = '<div class="sum-soon-line"><p>' + esc(SETS[set].soon) + '</p><span class="tbc">Coming soon</span></div>'; return; }
+      if (!list.length) { $(set).innerHTML = set === 'feedback' && (data.highlights || PREVIEW && data.content.highlights) ? '' : '<div class="sum-soon-line"><p>' + esc(SETS[set].soon) + '</p><span class="tbc">Coming soon</span></div>'; return; }
       var tiles = list.map(function (m, i) { var t = tile(set, m, i, m.hidden ? 0 : vi); if (!m.hidden) vi++; return t; });
       var count = visible(set).length;
       if (set === 'photos' && count > 3) tiles.splice(2, 0, '<div class="tile note" aria-hidden="true"><b>' + count + '</b><span>moments from the day</span></div>');
@@ -419,19 +489,39 @@
   var dirty = false, restoredFrom = null;
   function content() {
     var pics = function (set) { return (data[set] || []).map(function (m) { return { id: m.id, caption: m.caption || '', hidden: !!m.hidden }; }); };
-    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', photos: pics('photos'), feedback: pics('feedback') };
+    return { headCount: data.content.headCount, intro: data.content.intro || '', thanks: data.content.thanks || '', highlights: data.content.highlights || null, photos: pics('photos'), feedback: pics('feedback') };
   }
   function changed() { dirty = true; pvStatus(); }
   function when(iso) { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  // Three states, so it's obvious whether what you see is what's public: live and up to date, changes not live
+  // yet, or never published
   function pvStatus() {
-    var d = data, live = d.publishedAt ? 'Live' + (d.publishedVersion ? ': version ' + d.publishedVersion : '') + ' since ' + when(d.publishedAt) : 'Not published';
-    var draft = dirty ? (restoredFrom ? 'Restored version ' + restoredFrom + ', not saved' : 'Unsaved changes') : d.draftVersion ? 'Draft saved, version ' + d.draftVersion + ', ' + when(d.savedAt) : 'No draft saved yet';
-    $('pv-title').textContent = draft;
-    $('pv-status').textContent = live + (d.votingOpen ? ' · Voting is still open, so it can’t be published yet' : '');
+    var d = data, upToDate = !dirty && d.publishedAt && d.publishedVersion && d.publishedVersion === d.draftVersion;
+    var state = upToDate ? 'live' : d.publishedAt ? 'changed' : 'unpublished';
+    var title = {
+      live: 'Live. This is what everyone sees',
+      changed: dirty ? (restoredFrom ? 'Restored version ' + restoredFrom + ': not saved or live' : 'Unsaved changes, not live yet') : 'Saved changes, not live yet',
+      unpublished: dirty ? 'Unsaved changes. Not published yet' : d.draftVersion ? 'Draft saved. Not published yet' : 'Not published yet'
+    }[state];
+    var sub = (d.publishedAt ? 'Live: version ' + (d.publishedVersion || '–') + ' since ' + when(d.publishedAt) : 'Nobody can see it yet') +
+      (d.draftVersion && !upToDate ? ' · Draft: version ' + d.draftVersion + ', ' + when(d.savedAt) : '') +
+      (d.votingOpen ? ' · Voting is still open, so it can’t be published yet' : '');
+    $('pv-title').textContent = title;
+    $('pv-status').textContent = sub;
+    $('pv-bar').dataset.state = state;
     $('pv-save').disabled = !dirty;
     $('pv-versions-btn').disabled = false;
-    $('pv-publish').disabled = !!d.votingOpen;
+    $('pv-publish').disabled = !!d.votingOpen || state === 'live';
+    $('pv-publish').textContent = state === 'live' ? 'Published ✓' : state === 'changed' ? 'Publish changes' : 'Publish';
     $('pv-bar').classList.toggle('dirty', dirty);
+  }
+  function liveUrl() { return 'https://hackday.bonhard.ai/summary.html?event=' + encodeURIComponent(data.event.id); }
+  function showLive() {
+    var u = liveUrl();
+    $('pv-live-url').href = $('pv-live-open').href = u;
+    $('pv-live-url').textContent = u.replace('https://', '');
+    $('pv-live-text').textContent = 'Version ' + (data.publishedVersion || '') + ' of the summary is published. Anyone with the site password can see it now.';
+    $('pv-live').showModal();
   }
   function previewLoaded(version) {
     document.documentElement.classList.add('is-preview');
@@ -449,6 +539,23 @@
     el.textContent = data.content.intro || '';
     el.classList.toggle('empty', !data.content.intro);
   }
+  // Typed as plain lines, so they're quick to edit: numbers as "value | label", one quote per line
+  function renderHighlightsEditor() {
+    var h = data.content.highlights || { stats: [], quotes: [] };
+    $('highlights').innerHTML = '<div class="hl-edit">' +
+      '<label for="pv-hl-stats">Numbers <span>one per line: <code>4.55 | out of 5, overall</code></span></label>' +
+      '<textarea id="pv-hl-stats" class="pv-edit pv-area" rows="4">' + esc((h.stats || []).map(function (x) { return x.value + ' | ' + x.label; }).join('\n')) + '</textarea>' +
+      '<label for="pv-hl-quotes">Quotes <span>one per line, shown without names</span></label>' +
+      '<textarea id="pv-hl-quotes" class="pv-edit pv-area" rows="8">' + esc((h.quotes || []).join('\n')) + '</textarea>' +
+      '<p class="hl-edit-note">Preview</p></div><div id="pv-hl-preview">' + highlightsHtml(h) + '</div>';
+  }
+  function readHighlights() {
+    var stats = $('pv-hl-stats').value.split('\n').map(function (l) { var i = l.indexOf('|'); return i < 0 ? null : { value: l.slice(0, i).trim(), label: l.slice(i + 1).trim() }; })
+      .filter(function (x) { return x && x.value && x.label; });
+    var quotes = $('pv-hl-quotes').value.split('\n').map(function (l) { return l.trim().replace(/^["“]|["”]$/g, ''); }).filter(Boolean);
+    data.content.highlights = stats.length || quotes.length ? { stats: stats, quotes: quotes } : null;
+    $('pv-hl-preview').innerHTML = data.content.highlights ? highlightsHtml(data.content.highlights) : '';
+  }
   function renderThanksEditor() {
     $('thanks-wrap').hidden = false;
     $('thanks').innerHTML = '<label class="vh" for="pv-thanks">A note from Phil</label><textarea id="pv-thanks" class="pv-edit pv-area" maxlength="1200" rows="4" placeholder="Optional. A thank-you or what happens next. Only shown when there’s something here.">' + esc(data.content.thanks || '') + '</textarea>';
@@ -461,6 +568,7 @@
     $('sum-lead').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
     document.addEventListener('input', function (e) {
       if (e.target.id === 'pv-thanks') { data.content.thanks = e.target.value; changed(); }
+      if (e.target.id === 'pv-hl-stats' || e.target.id === 'pv-hl-quotes') { readHighlights(); changed(); }
       if (e.target.id === 'pv-head') {
         var v = e.target.value.trim();
         data.content.headCount = v === '' ? null : Math.max(0, Math.round(+v) || 0);
@@ -526,8 +634,13 @@
       busy(true); $('pv-title').textContent = 'Publishing…';
       send('/api/summary/publish', { event: data.event.id, content: content() }).then(function (d) {
         if (!d.ok) { busy(false); alert(d.message || 'That didn’t publish.'); return; }
-        dirty = false; restoredFrom = null; load();
+        dirty = false; restoredFrom = null; load().then(function () { if (data.publishedAt) showLive(); });
       });
+    };
+    $('pv-live-copy').onclick = function () {
+      var b = this, done = function () { b.textContent = 'Copied ✓'; setTimeout(function () { b.textContent = 'Copy link'; }, 1800); };
+      if (navigator.clipboard) navigator.clipboard.writeText(liveUrl()).then(done, function () { prompt('Copy the link:', liveUrl()); });
+      else prompt('Copy the link:', liveUrl());
     };
     $('pv-versions-btn').onclick = function () {
       $('pv-list').innerHTML = data.versions.length ? data.versions.map(function (v) {
