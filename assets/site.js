@@ -28,7 +28,11 @@
   root.classList.add('js');
   var STYLE_KEY = 'hackday-style';
   if (store('localStorage', STYLE_KEY) === 'clean') root.setAttribute('data-style', 'clean');
-  if (GATE_HASH && store('sessionStorage', GATE_KEY) !== '1') root.classList.add('locked');
+  // The organiser's summary preview is served by the demo control (hackday-control.bonhard.ai/preview/…), which
+  // Cloudflare Access already protects, so the password box isn't needed there
+  var PREVIEW = /^\/preview\//.test(location.pathname);
+  if (PREVIEW) root.classList.add('preview');
+  if (GATE_HASH && !PREVIEW && store('sessionStorage', GATE_KEY) !== '1') root.classList.add('locked');
 
   // drawn inline so the gate does not depend on the icon sprite being loaded
   var ICON_OPEN = '<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">';
