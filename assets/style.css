@@ -736,8 +736,54 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 /* event summary (summary.html): two rounds of leaderboards, prizes and what got built */
 :root { --people: #b8432f; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --people: #e5846f; } }
-.sum-stats { margin-top: 2rem; }
-.sum-stats dd { margin: 0; }
+.sum-hero .lead { margin-bottom: 0; }
+/* The intro numbers as tiles: people largest (a dot each), projects with their emoji, then the feedback highlights */
+.sum-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(11rem, auto); grid-auto-flow: dense; gap: .8rem; margin: 2rem 0 0; }
+.sum-bento > div { position: relative; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: calc(var(--radius) + 6px); padding: 1.5rem 1.6rem; display: flex; flex-direction: column; justify-content: flex-end; }
+.sum-bento dd { margin: 0; display: flex; flex-direction: column; }
+.sum-bento b { display: block; font-weight: 500; letter-spacing: -.055em; line-height: .9; font-variant-numeric: tabular-nums; font-size: clamp(3.4rem, 6vw, 5rem); }
+.sum-bento .lbl { color: var(--muted); margin-top: .6rem; font-size: 1rem; line-height: 1.35; }
+.sum-bento .lbl strong { color: var(--text); font-weight: 500; }
+.sum-bento .wide { grid-column: span 2; }
+.sum-bento .people { grid-column: span 2; grid-row: span 2; background: radial-gradient(120% 90% at 0% 100%, color-mix(in srgb, var(--accent) 22%, var(--surface)), var(--surface) 60%); }
+.sum-bento .people b { font-size: clamp(7rem, 17vw, 13rem); color: var(--accent); }
+.sum-bento .people .lbl { font-size: 1.25rem; }
+.sum-bento .people .pv-num { width: 100%; max-width: 20rem; font-size: clamp(5rem, 12vw, 9rem); line-height: 1; letter-spacing: -.05em; color: var(--accent); }
+.sum-bento .dots { position: absolute; top: 1.6rem; right: 1.6rem; left: 1.6rem; max-width: 22rem; margin-left: auto; display: grid; grid-template-columns: repeat(12, 1fr); gap: .45rem; }
+.sum-bento .dots span { aspect-ratio: 1; border-radius: 50%; background: var(--accent); opacity: .85; }
+.sum-bento .dots span:nth-child(3n) { opacity: .5; }
+.sum-bento .dots span:nth-child(5n) { opacity: .3; }
+.sum-bento .emoji-row { display: flex; flex-wrap: wrap; gap: .15rem .35rem; font-size: 1.45rem; line-height: 1.2; margin-bottom: auto; padding-bottom: 1rem; }
+.sum-bento .projects dd { height: 100%; }
+.sum-bento .split { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.sum-bento .split .lbl { text-align: right; max-width: 11rem; }
+.sum-bento .hero { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.sum-bento .hero .lbl, .sum-bento .hero .lbl strong { color: color-mix(in srgb, var(--accent-ink) 82%, transparent); }
+.sum-bento .hero dd { height: 100%; }
+.sum-bento .tag { margin: 0 0 auto; padding-bottom: 1rem; font-size: .75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--accent-ink) 70%, transparent); }
+.sum-bento .meter { display: block; height: .4rem; border-radius: 999px; background: color-mix(in srgb, currentColor 14%, transparent); margin-top: .9rem; overflow: hidden; }
+.sum-bento .meter i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--accent); }
+.sum-bento .hero .meter i { background: var(--accent-ink); }
+.sum-bento .stars { position: relative; display: block; align-self: flex-start; margin-top: .7rem; font-size: 1.3rem; letter-spacing: .1em; line-height: 1; color: color-mix(in srgb, var(--accent) 22%, transparent); }
+.sum-bento .stars i { position: absolute; inset: 0 auto 0 0; width: var(--w); overflow: hidden; white-space: nowrap; font-style: normal; color: var(--gold); }
+@media (prefers-reduced-motion: no-preference) {
+  .sum-bento > div { animation: sum-rise .8s cubic-bezier(.2, 1, .3, 1) both; animation-delay: calc(var(--i) * 70ms); }
+  .sum-bento .pop > * { animation: sum-pop .5s cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: calc(var(--d) + var(--j) * 28ms); }
+  .sum-bento .meter i { animation: sum-bar 1.2s cubic-bezier(.3, .8, .3, 1) both; animation-delay: calc(.3s + var(--i) * 70ms); }
+}
+@keyframes sum-rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes sum-pop { from { opacity: 0; transform: scale(.4); } }
+@media (max-width: 760px) {
+  .sum-bento { grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(9.5rem, auto); gap: .55rem; margin-top: 1.5rem; }
+  .sum-bento > div { padding: 1.1rem 1.1rem 1rem; }
+  .sum-bento .people { grid-row: span 1; min-height: 15rem; }
+  .sum-bento .people b { font-size: clamp(6rem, 30vw, 8rem); }
+  .sum-bento .projects { grid-column: span 2; }
+  .sum-bento b { font-size: clamp(2.6rem, 13vw, 3.4rem); }
+  .sum-bento .lbl { font-size: .9rem; }
+  .sum-bento .people .lbl { font-size: 1.05rem; }
+  .sum-bento .dots { top: 1.1rem; right: 1.1rem; left: auto; width: 55%; gap: .3rem; }
+}
 .sum-kicker { font-size: .8rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .3rem; }
 #round-people .sum-kicker { color: var(--people); }
 .sum-intro { max-width: 40rem; margin-top: -.3rem; }

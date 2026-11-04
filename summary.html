@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=0fa70d92">
+<link rel="stylesheet" href="assets/style.css?v=911ecf19">
 <script src="assets/site.js?v=6a0dbe03"></script>
 </head>
 <body data-event-page>
@@ -21,7 +21,7 @@
 <p class="eyebrow" id="sum-event">Event summary</p>
 <h1>The day in <em>review</em></h1>
 <p class="lead" id="sum-lead">Loading the summary…</p>
-<dl class="stats sum-stats" id="sum-stats" hidden></dl>
+<dl class="sum-bento" id="sum-stats" hidden></dl>
 </section>
 <div id="sum-body" hidden>
 
@@ -121,7 +121,7 @@
 </dialog>
 </main>
 <footer><div class="wrap">
-<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 2 November 2026.</p>
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool. Details marked “To be confirmed” may change. Last updated 4 November 2026.</p>
 <p>Product names and logos belong to their owners and are shown only to help you recognise the tools. No cookies, no analytics, no external fonts. This page reads the summary from the organiser’s server and remembers in this browser how far you’ve revealed.</p>
 </div></footer>
 <div class="fab" id="fab"><ul class="fab-menu" id="fab-menu" hidden><li><a href="index.html">Home</a></li><li><a href="get-ready.html">Get ready</a></li><li class="sub"><a href="hello-world.html">Warm-up</a></li><li class="sub"><a href="themes.html">Themes</a></li><li class="sub2"><a href="theme-personal-website.html">Personal website</a></li><li class="sub2"><a href="theme-elf-help.html">Elf Help</a></li><li class="sub2"><a href="theme-mortgage-journey.html">Mortgage journey</a></li><li><a href="event.html">The day</a></li><li class="sub"><a href="me.html">My day</a></li><li class="sub"><a href="plan.html">Plan your product</a></li><li class="sub"><a href="vote.html">Vote for favourites</a></li><li class="sub"><a href="summary.html" aria-current="page">Event summary</a></li><li><a href="stay-safe.html">Stay safe</a></li><li><a href="help.html">Get help</a></li><li class="sub"><a href="resources.html">Resources</a></li><li class="sep" aria-hidden="true"></li><li><a href="#top">Back to top ↑</a></li></ul><button class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-menu" aria-label="Menu"><span class="bars" aria-hidden="true"><span></span></span>Menu<span class="fab-current" aria-hidden="true">Summary</span></button></div>
@@ -218,20 +218,44 @@
     $('skip').onclick = function () { state.ai = TOP; state.people = true; save(); renderAi(); renderPeople(); renderPrizes(); };
   }
 
-  function autoIntro() { return cap(word(data.numbers.participants)) + ' people, one day, ' + word(data.numbers.projects) + ' products planned and built with AI. Here’s how it went.'; }
+  function autoIntro() { return 'One day, one room and a lot of AI. Here’s how it went.'; }
   function renderIntro() {
     if (PREVIEW) return renderIntroEditor();
     $('sum-lead').textContent = data.intro || autoIntro();
   }
-  function renderStats() {
-    var n = data.numbers;
-    var tiles = [[n.participants, 'participants', 'head'], [n.projects, 'projects shared'], [n.voters, n.voters === 1 ? 'person voted' : 'people voted']];
-    if (n.appsLive) tiles.push([n.appsLive, 'said their app went live']);
-    $('sum-stats').innerHTML = tiles.map(function (t) {
-      var num = PREVIEW && t[2] ? '<input class="pv-num" id="pv-head" type="number" min="0" max="10000" inputmode="numeric" value="' + (data.content.headCount == null ? '' : data.content.headCount) + '" placeholder="' + n.counted + '" aria-label="Head count">' : '<b>' + t[0] + '</b>';
-      return '<div class="stat"><dt class="vh">' + esc(t[1]) + '</dt><dd>' + num + '<span aria-hidden="true">' + esc(t[1]) + (PREVIEW && t[2] ? ' · empty uses the site’s count, ' + n.counted : '') + '</span></dd></div>';
-    }).join('');
+  // The numbers as tiles, so they're the first thing you see: people (a dot each), projects (their emoji), voters,
+  // then the feedback highlights (also shown in full further down), the highest percentage first and inverted.
+  // quiet: redrawn while editing in the preview, so nothing animates again
+  function renderStats(quiet) {
+    var n = data.numbers, h = PREVIEW ? data.content.highlights : data.highlights, i = 0;
+    function tile(cls, label, body) { return '<div' + (cls ? ' class="' + cls + '"' : '') + ' style="--i:' + i++ + '"><dt class="vh">' + esc(label) + '</dt><dd>' + body + '</dd></div>'; }
+    function num(v, dec, suf) { return '<b data-to="' + v + '" data-dec="' + (dec || 0) + '" data-suf="' + (suf || '') + '">' + esc(v + (suf || '')) + '</b>'; }
+    var dots = '';
+    for (var d = 0; d < Math.min(n.participants, 48); d++) dots += '<span style="--j:' + d + '"></span>';
+    var head = PREVIEW ? '<input class="pv-num" id="pv-head" type="number" min="0" max="10000" inputmode="numeric" value="' + (data.content.headCount == null ? '' : data.content.headCount) + '" placeholder="' + n.counted + '" aria-label="Head count">' : num(n.participants);
+    var emo = data.projects.slice(0, 40).map(function (p, j) { return '<span style="--j:' + j + '">' + esc(emoji(p)) + '</span>'; }).join('');
+    var stats = (h && h.stats || []).map(function (x) { return { x: x, n: statNum(x.value) }; });
+    var hot = stats.reduce(function (b, s, j) { return s.n && s.n.pct && (b < 0 || s.n.v > stats[b].n.v) ? j : b; }, -1);
+    if (hot > 0) stats.unshift(stats.splice(hot, 1)[0]);
+    var tiles = [
+      tile('people', 'Participants', '<span class="dots pop" aria-hidden="true" style="--d:.3s">' + dots + '</span>' + head +
+        '<span class="lbl" aria-hidden="true"><strong>' + (n.participants === 1 ? 'person' : 'people') + '</strong> in the room, one day' + (PREVIEW ? ' · empty uses the site’s count, ' + n.counted : '') + '</span>'),
+      tile('projects wide', 'Projects shared', '<span class="emoji-row pop" aria-hidden="true" style="--d:.5s">' + emo + '</span><span class="split">' + num(n.projects) +
+        '<span class="lbl" aria-hidden="true"><strong>' + (n.projects === 1 ? 'product' : 'products') + '</strong> planned and built with AI</span></span>'),
+      tile(stats.length || n.appsLive ? '' : 'wide', 'People who voted', num(n.voters) + '<span class="lbl" aria-hidden="true"><strong>' + (n.voters === 1 ? 'person' : 'people') + ' voted</strong>, ' + n.votes + (n.votes === 1 ? ' vote' : ' votes') + ' cast</span>')
+    ];
+    if (n.appsLive) tiles.push(tile('', 'Apps that went live', num(n.appsLive) + '<span class="lbl" aria-hidden="true">said their app went live</span>'));
+    stats.forEach(function (s, j) {
+      var v = s.n, extra = '';
+      if (v && v.pct) extra = '<span class="meter" aria-hidden="true"><i style="--w:' + Math.min(100, v.v) + '%"></i></span>';
+      else if (v && /^out of 5\b/i.test(s.x.label)) extra = '<span class="stars" aria-hidden="true" style="--w:' + Math.min(100, v.v / 5 * 100) + '%">★★★★★<i>★★★★★</i></span>';
+      var hero = j === 0 && hot >= 0;
+      tiles.push(tile(hero ? 'hero wide' : '', s.x.label, (hero ? '<span class="tag" aria-hidden="true">Your feedback</span>' : '') +
+        (v ? num(v.v.toFixed(v.dec), v.dec, v.pct ? '%' : '') : '<b>' + esc(s.x.value) + '</b>') + extra + '<span class="lbl" aria-hidden="true">' + esc(s.x.label) + '</span>'));
+    });
+    $('sum-stats').innerHTML = tiles.join('');
     $('sum-stats').hidden = false;
+    if (!quiet) countUp($('sum-stats'));
   }
   function paras(text) { return text.split(/\n{2,}/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; }).join(''); }
   // What people said in the feedback form: a few big numbers, then a wall of anonymous quotes
@@ -241,8 +265,9 @@
     $('highlights').innerHTML = h ? highlightsHtml(h) : '';
     countUp($('highlights'));
   }
+  function statNum(value) { var m = /^(\d+(?:\.\d+)?)(%?)$/.exec(value); return m ? { v: +m[1], pct: !!m[2], dec: (m[1].split('.')[1] || '').length } : null; }
   function highlightsHtml(h) {
-    var nums = (h.stats || []).map(function (x) { var m = /^(\d+(?:\.\d+)?)(%?)$/.exec(x.value); return m ? { v: +m[1], pct: !!m[2], dec: (m[1].split('.')[1] || '').length } : null; });
+    var nums = (h.stats || []).map(function (x) { return statNum(x.value); });
     var best = -1, bestV = -1;
     nums.forEach(function (n, i) { if (n && n.pct && n.v > bestV) { bestV = n.v; best = i; } });
     var stats = (h.stats || []).map(function (x, i) {
@@ -262,8 +287,9 @@
     return (stats ? '<dl class="hl-stats">' + stats + '</dl>' : '') + (quotes ? '<ul class="hl-quotes">' + quotes + '</ul>' : '');
   }
   // The big numbers count up from 0 the first time they scroll into view
+  function mark(el, cls) { var box = el.closest('.hl-stats > div'); if (box) box.classList.add(cls); }  // the feedback tiles fade in too
   function countUp(root) {
-    var els = (root || document).querySelectorAll('.hl-num[data-to]');
+    var els = (root || document).querySelectorAll('[data-to]');
     if (reduce || !window.IntersectionObserver || !els.length) return;
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
@@ -276,10 +302,10 @@
           el.textContent = (to * ease).toFixed(dec) + suf;
           if (k < 1) requestAnimationFrame(tick);
         })(performance.now());
-        el.closest('div').classList.add('in');
+        mark(el, 'in');
       });
     }, { threshold: .6 });
-    els.forEach(function (el) { el.closest('div').classList.add('ready'); io.observe(el); });
+    els.forEach(function (el) { mark(el, 'ready'); el.textContent = (0).toFixed(+el.dataset.dec) + el.dataset.suf; io.observe(el); });
   }
   // The reel, played right here. Same choice as reel.html: the organiser's upload (GET /summary's reel.video) or the
   // one made in Claude Code (assets/reels/<event>.mp4). reel.html stays as its own page, to send on its own.
@@ -555,6 +581,7 @@
     var quotes = $('pv-hl-quotes').value.split('\n').map(function (l) { return l.trim().replace(/^["“]|["”]$/g, ''); }).filter(Boolean);
     data.content.highlights = stats.length || quotes.length ? { stats: stats, quotes: quotes } : null;
     $('pv-hl-preview').innerHTML = data.content.highlights ? highlightsHtml(data.content.highlights) : '';
+    renderStats(true);
   }
   function renderThanksEditor() {
     $('thanks-wrap').hidden = false;
