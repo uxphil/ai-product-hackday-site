@@ -355,6 +355,8 @@
   // Worker's GET /events, kept in this browser for the next page. FALLBACK is used until that has loaded once.
   // Which event: ?event= in the address, else the one picked during this visit, else the page's default: the next
   // event (today or later), or the last one (today or earlier) on pages with <html data-event-default="last">.
+  // A test link from the demo control (?test=<key>) adds an event that isn't on the site yet to this browser's
+  // picker only, marked "not public yet", so the organiser can try the pages first. ?test=off forgets them.
   var FALLBACK = [{ id: '2026-10-28', held_on: '2026-10-28', location: 'Manchester' }];
   var API = 'https://hackday-api.bonhard.ai', EVENT_KEY = 'hackday-event', LIST_KEY = 'hackday-events';
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {  // previewing: ?api=http://localhost:8794, kept for the visit
@@ -362,8 +364,19 @@
     if (q) store('sessionStorage', 'hackday-api', q);
     API = store('sessionStorage', 'hackday-api') || API;
   }
+  var TEST_KEY = 'hackday-test-keys', test = new URLSearchParams(location.search).get('test');
+  var testKeys = (store('localStorage', TEST_KEY) || '').split(',').filter(Boolean);
+  var newTest = /^[0-9a-f]{16}$/.test(test || '') && testKeys.indexOf(test) < 0;  // the saved list can't have its event yet
+  if (newTest) testKeys = [test].concat(testKeys).slice(0, 5);
+  if (test === 'off') testKeys = [];
+  if (test) {
+    store('localStorage', TEST_KEY, testKeys.join(','));
+    var tu = new URL(location.href); tu.searchParams.delete('test'); history.replaceState(null, '', tu.toString());
+  }
   var events = FALLBACK;
   try { var cached = JSON.parse(store('localStorage', LIST_KEY) || 'null'); if (cached && cached.length) events = cached; } catch (e) {}
+  if (!testKeys.length) events = events.filter(function (e) { return !e.test; });
+  if (!events.length) events = FALLBACK;
   var param = new URLSearchParams(location.search).get('event');
   if (param && !/^\d{4}-\d{2}-\d{2}(-\d+)?$/.test(param)) param = null;
   if (param) store('sessionStorage', EVENT_KEY, param);
@@ -373,7 +386,7 @@
   var missing = store('sessionStorage', 'hackday-event-missing');  // set before a reload below
   if (missing) store('sessionStorage', 'hackday-event-missing', '');
   function listed(id) { return events.some(function (e) { return e.id === id; }); }
-  if (chosen && events !== FALLBACK && !listed(chosen)) { missing = chosen; chosen = null; store('sessionStorage', EVENT_KEY, ''); }
+  if (chosen && events !== FALLBACK && !newTest && !listed(chosen)) { missing = chosen; chosen = null; store('sessionStorage', EVENT_KEY, ''); }
   function today() { return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/London' }); }
   function byDefault(list) {
     var t = today(), last = root.getAttribute('data-event-default') === 'last';
@@ -387,7 +400,7 @@
 
   function label(e) {
     var d = new Date((e.held_on || e.id.slice(0, 10)) + 'T12:00:00');
-    return [d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), e.location].filter(Boolean).join(' · ');
+    return [d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), e.location, e.test && 'not public yet'].filter(Boolean).join(' · ');
   }
   function options(select) {
     select.innerHTML = events.map(function (e) {
@@ -416,7 +429,7 @@
         window.hackdayEvent = eventId; window.hackdayEventChosen = true; tagLinks();
       }
     });
-    fetch(API + '/events').then(function (r) { return r.json(); }).then(function (d) {
+    fetch(API + '/events' + (testKeys.length ? '?test=' + testKeys.join(',') : '')).then(function (r) { return r.json(); }).then(function (d) {
       if (!d.ok || !d.events || !d.events.length) return;
       events = d.events;
       store('localStorage', LIST_KEY, JSON.stringify(events));
