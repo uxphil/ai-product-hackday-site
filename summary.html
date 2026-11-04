@@ -7,7 +7,7 @@
 <meta name="description" content="How the hackathon went: the numbers, the AI judge’s leaderboard, the people’s choice and the prizes.">
 <title>Event summary · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=911ecf19">
+<link rel="stylesheet" href="assets/style.css?v=d4dd32cf">
 <script src="assets/site.js?v=6a0dbe03"></script>
 </head>
 <body data-event-page>
@@ -17,12 +17,13 @@
 </div></header>
 <main id="main">
 <div class="wrap">
-<section class="block first sum-hero">
+<section class="block first sum-hero" id="s-numbers">
 <p class="eyebrow" id="sum-event">Event summary</p>
 <h1>The day in <em>review</em></h1>
 <p class="lead" id="sum-lead">Loading the summary…</p>
 <dl class="sum-bento" id="sum-stats" hidden></dl>
 </section>
+<div class="sum-nav" id="sum-nav" role="navigation" aria-label="On this page" hidden><ul id="sum-nav-list"></ul></div>
 <div id="sum-body" hidden>
 
 <section class="block sum-round" id="round-ai" aria-labelledby="round-ai-h">
@@ -48,19 +49,19 @@
 </div>
 </section>
 
-<section class="block" aria-labelledby="prizes-h">
+<section class="block" id="s-prizes" aria-labelledby="prizes-h">
 <h2 id="prizes-h">The <em>prizes</em></h2>
 <p class="muted sum-intro">One prize per project, so the love gets spread. The category prizes go to the AI judge’s top score in each category; the people’s choice goes to the most votes.</p>
 <div class="sum-prizes" id="prizes"></div>
 </section>
 
-<section class="block" aria-labelledby="built-h">
+<section class="block" id="s-built" aria-labelledby="built-h">
 <h2 id="built-h">What got <em>built</em></h2>
 <p class="muted sum-intro">The kind of app each PRD describes, as the AI judge saw it.</p>
 <div class="sum-built" id="built"></div>
 </section>
 
-<section class="block" aria-labelledby="extras-h">
+<section class="block" id="s-day" aria-labelledby="extras-h">
 <h2 id="extras-h">From the <em>day</em></h2>
 <h3 class="sum-h3">Your feedback</h3>
 <div id="highlights"></div>
@@ -211,7 +212,7 @@
     $('how-people').textContent = n.participantsCounted ? 'everyone named on a shared project or who joined the day on the site, whichever is more' : 'the organiser’s head count on the day';
     $('sum-body').hidden = false;
 
-    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderHighlights(); renderPictures(); renderThanks();
+    renderAi(); renderPeople(); renderPrizes(); renderBuilt(); renderHighlights(); renderPictures(); renderThanks(); renderNav();
     $('ai-next').onclick = function () { state.ai = Math.min(state.ai + 1, Math.min(TOP, aiRanked.length)); save(); renderAi(true); renderPeople(); };
     $('people-go').onclick = function () { state.people = true; save(); renderPeople(true); renderPrizes(); };
     $('people-skip').onclick = function () { $('skip').click(); $('round-people').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
@@ -255,7 +256,7 @@
     });
     $('sum-stats').innerHTML = tiles.join('');
     $('sum-stats').hidden = false;
-    if (!quiet) countUp($('sum-stats'));
+    if (!quiet) countUp($('sum-stats'), true);
   }
   function paras(text) { return text.split(/\n{2,}/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; }).join(''); }
   // What people said in the feedback form: a few big numbers, then a wall of anonymous quotes
@@ -288,25 +289,25 @@
   }
   // The big numbers count up from 0 the first time they scroll into view
   function mark(el, cls) { var box = el.closest('.hl-stats > div'); if (box) box.classList.add(cls); }  // the feedback tiles fade in too
-  function countUp(root) {
+  function countUp(root, now) {  // now: straight away, for the tiles at the top
     var els = (root || document).querySelectorAll('[data-to]');
     if (reduce || !window.IntersectionObserver || !els.length) return;
+    function run(el) {
+      var to = +el.dataset.to, dec = +el.dataset.dec, suf = el.dataset.suf, t0 = null;
+      (function tick(t) {
+        if (!t0) t0 = t;
+        var k = Math.min(1, (t - t0) / 1100), ease = 1 - Math.pow(1 - k, 3);
+        el.textContent = (to * ease).toFixed(dec) + suf;
+        if (k < 1) requestAnimationFrame(tick);
+      })(performance.now());
+      mark(el, 'in');
+    }
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        io.unobserve(e.target);
-        var el = e.target, to = +el.dataset.to, dec = +el.dataset.dec, suf = el.dataset.suf, t0 = null;
-        (function tick(t) {
-          if (!t0) t0 = t;
-          var k = Math.min(1, (t - t0) / 1100), ease = 1 - Math.pow(1 - k, 3);
-          el.textContent = (to * ease).toFixed(dec) + suf;
-          if (k < 1) requestAnimationFrame(tick);
-        })(performance.now());
-        mark(el, 'in');
-      });
+      es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); run(e.target); } });
     }, { threshold: .6 });
-    els.forEach(function (el) { mark(el, 'ready'); el.textContent = (0).toFixed(+el.dataset.dec) + el.dataset.suf; io.observe(el); });
+    els.forEach(function (el) { mark(el, 'ready'); el.textContent = (0).toFixed(+el.dataset.dec) + el.dataset.suf; if (now) run(el); else io.observe(el); });
   }
+
   // The reel, played right here. Same choice as reel.html: the organiser's upload (GET /summary's reel.video) or the
   // one made in Claude Code (assets/reels/<event>.mp4). reel.html stays as its own page, to send on its own.
   var SITE = PREVIEW ? 'https://hackday.bonhard.ai/' : '';  // the preview runs on the control's address
@@ -326,6 +327,54 @@
     if (PREVIEW) return renderThanksEditor();
     $('thanks-wrap').hidden = !data.thanks;
     $('thanks').innerHTML = data.thanks ? paras(data.thanks) : '';
+    if (navReady) renderNav();
+  }
+
+  // ---- Section nav. Desktop: a bar under the number tiles that docks under the header as you scroll. Phones: the
+  // same sections, indented under Event summary in the floating Menu, whose label says where you are. Both light
+  // up the section you're reading. Built here rather than written into the page, so A note from Phil only shows
+  // when there is one (and check-site.py's menu-matches-navigation check stays as it is).
+  var SECTIONS = [['s-numbers', 'The numbers', 'Numbers'], ['round-ai', 'AI judge', 'AI judge'], ['round-people', 'The people', 'People'],
+    ['s-prizes', 'Prizes', 'Prizes'], ['s-built', 'What got built', 'Built'], ['s-day', 'From the day', 'The day'], ['thanks-wrap', 'A note from Phil', 'Note']];
+  var navOn = null, navReady = false;
+  function renderNav() {
+    var list = SECTIONS.filter(function (x) { return !$(x[0]).hidden; });
+    var links = function (cls) { return list.map(function (x) { return '<li' + (cls ? ' class="' + cls + '"' : '') + '><a href="#' + x[0] + '" data-sec="' + x[0] + '">' + esc(x[1]) + '</a></li>'; }).join(''); };
+    $('sum-nav-list').innerHTML = links('');
+    $('sum-nav').hidden = false;
+    var fabMenu = $('fab-menu'), here = fabMenu && fabMenu.querySelector('a[aria-current="page"]');
+    if (here) {
+      fabMenu.querySelectorAll('li.sum-sec').forEach(function (li) { li.remove(); });
+      here.parentNode.insertAdjacentHTML('afterend', links('sub2 sum-sec'));
+    }
+    navOn = null; spy();
+    if (navReady) return;
+    navReady = true;
+    window.addEventListener('scroll', function () { if (!spy.queued) { spy.queued = true; requestAnimationFrame(function () { spy.queued = false; spy(); }); } }, { passive: true });
+    window.addEventListener('resize', spy);
+    // The long Menu scrolls, so open it at this page's sections
+    var fabBtn = document.querySelector('.fab-btn');
+    if (fabBtn && here) fabBtn.addEventListener('click', function () { requestAnimationFrame(function () { fabMenu.scrollTop = here.parentNode.offsetTop - 8; }); });
+  }
+  function spy() {
+    var head = document.querySelector('.site-header'), nav = $('sum-nav');
+    var top = head && getComputedStyle(head).position === 'sticky' ? head.offsetHeight : 0;
+    document.documentElement.style.setProperty('--sum-top', top + 'px');
+    nav.classList.toggle('docked', nav.getBoundingClientRect().top <= top + 1);
+    var line = top + (nav.offsetHeight || 0) + innerHeight * .25, on = SECTIONS[0][0];
+    var end = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;  // at the bottom, the last one counts
+    SECTIONS.forEach(function (x) { var el = $(x[0]); if (!el.hidden && (end || el.getBoundingClientRect().top <= line)) on = x[0]; });
+    if (on === navOn) return;
+    navOn = on;
+    document.querySelectorAll('[data-sec]').forEach(function (a) {
+      var is = a.dataset.sec === on;
+      a.classList.toggle('on', is);
+      if (is) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+    var cur = document.querySelector('.fab-current'), sec = SECTIONS.filter(function (x) { return x[0] === on; })[0];
+    if (cur) cur.textContent = 'Summary · ' + sec[2];
+    var pill = nav.querySelector('a.on');  // keep the lit one in view when the bar scrolls sideways
+    if (pill) $('sum-nav-list').scrollLeft = pill.offsetLeft - $('sum-nav-list').offsetWidth / 2 + pill.offsetWidth / 2;
   }
 
   // ---- Round one: the AI judge. Places 6 and below show at once; the top five are revealed 5th, 4th … 1st.
