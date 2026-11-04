@@ -170,6 +170,11 @@ button.copy { font: inherit; font-size: .82rem; background: transparent; color: 
 .callout p { margin: 0; }
 .note { border-left: 3px solid var(--accent); background: var(--surface); padding: .8rem 1.1rem; border-radius: 0 var(--radius) var(--radius) 0; margin: 1.2rem 0; }
 .note p:first-child { margin-top: 0; } .note > :last-child { margin-bottom: 0; }
+/* site.js: a link named an event that isn't on the site */
+.event-missing { display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; border-left-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-text); }
+.event-missing p { margin: 0; }
+.event-missing-x { flex: none; font: inherit; background: none; border: 0; color: inherit; cursor: pointer; padding: 0 .2rem; opacity: .7; }
+.event-missing-x:hover { opacity: 1; }
 .tbc { display: inline-block; background: var(--tbc-bg); color: var(--tbc-text); font-size: .72rem; font-weight: 600; padding: .05rem .55rem; border-radius: 999px; vertical-align: middle; white-space: nowrap; letter-spacing: .01em; }
 .tbc-box { display: flex; gap: .9rem; border: 1px dashed var(--tbc-text); background: var(--tbc-bg); color: var(--tbc-text); border-radius: var(--radius); padding: 1rem 1.2rem; margin: 1.2rem 0; }
 .tbc-box .icon { margin-top: .2rem; }

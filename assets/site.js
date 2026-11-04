@@ -368,6 +368,12 @@
   if (param && !/^\d{4}-\d{2}-\d{2}(-\d+)?$/.test(param)) param = null;
   if (param) store('sessionStorage', EVENT_KEY, param);
   var chosen = param || store('sessionStorage', EVENT_KEY);
+  // A link can name an event that isn't on the site (not listed, or no such event): set it aside and use the page's
+  // default, with a note saying so. Checked against the saved list now and against the Worker's once it answers.
+  var missing = store('sessionStorage', 'hackday-event-missing');  // set before a reload below
+  if (missing) store('sessionStorage', 'hackday-event-missing', '');
+  function listed(id) { return events.some(function (e) { return e.id === id; }); }
+  if (chosen && events !== FALLBACK && !listed(chosen)) { missing = chosen; chosen = null; store('sessionStorage', EVENT_KEY, ''); }
   function today() { return new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/London' }); }
   function byDefault(list) {
     var t = today(), last = root.getAttribute('data-event-default') === 'last';
@@ -384,8 +390,7 @@
     return [d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), e.location].filter(Boolean).join(' · ');
   }
   function options(select) {
-    var list = events.some(function (e) { return e.id === eventId; }) ? events : [{ id: eventId }].concat(events);  // a link can name an event that isn't listed
-    select.innerHTML = list.map(function (e) {
+    select.innerHTML = events.map(function (e) {
       var o = document.createElement('option'); o.value = e.id; o.textContent = label(e); return o.outerHTML;
     }).join('');
     select.value = eventId;
@@ -401,7 +406,7 @@
     var select = wrap.querySelector('select');
     options(select);
     bar.insertBefore(wrap, nav);
-    tagLinks();
+    tagLinks(); noteMissing();
     select.addEventListener('change', function () {
       eventId = this.value; chosen = eventId;
       store('sessionStorage', EVENT_KEY, eventId);
@@ -415,11 +420,30 @@
       if (!d.ok || !d.events || !d.events.length) return;
       events = d.events;
       store('localStorage', LIST_KEY, JSON.stringify(events));
+      if (missing && listed(missing) && missing === param) { location.reload(); return; }  // the saved list was out of date
+      if (chosen && !listed(chosen)) { missing = chosen; chosen = null; store('sessionStorage', EVENT_KEY, ''); }
+      if (missing && param) { var u = new URL(location.href); u.searchParams.delete('event'); history.replaceState(null, '', u.toString()); }
       var id = chosen || byDefault(events);
-      if (id !== eventId && document.body.hasAttribute('data-event-page')) { location.reload(); return; }  // the default moved: the list is saved now
-      eventId = window.hackdayEvent = id;
-      options(select); tagLinks();
+      if (id !== eventId && document.body.hasAttribute('data-event-page')) {  // the page was drawn for another event
+        if (missing) store('sessionStorage', 'hackday-event-missing', missing);
+        location.reload(); return;
+      }
+      eventId = window.hackdayEvent = id; window.hackdayEventChosen = !!chosen;
+      options(select); tagLinks(); noteMissing();
     }).catch(function () {});
+  }
+  // "That event isn't on the site": a note under the header, once per page
+  function noteMissing() {
+    if (!missing || document.getElementById('event-missing')) return;
+    var shown = events.filter(function (e) { return e.id === eventId; })[0] || { id: eventId };
+    var box = document.createElement('div');
+    box.className = 'wrap'; box.id = 'event-missing';
+    box.innerHTML = '<div class="note warn event-missing" role="status"><p><strong>That event isn’t on the site.</strong> ' +
+      'The link was for ' + label({ id: missing }) + ', which Phil hasn’t added yet. Showing ' + label(shown) + ' instead.</p>' +
+      '<button type="button" class="event-missing-x" aria-label="Dismiss">✕</button></div>';
+    box.querySelector('button').onclick = function () { box.remove(); };
+    var header = document.querySelector('.site-header');
+    header.parentNode.insertBefore(box, header.nextSibling);
   }
   // Links to the event-specific pages carry the chosen event in their address
   function tagLinks() {
