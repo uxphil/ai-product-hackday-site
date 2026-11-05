@@ -7,7 +7,7 @@
 <meta name="description" content="Hello-world warm-up: ask Claude for a simple web page and see it on your own computer.">
 <title>Warm-up: Claude route · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=7cbecb2f">
+<link rel="stylesheet" href="assets/style.css?v=611aa504">
 <script src="assets/site.js?v=3db83242"></script>
 </head>
 <body>
@@ -49,7 +49,9 @@
 2. Run gh auth login --hostname github.com --git-protocol https --web in the background, then show me the one-time code clearly. Don’t open a browser or use any browser tools: I’ll type the code myself at github.com/login/device. Never ask me for a password or token.
 3. When I say done, run gh auth setup-git and gh auth status, and tell me my GitHub username.
 Don’t create a repository or publish anything today.</p><p><button type="button" class="copy" data-copy="clp2">Copy</button></p></div>
-<p>When Claude shows the code (it looks like <code>ABCD-1234</code>), go to <a href="https://github.com/login/device" rel="noopener">github.com/login/device</a> <strong>on any device where you’re signed in to GitHub</strong>, your phone included. Type the code, press Continue, then Authorize. Tell Claude “done”. The code works for about 15 minutes, so do it in one go.</p>
+<p>When Claude shows the code (it looks like <code>ABCD-1234</code>), go to this address <strong>on any device where you’re signed in to GitHub</strong>, your phone included:</p>
+<p class="link-line"><a href="https://github.com/login/device" rel="noopener">github.com/login/device</a></p>
+<p>Type the code, press Continue, then Authorize. Tell Claude “done”. The code works for about 15 minutes, so do it in one go.</p>
 <p>It’s fine to approve Claude using <code>git</code> and <code>gh</code>, and installing them if it asks. You’re finished when Claude tells you your GitHub username.</p>
 <details><summary>Something went wrong, or it asks for something odd</summary><ul>
 <li><strong>It asks for a password or token:</strong> say no. Say “Don’t ask for a password or token. Use the one-time code instead.”</li>
