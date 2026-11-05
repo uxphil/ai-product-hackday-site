@@ -456,7 +456,7 @@ table.compare thead th .pairline2 .plus { margin: 0 .5rem 0 0; }
 @media (max-width: 720px) and (prefers-reduced-motion: reduce) { .fab-btn, .fab-menu, .bars::before, .bars::after, .bars span { transition: none; } }
 
 /* review fixes: safety box in the hero, open-items list, quieter second-choice badge, theme switch inside the mobile menu */
-.hero-safe { margin: 1.4rem 0 0; }
+.hero-safe { margin: 1.4rem 0 1.5rem; }
 .tbc-box ul { margin: .4rem 0 .6rem; padding-left: 1.1rem; }
 .tbc-box li { margin: .2rem 0; }
 .badge.ghost-badge { background: var(--surface-2); color: var(--text); border: 1px solid var(--line); }
