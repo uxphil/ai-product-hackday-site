@@ -942,10 +942,8 @@ html.reel-embed .reel-screen video { box-shadow: none; }
 @media (max-width: 860px) { .home-reel { grid-template-columns: 1fr; } }
 .optional { font-weight: 400; color: var(--muted); }
 .pass dd.pass-email { font-size: 1rem; font-weight: 500; }
-.pass-email .linkish { font-size: .9rem; color: var(--accent); margin-left: .3rem; }
-#email-form { margin: 0 0 1rem; }
-#email-form[hidden] { display: none; }
-#email-form input { font-family: inherit; letter-spacing: normal; text-transform: none; }
+#details-form { margin: .8rem 0 1.2rem; padding: 1.2rem; gap: 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.details-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 
 /* summary: photo mosaic, feedback tiles and the lightbox counter */
 .tile { position: relative; margin: 0; border-radius: 14px; overflow: hidden; background: var(--surface-2); }

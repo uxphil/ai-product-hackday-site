@@ -7,7 +7,7 @@
 <meta name="description" content="Your board for the day: five stops and a call button.">
 <title>My day · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=611aa504">
+<link rel="stylesheet" href="assets/style.css?v=cf4c3cbc">
 <script src="assets/site.js?v=3db83242"></script>
 </head>
 <body data-event-page>
@@ -28,7 +28,7 @@
 <p class="lead" id="find-lead">Your board for the day: five stops from warm-up to a live app, and a call button for when you’re stuck.</p>
 <div id="boards"></div>
 <h2>Find your board</h2>
-<p>Closed it by mistake? Type the code from your board (10 letters and numbers), or open the link you bookmarked. No code? Ask a helper: they can look it up for you.</p>
+<p>Lost your board? Go to <strong>Phil</strong> for a QR code that opens it. Or open the link you bookmarked, or type the code from your board (10 letters and numbers).</p>
 <form class="find-code" id="find-form" novalidate><div class="field" style="flex:1 1 12rem"><label class="vh" for="code">Board code</label><input type="text" id="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7QM4-TXP2A" maxlength="80"><p class="msg" aria-live="polite"></p></div><button class="btn" type="submit">Open my board</button></form>
 <p style="margin-top:1.6rem">New here? <a class="btn small ghost" href="join.html">Join the day <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-arrow-right"/></svg></a></p>
 </div>
@@ -43,15 +43,23 @@
 </div>
 
 <div class="pass">
-<dl><dt>Passenger</dt><dd id="b-name"></dd><dt>Day job</dt><dd id="b-job"></dd><dt>Email for materials</dt><dd class="pass-email"><span id="b-email"></span> <button class="linkish" type="button" id="email-edit" aria-expanded="false" aria-controls="email-form"></button></dd></dl>
+<dl><dt>Passenger</dt><dd id="b-name"></dd><dt>Day job</dt><dd id="b-job"></dd><dt>Email for materials</dt><dd class="pass-email" id="b-email"></dd></dl>
 <dl class="stub"><dt>Board code</dt><dd class="code" id="b-code"></dd></dl>
 </div>
-<form class="find-code" id="email-form" novalidate hidden><div class="field" style="flex:1 1 14rem"><label class="vh" for="email">Personal email</label><input type="email" id="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.com"><p class="hint">Optional. Phil uses it only to send you this event’s materials, and deletes it 30 days after the event. Leave it empty to remove it.</p><p class="msg" aria-live="polite"></p></div><button class="btn small" type="submit">Save</button></form>
 <div class="pass-actions">
 <button class="btn small" type="button" id="copy-link"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-link"/></svg><span>Copy my link</span></button>
 <button class="btn small ghost" type="button" id="phone-btn" aria-expanded="false" aria-controls="phone"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-smartphone"/></svg>Open on my phone</button>
+<button class="btn small ghost" type="button" id="details-btn" aria-expanded="false" aria-controls="details-form"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-pencil"/></svg><span>Edit my details</span></button>
 </div>
-<p class="pass-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-bookmark"/></svg> <strong>Bookmark this page.</strong> It’s yours alone. Lost it? Go to <strong>My day</strong> in the menu and type your code.</p>
+<form class="form" id="details-form" novalidate hidden>
+<div class="field" id="f-name"><label for="name">Your name</label><input type="text" id="name" autocomplete="name" maxlength="80" required><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-nickname"><label for="nickname">Nickname</label><input type="text" id="nickname" autocomplete="nickname" maxlength="30" required><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-jobTitle"><label for="jobTitle">Day-job title</label><input type="text" id="jobTitle" autocomplete="organization-title" maxlength="80" required><p class="msg" aria-live="polite"></p></div>
+<div class="field" id="f-email"><label for="email">Personal email <span class="optional">(optional)</span></label><p class="hint">Phil uses it only to send you this event’s materials, and deletes it 30 days after the event. Leave it empty to remove it.</p><input type="email" id="email" autocomplete="email" inputmode="email" maxlength="254"><p class="msg" aria-live="polite"></p></div>
+<div class="form-status warn" id="details-status" role="status" aria-live="polite"></div>
+<div class="details-actions"><button class="btn small" type="submit" id="details-save">Save</button><button class="btn small ghost" type="button" id="details-cancel">Cancel</button></div>
+</form>
+<p class="pass-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-bookmark"/></svg> <strong>Bookmark this page.</strong> It’s yours alone. Lost it? Go to <strong>Phil</strong> for a QR code that opens it.</p>
 <div class="form-status" id="phone" hidden><p style="margin:0">On your phone, open <code id="phone-url"></code> and type <strong class="code" id="phone-code"></strong>. You’ll need the site password. Both devices then share this board.</p></div>
 
 <div class="flight">
@@ -173,7 +181,6 @@
     $('b-job').textContent = b.jobTitle;
     $('b-email').textContent = b.email || 'None given';
     $('b-email').classList.toggle('muted', !b.email);
-    $('email-edit').textContent = b.email ? 'Change' : 'Add';
     $('b-code').textContent = pretty(b.code);
     $('phone-url').textContent = location.host + location.pathname.replace(/[^/]*$/, '') + 'me.html';
     $('phone-code').textContent = pretty(b.code);
@@ -183,7 +190,7 @@
     var done = STOPS.filter(function (s) { return b.steps[s.key]; }).length;
     if (first) {
       $('stops').innerHTML = STOPS.map(function (s, i) {
-        return '<li class="stop" data-key="' + s.key + '"><span class="num">' + (i + 1) + '</span><div><h3>' + s.title + '</h3><p>' + s.text + ' <a href="' + s.href + '">How</a></p></div>' +
+        return '<li class="stop" data-key="' + s.key + '"><span class="num">' + (i + 1) + '</span><div><h3>' + s.title + '</h3><p>' + s.text + ' <a href="' + s.href + '" target="_blank" rel="noopener">How<span class="vh"> (opens in a new tab)</span></a></p></div>' +
           '<button class="tick" type="button" aria-pressed="false" aria-label="' + s.title + '"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-check"/></svg><span>Done</span></button></li>';
       }).join('');
       $('track').insertAdjacentHTML('afterbegin', STOPS.map(function (s, i) { return '<span class="dot" style="left:' + ((i + 1) * 20) + '%"></span>'; }).join(''));
@@ -232,20 +239,41 @@
   $('call-off').addEventListener('click', function () { setCall(false); });
   $('note').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); setCall(true); } });
 
-  $('email-edit').addEventListener('click', function () {
-    var f = $('email-form'), open = f.hidden;
-    f.hidden = !open; this.setAttribute('aria-expanded', String(open));
-    if (open) { $('email').value = board.email || ''; $('email').focus(); }
+  // ---------- editing your details (the Worker checks them) ----------
+  var DETAILS = ['name', 'nickname', 'jobTitle', 'email'];
+  function detailsProblem(field, text) {
+    DETAILS.forEach(function (k) {
+      var f = $('f-' + k), bad = k === field;
+      f.classList.toggle('bad', bad);
+      f.querySelector('.msg').textContent = bad ? text : '';
+    });
+    $('details-status').textContent = field === 'status' ? text : '';
+    if (DETAILS.indexOf(field) > -1) $(field).focus();
+  }
+  function showDetails(open) {
+    $('details-form').hidden = !open;
+    $('details-btn').setAttribute('aria-expanded', String(open));
+    detailsProblem();
+  }
+  $('details-btn').addEventListener('click', function () {
+    var open = $('details-form').hidden;
+    showDetails(open);
+    if (open) { DETAILS.forEach(function (k) { $(k).value = board[k] || ''; }); $('name').focus(); }
   });
-  $('email-form').addEventListener('submit', function (e) {
+  $('details-cancel').addEventListener('click', function () { showDetails(false); $('details-btn').focus(); });
+  $('details-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    var f = this, field = f.querySelector('.field'), v = $('email').value.trim();
-    field.classList.remove('bad'); field.querySelector('.msg').textContent = '';
-    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { field.classList.add('bad'); field.querySelector('.msg').textContent = 'That doesn’t look like an email address.'; return; }
-    post({ email: v }).then(function (d) {
-      if (!d.ok) { field.classList.add('bad'); field.querySelector('.msg').textContent = d.message; return; }
-      f.hidden = true; $('email-edit').setAttribute('aria-expanded', 'false'); render(d.board);
-    }).catch(function () { status('That didn’t save. Check your connection and try again.', true); });
+    var body = {}, save = $('details-save'), btn = $('details-btn');
+    DETAILS.forEach(function (k) { body[k] = $(k).value.trim(); });
+    detailsProblem();
+    save.disabled = true;
+    post(body).then(function (d) {
+      save.disabled = false;
+      if (!d.ok) return detailsProblem(DETAILS.indexOf(d.field) > -1 ? d.field : 'status', d.message);
+      render(d.board); showDetails(false); btn.focus();
+      var label = btn.querySelector('span');
+      label.textContent = 'Saved'; setTimeout(function () { label.textContent = 'Edit my details'; }, 2000);
+    }).catch(function () { save.disabled = false; detailsProblem('status', 'That didn’t save. Check your connection and try again.'); });
   });
 
   $('copy-link').addEventListener('click', function () {
@@ -268,7 +296,7 @@
     }).catch(function () { status('That didn’t go through. Check your connection and try again.', true); });
   });
 
-  window.addEventListener('hashchange', function () { board = null; $('stops').innerHTML = ''; $('track').querySelectorAll('.dot').forEach(function (d) { d.remove(); }); load(); });
+  window.addEventListener('hashchange', function () { board = null; showDetails(false); $('stops').innerHTML = ''; $('track').querySelectorAll('.dot').forEach(function (d) { d.remove(); }); load(); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden && board) refresh(); });
   load();
 })();
