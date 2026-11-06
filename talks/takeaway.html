@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A guide to keep from the AI Enabled Product Hackathon: the instructions, prompts and links, on the web or as a PDF.">
+<title>The take-away · AI Enabled Product Hackathon</title>
+<link rel="preload" href="../assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/style.css?v=611aa504">
+<script src="../assets/site.js?v=3db83242"></script>
+<style>
+.takeaway { display: grid; gap: 2rem; padding-bottom: 3rem; }
+.takeaway section.cover { padding: 2rem 0 .5rem; }
+.cover .brand { display: none; }
+.cover-actions { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; margin-top: 1.5rem; }
+.cover-actions p { margin: 0; max-width: 26rem; }
+.print-only { display: none; }
+.rail { min-width: 0; }
+.rail p { margin: 0 0 .3rem; font-weight: 600; font-size: .95rem; }
+.rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 1.5rem; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+.rail a { display: block; padding: .32rem .7rem; margin-left: -.7rem; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: .95rem; line-height: 1.3; }
+.rail a:hover { color: var(--text); background: var(--surface); }
+.rail a[aria-current="true"] { color: var(--text); background: var(--surface-2); font-weight: 500; }
+.cards { display: grid; gap: 1.25rem; min-width: 0; }
+.chapter { display: grid; gap: 1.25rem; scroll-margin-top: 5rem; }
+.sheet { display: flex; flex-direction: column; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: clamp(1.25rem, 3.5vw, 2.25rem); }
+.sheet-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+.sheet-top b { color: var(--accent); font-weight: 600; }
+.stopline { display: inline-flex; align-items: center; flex: none; }
+.stopline i { width: .6rem; height: .6rem; border-radius: 50%; border: 1.5px solid var(--muted); }
+.stopline i + i { margin-left: 1.05rem; position: relative; }
+.stopline i + i::before { content: ""; position: absolute; right: 100%; top: 50%; width: 1.05rem; height: 1.5px; margin: -.75px .1rem 0 0; background: var(--line); width: .85rem; }
+.stopline i.on { background: var(--accent); border-color: var(--accent); }
+.stopline i.on + i.on::before { background: var(--accent); }
+.sheet h2 { font-size: clamp(1.55rem, 3vw, 2.1rem); margin-bottom: .6rem; }
+.sheet .intro { font-size: 1.15rem; color: var(--muted); max-width: 44rem; margin: 0 0 1.1rem; }
+.sheet > div > :last-child { margin-bottom: 0; }
+.sheet-foot { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.25rem; color: var(--muted); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.boxes { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin: 1rem 0; }
+.box { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1.1rem; font-size: 1.02rem; }
+.box p { margin: .35rem 0; }
+.box p:last-child { margin-bottom: 0; }
+.box h3 { display: flex; align-items: center; gap: .45rem; }
+.box h3 .icon { color: var(--accent); }
+.split { display: grid; gap: .4rem 2rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); align-items: start; }
+.split > p, .split > div > p:first-child { margin-top: 0; }
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+.points li { position: relative; padding-left: 1.6rem; }
+.points li::before { content: ""; position: absolute; left: .15rem; top: .5em; width: .75rem; height: .4rem; border: solid var(--accent); border-width: 0 0 2px 2px; transform: rotate(-45deg); }
+.pull { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem 1rem; margin: 1rem 0 0; }
+.do { list-style: none; counter-reset: do; margin: .8rem 0 0; padding: 0; display: grid; gap: .8rem; }
+.do > li { counter-increment: do; position: relative; padding-left: 2.4rem; min-height: 1.8rem; }
+.sheet code { white-space: nowrap; }
+.do > li::before { content: counter(do); position: absolute; left: 0; top: 0; width: 1.8rem; height: 1.8rem; display: grid; place-items: center; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: .95rem; }
+.route { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: .6rem; counter-reset: stop; }
+.route li { counter-increment: stop; position: relative; padding-left: 2.1rem; font-size: 1rem; line-height: 1.35; }
+.route li::before { content: counter(stop); position: absolute; left: 0; top: 0; width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: .82rem; }
+.route b { display: block; font-weight: 600; color: var(--text); }
+.route span { display: block; color: var(--muted); font-size: .92rem; }
+.route a { display: block; text-decoration: none; }
+.route a:hover b { color: var(--accent); }
+.prompt .label { font-size: .85rem; color: var(--muted); font-weight: 500; margin: 0; }
+.prompt .copy-row { margin: .4rem 0 0; }
+@media (min-width: 720px) {
+  .route { grid-template-columns: repeat(5, 1fr); gap: 1rem; position: relative; }
+  .route::before { content: ""; position: absolute; left: .75rem; right: 19%; top: .72rem; height: 2px; background: var(--line); }
+  .route li { padding: 2.1rem 0 0; }
+  .route li::before { z-index: 1; }
+}
+@media (min-width: 1060px) {
+  .takeaway { grid-template-columns: 13.5rem minmax(0, 1fr); gap: 2.5rem; align-items: start; }
+  .takeaway section.cover { grid-column: 1 / -1; }
+  .rail { position: sticky; top: 5rem; }
+  .rail ol { grid-template-columns: 1fr; }
+}
+@page { size: 297mm 210mm; margin: 0; }
+@media print {
+  :root:not(#x) { --bg: #f7f8f5; --surface: #eef1e8; --surface-2: #e3e8d9; --text: #1d211b; --muted: #565d52; --line: #d8ddd1; --accent: #4d6b35; --accent-ink: #f7f8f5; --accent-soft: rgba(77, 107, 53, .13); --warn-bg: #fbf3dc; --warn-line: #b08a2e; --warn-text: #4a3a0d; }
+  html, body { background: var(--bg); font-size: 12.4pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  main { padding: 0; }
+  .rail, .web-only, .prompt .copy-row, .skip, body > footer { display: none; }
+  .print-only { display: block; }
+  .wrap { max-width: none; padding: 0; }
+  .takeaway, .cards, .chapter { display: block; padding: 0; }
+  .sheet, .takeaway section.cover { box-sizing: border-box; min-height: 209.8mm; padding: 13mm 17mm 9mm; margin: 0; border: 0; border-radius: 0; background: var(--bg); break-after: page; break-inside: avoid; }
+  .sheet { display: flex; }
+  .sheet-top { font-size: 10pt; margin-bottom: 6mm; }
+  .sheet h2 { font-size: 27pt; margin-bottom: 3mm; }
+  .sheet .intro { font-size: 14pt; max-width: none; margin-bottom: 6mm; }
+  .sheet-foot { margin-top: auto; padding-top: 4mm; font-size: 8.5pt; }
+  .boxes { grid-template-columns: repeat(3, 1fr); }
+  .boxes.two { grid-template-columns: repeat(2, 1fr); }
+  .box { background: var(--surface); }
+  .prompt { break-inside: avoid; }
+  .route { grid-template-columns: repeat(5, 1fr); gap: 1rem; position: relative; }
+  .route::before { content: ""; position: absolute; left: .75rem; right: 19%; top: .72rem; height: 2px; background: var(--line); }
+  .route li { padding: 2.1rem 0 0; }
+  .route li::before { z-index: 1; }
+  .takeaway section.cover { display: flex; flex-direction: column; background: var(--surface); }
+  .cover .brand { display: block; margin-bottom: auto; font-size: 13pt; }
+  .cover .eyebrow { display: none; }
+  .cover h1 { font-size: 60pt; margin: 0 0 4mm; }
+  .cover .lead { font-size: 15pt; max-width: 200mm; }
+  .cover .callout { font-size: 11pt; margin-bottom: 0; }
+  .cover-keep { margin: 5mm 0 0; color: var(--muted); font-size: 9pt; line-height: 1.45; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" id="top"><div class="wrap bar">
+<a class="brand" href="../index.html">ai product <span>hackday</span></a>
+<a href="../resources.html">← Resources</a>
+</div></header>
+<main id="main">
+<div class="wrap takeaway">
+<section class="cover">
+<a class="brand" href="../index.html">ai product <span>hackday</span></a>
+<p class="eyebrow">To keep</p>
+<h1>The <em>take-away</em></h1>
+<p class="lead">Everything from the hackathon in one place: how to work with your AI, every step from warm-up to a live app, and every useful prompt and link. It’s yours to keep.</p>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="../stay-safe.html">More on staying safe</a>.</p></div>
+<div class="cover-actions web-only"><a class="btn" href="takeaway.pdf" download><svg class="icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-arrow-down"/></svg>Download the PDF</a><p class="muted small">The PDF needs no password, so it’s the best copy to keep. You can also bookmark this page.</p></div>
+<p class="print-only cover-keep">The latest copy is at hackday.bonhard.ai/talks/takeaway.pdf. Organised by Phil Bonhard. This guide does not claim endorsement by any organisation or approval of any tool.</p>
+</section>
+<nav class="rail" aria-label="In this guide"><p>In this guide</p><ol><li><a href="#start">Start here</a></li><li><a href="#working-with-ai">Working with your AI</a></li><li><a href="#warm-up">Stop 1: Warm-up</a></li></ol></nav>
+<div class="cards">
+<section class="chapter" id="start"><article class="sheet" id="how-to-use"><div class="sheet-top"><b>Start here</b></div><div><h2>How to use this</h2>
+<p class="intro">This is everything from the hackathon, written to be read on its own. You don’t need the talks, and you can dip in anywhere.</p>
+<div class="boxes">
+<div class="box"><h3>Follow the five stops</h3><p>The steps run in the same order as the My day board, from warm-up to a live app.</p></div>
+<div class="box"><h3>Copy the prompts</h3><p>On the web page, each prompt has a Copy button. In the PDF, select the text. Change the words in [square brackets] to your own.</p></div>
+<div class="box"><h3>Read what comes back</h3><p>A prompt is a starting point. Adjust the wording to your idea, then read and challenge what the AI gives you.</p></div>
+</div>
+<ol class="route" aria-label="The five stops">
+<li><a href="#warm-up"><b>Warm-up done</b><span>Hello world on your own computer</span></a></li>
+<li><b>GitHub connected</b><span>Your AI tool can save to your account</span></li>
+<li><b>Hello world pushed</b><span>Your page is on GitHub with a live address</span></li>
+<li><b>PRD shared</b><span>A short plan, reviewed and saved</span></li>
+<li><b>App live</b><span>Someone else can open it on their own device</span></li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>2 / 8</span></div></article></section>
+<section class="chapter" id="working-with-ai"><article class="sheet" id="talk"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Talk to it like a colleague</h2>
+<p class="intro">Think of your AI as a very fast colleague who’s never met you. It knows a lot about building things and nothing about who you’re designing for. That’s your job.</p>
+<div class="split">
+<div>
+<p>You don’t need special words. Brief it the way you’d brief a colleague. If the answer isn’t right, say so. It won’t be offended.</p>
+<p>Ask it for help with anything, including “how do I…?”</p>
+</div>
+<ul class="points">
+<li><strong>Tell it who you are.</strong> “I’m a designer. Explain things in plain words.”</li>
+<li><strong>Give it context.</strong> Who it’s for, the problem, and what good looks like.</li>
+<li><strong>Keep talking.</strong> Ask follow-up questions, and say “that’s not what I meant”.</li>
+<li><strong>Let it question you.</strong> Ask it to ask you questions before it builds anything.</li>
+</ul>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>3 / 8</span></div></article><article class="sheet" id="show"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Show it, don’t describe it</h2>
+<p class="intro">A screenshot beats a paragraph. If something looks wrong, or you see an error you don’t understand, grab it, paste it and ask “what’s going on here?”</p>
+<div class="boxes two">
+<div class="box"><h3>On a Mac</h3><p><strong>Grab part of the screen.</strong> Press <kbd>⌘ Cmd</kbd> <kbd>⇧ Shift</kbd> <kbd>4</kbd>, then drag a box round the bit you need.</p><p><strong>Put it in the chat.</strong> Drag the thumbnail (bottom right) into the chat. Or add <kbd>Ctrl</kbd> to copy it, then press <kbd>⌘ Cmd</kbd> <kbd>V</kbd>.</p></div>
+<div class="box"><h3>On Windows</h3><p><strong>Grab part of the screen.</strong> Press <kbd>⊞ Win</kbd> <kbd>⇧ Shift</kbd> <kbd>S</kbd>, then drag a box round the bit you need.</p><p><strong>Put it in the chat.</strong> It’s copied already. Click in the chat and press <kbd>Ctrl</kbd> <kbd>V</kbd>.</p></div>
+</div>
+<p class="pull"><strong>Grab only the bit you need.</strong> A full-screen shot can catch Teams, email, notifications and other tabs. Share only a screenshot of your own sample product.</p></div><div class="sheet-foot"><span>The take-away</span><span>4 / 8</span></div></article><article class="sheet" id="in-charge"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Stay in charge</h2>
+<p class="intro">AI can be confidently wrong. The cure is simple: small steps, and look at the result every time.</p>
+<div class="boxes">
+<div class="box"><h3>One change at a time</h3><p>Ask, check, then the next thing.</p></div>
+<div class="box"><h3>Check it yourself</h3><p>Open it, click it, try it on your phone. “Done” doesn’t always mean done.</p></div>
+<div class="box"><h3>Save when it works</h3><p>Publish a working version before a big change.</p></div>
+</div>
+<div class="split">
+<p><strong>If in doubt, ask it to explain its choices.</strong> “What were the options? Why this one?” That’s how you learn, and it’s often how you catch the mistake.</p>
+<p><strong>Going round in circles?</strong> Start a fresh chat and explain where you’ve got to.</p>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>5 / 8</span></div></article><article class="sheet" id="permissions"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Permissions, money and getting stuck</h2>
+<p class="intro">These tools can create files, run commands and use your accounts. That’s what makes them useful, and it’s why you read before you say yes.</p>
+<div class="boxes">
+<div class="box"><h3>Read before you say yes</h3><p>Your AI asks permission before it does things. Say yes to your project folder and GitHub. Say no to anything you don’t understand, then ask for help.</p></div>
+<div class="box"><h3>Don’t buy anything on the spot</h3><p>Asked to pay, upgrade or add a card without planning to? Stop and ask. Ran out of usage? Don’t top up in a panic.</p></div>
+<div class="box"><h3>The 10-minute rule</h3><p>Stuck for ten minutes? Ask for help. Screenshot, paste, ask: your AI is the first helper you go to.</p></div>
+</div>
+<p class="pull"><strong>Never paste a password, key or token into a chat.</strong> If your AI asks for one, say no. GitHub gives you a one-time code to type in yourself.</p></div><div class="sheet-foot"><span>The take-away</span><span>6 / 8</span></div></article></section>
+<section class="chapter" id="warm-up"><article class="sheet" id="choose-tool"><div class="sheet-top"><span><b>Stop 1 of 5</b> · Warm-up</span><span class="stopline" aria-hidden="true"><i class=on></i><i></i><i></i><i></i><i></i></span></div><div><h2>Choose your tool</h2>
+<p class="intro">Both do the same job. The warm-up takes about 25–35 minutes the first time (an estimate) and checks that your tools work. It’s a rehearsal, not your product.</p>
+<div class="boxes two">
+<div class="box"><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-b-claude"/></svg> Claude</h3><p>In the Claude desktop app’s Code tab. Needs Claude Pro or higher, because Claude Code isn’t on the free plan. Buying a plan is your choice.</p><p><a href="https://claude.com/download">Download the Claude app</a></p></div>
+<div class="box"><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-b-openai"/></svg> Codex</h3><p>In the ChatGPT desktop app. Listed on free and paid ChatGPT plans, with usage limits, so a paid plan gives you more room.</p><p><a href="https://chatgpt.com/download">Download the ChatGPT app</a></p></div>
+</div>
+<p class="pull"><strong>Plans change.</strong> Check the provider’s own site before you sign up. Use your own personal accounts, not a work account or work email.</p></div><div class="sheet-foot"><span>The take-away</span><span>7 / 8</span></div></article><article class="sheet" id="first-page"><div class="sheet-top"><span><b>Stop 1 of 5</b> · Warm-up</span><span class="stopline" aria-hidden="true"><i class=on></i><i></i><i></i><i></i><i></i></span></div><div><h2>Make your first page</h2>
+<ol class="do">
+<li><strong>Install the app and sign in.</strong> In Claude, click the Code tab. In the ChatGPT app, choose Codex from the dropdown.</li>
+<li><strong>Create a free GitHub account</strong> at <a href="https://github.com/signup">github.com/signup</a>, with your own email. Your username is public. Remember how you signed up (email, Google or Apple) and always sign in the same way.</li>
+<li><strong>Give it an empty folder.</strong> Make a new folder called <code>hello-hackday</code> on your Desktop and open it in your tool.</li>
+<li><strong>Ask for your page.</strong> Paste this in. It may ask a question or two, or just make the page: either is fine. If it asks, answer in your own words, or say “you decide”.<div class="prompt"><p id="prompt-1">I’d like you to create a webpage that simply says hello world.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-1">Copy</button></p></div></li>
+<li><strong>See it.</strong> Ask “Please open the page in my browser”, or double-click the file ending in <code>.html</code>. The address starts with <code>file://</code>, which means it’s only on your computer.</li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>8 / 8</span></div></article></section>
+</div>
+</div>
+</main>
+<footer><div class="wrap">
+<p>Organised by Phil Bonhard. This site does not claim endorsement by any organisation or approval of any tool.</p>
+<p>No cookies, no analytics, no external fonts.</p>
+</div></footer>
+<script>
+(function () {
+  var links = [].slice.call(document.querySelectorAll('.rail a'));
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) {
+        if (a.hash === '#' + e.target.id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('.chapter').forEach(function (c) { io.observe(c); });
+})();
+</script>
+</body>
+</html>
