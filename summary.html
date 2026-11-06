@@ -737,6 +737,7 @@
       busy(true); $('pv-title').textContent = 'Publishing…';
       send('/api/summary/publish', { event: data.event.id, content: content() }).then(function (d) {
         if (!d.ok) { busy(false); alert(d.message || 'That didn’t publish.'); return; }
+        try { localStorage.setItem('summary-published', String(Date.now())); } catch (e) {}  // tells the control's Summary tab, open in the other tab
         dirty = false; restoredFrom = null; load().then(function () { if (data.publishedAt) showLive(); });
       });
     };
