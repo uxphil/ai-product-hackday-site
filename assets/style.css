@@ -942,6 +942,13 @@ html.reel-embed .reel-screen video { box-shadow: none; }
 @media (max-width: 860px) { .home-reel { grid-template-columns: 1fr; } }
 .optional { font-weight: 400; color: var(--muted); }
 .pass dd.pass-email { font-size: 1rem; font-weight: 500; }
+.after { margin: 0 0 1.6rem; }
+.after h2 { margin: .4rem 0 .7rem; }
+.after .boards { margin: 0; }
+.after .boards a { display: grid; grid-template-columns: auto 1fr; column-gap: .9rem; }
+.after .boards .icon { grid-row: span 2; }
+.after .boards a span { margin-left: 0; }
+#connect-github, #publish, #write-prd { scroll-margin-top: 5.5rem; }
 #details-form { margin: .8rem 0 1.2rem; padding: 1.2rem; gap: 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
 .details-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 

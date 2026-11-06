@@ -7,7 +7,7 @@
 <meta name="description" content="Your board for the day: five stops and a call button.">
 <title>My day · AI Enabled Product Hackathon</title>
 <link rel="preload" href="assets/fonts/dm-sans-normal-400-2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=cf4c3cbc">
+<link rel="stylesheet" href="assets/style.css?v=e91f10aa">
 <script src="assets/site.js?v=3db83242"></script>
 </head>
 <body data-event-page>
@@ -35,6 +35,7 @@
 
 <!-- The board -->
 <div id="board" hidden>
+<div class="after" id="after" hidden><h2>Thanks for <em>coming</em></h2><ul class="boards" id="after-links"></ul></div>
 <div class="call" id="call" data-state="idle">
 <button class="call-btn" type="button" id="call-btn" aria-pressed="false" aria-describedby="call-text"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-hand"/></svg><span class="vh" id="call-label">Call a helper</span></button>
 <div id="call-text"><h2 id="call-title">Stuck? Call a helper</h2><p id="call-sub">Like the button above a plane seat. A helper sees your nickname, your stop and your note, and comes to you.</p></div>
@@ -95,11 +96,16 @@
   }
   var KEY = 'hackday-boards';
   var STOPS = [
-    { key: 'warmup', title: 'Warm-up done', text: 'Hello world on your own computer.', href: 'hello-world.html' },
-    { key: 'github', title: 'GitHub connected', text: 'Your AI tool can save to your GitHub account.', href: 'hello-world-publish.html' },
-    { key: 'pushed', title: 'Hello world pushed', text: 'Your page is on GitHub with a live address.', href: 'hello-world-publish.html' },
-    { key: 'prd', title: 'PRD shared', text: 'Sent for the demos.', href: 'share.html' },
-    { key: 'live', title: 'App live', text: 'Someone else can open it on their own device.', href: 'event.html' },
+    { key: 'warmup', title: 'Warm-up done', text: 'Hello world on your own computer.', how: [['How', 'hello-world.html']] },
+    { key: 'github', title: 'GitHub connected', text: 'Your AI tool can save to your GitHub account.', how: [['Claude', 'hello-world-claude.html#connect-github'], ['Codex', 'hello-world-codex.html#connect-github'], ['Other tools', 'hello-world-other.html']] },
+    { key: 'pushed', title: 'Hello world pushed', text: 'Your page is on GitHub with a live address.', how: [['How', 'hello-world-publish.html#publish']] },
+    { key: 'prd', title: 'PRD shared', text: 'Sent for the demos.', how: [['Write it', 'plan.html#write-prd'], ['Share it', 'share.html']] },
+    { key: 'live', title: 'App live', text: 'Someone else can open it on their own device.', how: [['How', 'event.html#finish-line']] },
+  ];
+  // Shown on the board once the organiser opens voting or feedback for this event. An entry with no key shows with either.
+  var AFTER = [
+    { key: 'vote', title: 'Vote for favourites', text: 'Pick the projects you liked', href: 'vote.html', icon: 'i-heart' },
+    { key: 'feedback', title: 'Give feedback', text: 'Tell us how the day went', href: 'feedback.html', icon: 'i-message-circle' },
   ];
   var PHASES = ['At the gate', 'Boarding', 'Taxiing', 'Take-off', 'Cruising', 'Landed 🎉'];
   var $ = function (id) { return document.getElementById(id); };
@@ -117,6 +123,13 @@
   function pretty(c) { return c.slice(0, 5) + '-' + c.slice(5); }
   function ago(iso) { var m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000)); return m < 1 ? 'just now' : m === 1 ? '1 minute ago' : m + ' minutes ago'; }
   function status(text, warn) { $('status').className = 'form-status' + (warn ? ' warn' : ''); $('status').textContent = text || ''; }
+
+  // rel="opener": without it a new tab loses this tab's unlocked password gate (sessionStorage) and asks again. Our own pages only.
+  function newTab(label, href) { return '<a href="' + href + '" target="_blank" rel="opener">' + label + '<span class="vh"> (opens in a new tab)</span></a>'; }
+  function howLinks(s) {
+    var links = s.how.map(function (h) { return newTab(h[0], h[1]); }).join(' · ');
+    return s.how.length > 1 ? 'How: ' + links : links;
+  }
 
   function post(body) {
     return fetch(API + '/me', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ code: code }, body)) })
@@ -186,11 +199,21 @@
     $('phone-code').textContent = pretty(b.code);
     $('switch-wrap').hidden = boards().length < 2;
 
+    // Vote, feedback and materials, once the organiser opens them (they open in a new tab, like the How links)
+    var open = b.open || {}, after = AFTER.filter(function (a) { return !a.key || open[a.key]; }), shown = String(open.vote) + open.feedback;
+    $('after').hidden = !(open.vote || open.feedback);
+    if ($('after').dataset.shown !== shown) {  // only when it changes, so a check for updates can't take focus off a link
+      $('after').dataset.shown = shown;
+      $('after-links').innerHTML = after.map(function (a) {
+        return '<li><a href="' + a.href + '" target="_blank" rel="opener"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#' + a.icon + '"/></svg><strong>' + a.title + '</strong><span>' + a.text + '</span></a></li>';
+      }).join('');
+    }
+
     // Stops and the plane
     var done = STOPS.filter(function (s) { return b.steps[s.key]; }).length;
     if (first) {
       $('stops').innerHTML = STOPS.map(function (s, i) {
-        return '<li class="stop" data-key="' + s.key + '"><span class="num">' + (i + 1) + '</span><div><h3>' + s.title + '</h3><p>' + s.text + ' <a href="' + s.href + '" target="_blank" rel="noopener">How<span class="vh"> (opens in a new tab)</span></a></p></div>' +
+        return '<li class="stop" data-key="' + s.key + '"><span class="num">' + (i + 1) + '</span><div><h3>' + s.title + '</h3><p>' + s.text + ' ' + howLinks(s) + '</p></div>' +
           '<button class="tick" type="button" aria-pressed="false" aria-label="' + s.title + '"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-check"/></svg><span>Done</span></button></li>';
       }).join('');
       $('track').insertAdjacentHTML('afterbegin', STOPS.map(function (s, i) { return '<span class="dot" style="left:' + ((i + 1) * 20) + '%"></span>'; }).join(''));
