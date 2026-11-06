@@ -61,9 +61,21 @@
 .route a { display: block; text-decoration: none; }
 .route a:hover b { color: var(--accent); }
 .gap { margin-top: 1.4rem; }
+.ifs { margin: .8rem 0 0; }
+.ifs > div { padding: .6rem 0; border-top: 1px solid var(--line); }
+.ifs dt { font-weight: 600; }
+.ifs dd { margin: 0; }
+.links { list-style: none; margin: .8rem 0 0; padding: 0; display: grid; gap: .55rem 2rem; }
+.links a { display: block; text-decoration: none; }
+.links b { display: block; font-weight: 500; color: var(--accent); }
+.links a:hover b { text-decoration: underline; }
+.links span { display: block; color: var(--muted); font-size: .92rem; line-height: 1.3; }
+.sheet .callout { margin: .8rem 0; }
 .prompt .copy-row { margin: .4rem 0 0; }
 @media (min-width: 720px) {
   .sheet code { white-space: nowrap; }
+  .ifs > div { display: grid; grid-template-columns: 2fr 3fr; gap: 1.5rem; }
+  .links { grid-template-columns: 1fr 1fr; }
   .route.four { grid-template-columns: repeat(4, 1fr); }
   .route.four::before { right: 24%; }
   .points.two { grid-template-columns: 1fr 1fr; column-gap: 2rem; }
@@ -107,11 +119,17 @@
   .route.four { grid-template-columns: repeat(4, 1fr); }
   .route.four::before { right: 24%; }
   .points.two { grid-template-columns: 1fr 1fr; column-gap: 8mm; }
+  .ifs > div { display: grid; grid-template-columns: 2fr 3fr; gap: 6mm; padding: 2mm 0; }
+  .links { grid-template-columns: 1fr 1fr; gap: 2mm 8mm; }
   .takeaway section.cover { display: flex; flex-direction: column; background: var(--surface); }
-  .cover .brand { display: block; margin-bottom: auto; font-size: 13pt; }
+  .cover .brand { display: block; margin-bottom: 7mm; font-size: 13pt; }
+  .cover-toc { margin-bottom: auto; }
+  .cover-toc ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-rows: repeat(7, auto); grid-template-columns: 1fr 1fr; grid-auto-flow: column; gap: .3mm 14mm; }
+  .cover-toc a { display: flex; justify-content: space-between; gap: 6mm; padding: .5mm 0; color: var(--text); text-decoration: none; border: 0; font-size: 10.5pt; }
+  .cover-toc a span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
   .cover .eyebrow { display: none; }
-  .cover h1 { font-size: 60pt; margin: 0 0 4mm; }
-  .cover .lead { font-size: 15pt; max-width: 200mm; }
+  .cover h1 { font-size: 54pt; margin: 0 0 3mm; }
+  .cover .lead { font-size: 13.5pt; max-width: 210mm; }
   .cover .callout { font-size: 11pt; margin-bottom: 0; }
   .cover-keep { margin: 5mm 0 0; color: var(--muted); font-size: 9pt; line-height: 1.45; }
 }
@@ -127,6 +145,7 @@
 <div class="wrap takeaway">
 <section class="cover">
 <a class="brand" href="../index.html">ai product <span>hackday</span></a>
+<nav class="print-only cover-toc" aria-label="Contents"><ol><li><a href="#start"><span>Start here</span><span>2</span></a></li><li><a href="#working-with-ai"><span>Working with your AI</span><span>3</span></a></li><li><a href="#warm-up"><span>Stop 1: Warm-up done</span><span>7</span></a></li><li><a href="#connect-github"><span>Stop 2: GitHub connected</span><span>9</span></a></li><li><a href="#publish"><span>Stop 3: Hello world pushed</span><span>10</span></a></li><li><a href="#plan"><span>Stop 4: PRD shared</span><span>14</span></a></li><li><a href="#app-live"><span>Stop 5: App live</span><span>20</span></a></li><li><a href="#other-routes"><span>Other ways to take part</span><span>25</span></a></li><li><a href="#after"><span>After the day</span><span>33</span></a></li><li><a href="#prompts"><span>Every prompt</span><span>37</span></a></li><li><a href="#stuck"><span>If something goes wrong</span><span>44</span></a></li><li><a href="#stay-safe"><span>Stay safe</span><span>47</span></a></li><li><a href="#links"><span>Every link</span><span>50</span></a></li></ol></nav>
 <p class="eyebrow">To keep</p>
 <h1>The <em>take-away</em></h1>
 <p class="lead">Everything from the hackathon in one place: how to work with your AI, every step from warm-up to a live app, and every useful prompt and link. It’s yours to keep.</p>
@@ -134,7 +153,7 @@
 <div class="cover-actions web-only"><a class="btn" href="takeaway.pdf" download><svg class="icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-arrow-down"/></svg>Download the PDF</a><p class="muted small">The PDF needs no password, so it’s the best copy to keep. You can also bookmark this page.</p></div>
 <p class="print-only cover-keep">The latest copy is at hackday.bonhard.ai/talks/takeaway.pdf. Organised by Phil Bonhard. This guide does not claim endorsement by any organisation or approval of any tool.</p>
 </section>
-<nav class="rail" aria-label="In this guide"><p>In this guide</p><ol><li><a href="#start">Start here</a></li><li><a href="#working-with-ai">Working with your AI</a></li><li><a href="#warm-up">Stop 1: Warm-up done</a></li><li><a href="#connect-github">Stop 2: GitHub connected</a></li><li><a href="#publish">Stop 3: Hello world pushed</a></li><li><a href="#plan">Stop 4: PRD shared</a></li><li><a href="#app-live">Stop 5: App live</a></li></ol></nav>
+<nav class="rail" aria-label="In this guide"><p>In this guide</p><ol><li><a href="#start">Start here</a></li><li><a href="#working-with-ai">Working with your AI</a></li><li><a href="#warm-up">Stop 1: Warm-up done</a></li><li><a href="#connect-github">Stop 2: GitHub connected</a></li><li><a href="#publish">Stop 3: Hello world pushed</a></li><li><a href="#plan">Stop 4: PRD shared</a></li><li><a href="#app-live">Stop 5: App live</a></li><li><a href="#other-routes">Other ways to take part</a></li><li><a href="#after">After the day</a></li><li><a href="#prompts">Every prompt</a></li><li><a href="#stuck">If something goes wrong</a></li><li><a href="#stay-safe">Stay safe</a></li><li><a href="#links">Every link</a></li></ol></nav>
 <div class="cards">
 <section class="chapter" id="start"><article class="sheet" id="how-to-use"><div class="sheet-top"><b>Start here</b></div><div><h2>How to use this</h2>
 <p class="intro">This is everything from the hackathon, written to be read on its own. You don’t need the talks, and you can dip in anywhere.</p>
@@ -149,7 +168,7 @@
 <li><a href="#publish"><b>Hello world pushed</b><span>Your page is on GitHub with a live address</span></a></li>
 <li><a href="#plan"><b>PRD shared</b><span>A short plan, reviewed and saved</span></a></li>
 <li><a href="#app-live"><b>App live</b><span>Someone else can open it on their own device</span></a></li>
-</ol></div><div class="sheet-foot"><span>The take-away</span><span>2 / 24</span></div></article></section>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>2 / 51</span></div></article></section>
 <section class="chapter" id="working-with-ai"><article class="sheet" id="talk"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Talk to it like a colleague</h2>
 <p class="intro">Think of your AI as a very fast colleague who’s never met you. It knows a lot about building things and nothing about who you’re designing for. That’s your job.</p>
 <div class="split">
@@ -163,13 +182,13 @@
 <li><strong>Keep talking.</strong> Ask follow-up questions, and say “that’s not what I meant”.</li>
 <li><strong>Let it question you.</strong> Ask it to ask you questions before it builds anything.</li>
 </ul>
-</div></div><div class="sheet-foot"><span>The take-away</span><span>3 / 24</span></div></article><article class="sheet" id="show"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Show it, don’t describe it</h2>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>3 / 51</span></div></article><article class="sheet" id="show"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Show it, don’t describe it</h2>
 <p class="intro">A screenshot beats a paragraph. If something looks wrong, or you see an error you don’t understand, grab it, paste it and ask “what’s going on here?”</p>
 <div class="boxes two">
 <div class="box"><h3>On a Mac</h3><p><strong>Grab part of the screen.</strong> Press <kbd>⌘ Cmd</kbd> <kbd>⇧ Shift</kbd> <kbd>4</kbd>, then drag a box round the bit you need.</p><p><strong>Put it in the chat.</strong> Drag the thumbnail (bottom right) into the chat. Or add <kbd>Ctrl</kbd> to copy it, then press <kbd>⌘ Cmd</kbd> <kbd>V</kbd>.</p></div>
 <div class="box"><h3>On Windows</h3><p><strong>Grab part of the screen.</strong> Press <kbd>⊞ Win</kbd> <kbd>⇧ Shift</kbd> <kbd>S</kbd>, then drag a box round the bit you need.</p><p><strong>Put it in the chat.</strong> It’s copied already. Click in the chat and press <kbd>Ctrl</kbd> <kbd>V</kbd>.</p></div>
 </div>
-<p class="pull"><strong>Grab only the bit you need.</strong> A full-screen shot can catch Teams, email, notifications and other tabs. Share only a screenshot of your own sample product.</p></div><div class="sheet-foot"><span>The take-away</span><span>4 / 24</span></div></article><article class="sheet" id="in-charge"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Stay in charge</h2>
+<p class="pull"><strong>Grab only the bit you need.</strong> A full-screen shot can catch Teams, email, notifications and other tabs. Share only a screenshot of your own sample product.</p></div><div class="sheet-foot"><span>The take-away</span><span>4 / 51</span></div></article><article class="sheet" id="in-charge"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Stay in charge</h2>
 <p class="intro">AI can be confidently wrong. The cure is simple: small steps, and look at the result every time.</p>
 <div class="boxes">
 <div class="box"><h3>One change at a time</h3><p>Ask, check, then the next thing.</p></div>
@@ -179,28 +198,28 @@
 <div class="split">
 <p><strong>If in doubt, ask it to explain its choices.</strong> “What were the options? Why this one?” That’s how you learn, and it’s often how you catch the mistake.</p>
 <p><strong>Going round in circles?</strong> Start a fresh chat and explain where you’ve got to.</p>
-</div></div><div class="sheet-foot"><span>The take-away</span><span>5 / 24</span></div></article><article class="sheet" id="permissions"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Permissions, money and getting stuck</h2>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>5 / 51</span></div></article><article class="sheet" id="permissions"><div class="sheet-top"><b>Working with your AI</b></div><div><h2>Permissions, money and getting stuck</h2>
 <p class="intro">These tools can create files, run commands and use your accounts. That’s what makes them useful, and it’s why you read before you say yes.</p>
 <div class="boxes">
 <div class="box"><h3>Read before you say yes</h3><p>Your AI asks permission before it does things. Say yes to your project folder and GitHub. Say no to anything you don’t understand, then ask for help.</p></div>
 <div class="box"><h3>Don’t buy anything on the spot</h3><p>Asked to pay, upgrade or add a card without planning to? Stop and ask. Ran out of usage? Don’t top up in a panic.</p></div>
 <div class="box"><h3>The 10-minute rule</h3><p>Stuck for ten minutes? Ask for help. Screenshot, paste, ask: your AI is the first helper you go to.</p></div>
 </div>
-<p class="pull"><strong>Never paste a password, key or token into a chat.</strong> If your AI asks for one, say no. GitHub gives you a one-time code to type in yourself.</p></div><div class="sheet-foot"><span>The take-away</span><span>6 / 24</span></div></article></section>
+<p class="pull"><strong>Never paste a password, key or token into a chat.</strong> If your AI asks for one, say no. GitHub gives you a one-time code to type in yourself.</p></div><div class="sheet-foot"><span>The take-away</span><span>6 / 51</span></div></article></section>
 <section class="chapter" id="warm-up"><article class="sheet" id="choose-tool"><div class="sheet-top"><span><b>Stop 1 of 5</b> · Warm-up done</span><span class="stopline" aria-hidden="true"><i class=on></i><i></i><i></i><i></i><i></i></span></div><div><h2>Choose your tool</h2>
 <p class="intro">Both do the same job. The warm-up takes about 25–35 minutes the first time (an estimate) and checks that your tools work. It’s a rehearsal, not your product.</p>
 <div class="boxes two">
 <div class="box"><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-b-claude"/></svg> Claude</h3><p>In the Claude desktop app’s Code tab. Needs Claude Pro or higher, because Claude Code isn’t on the free plan. Buying a plan is your choice.</p><p><a href="https://claude.com/download">Download the Claude app</a></p></div>
 <div class="box"><h3><svg class="icon brand" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-b-openai"/></svg> Codex</h3><p>In the ChatGPT desktop app. Listed on free and paid ChatGPT plans, with usage limits, so a paid plan gives you more room.</p><p><a href="https://chatgpt.com/download">Download the ChatGPT app</a></p></div>
 </div>
-<p class="pull"><strong>Plans change.</strong> Check the provider’s own site before you sign up. Use your own personal accounts, not a work account or work email.</p></div><div class="sheet-foot"><span>The take-away</span><span>7 / 24</span></div></article><article class="sheet" id="first-page"><div class="sheet-top"><span><b>Stop 1 of 5</b> · Warm-up done</span><span class="stopline" aria-hidden="true"><i class=on></i><i></i><i></i><i></i><i></i></span></div><div><h2>Make your first page</h2>
+<p class="pull"><strong>Plans change.</strong> Check the provider’s own site before you sign up. Use your own personal accounts, not a work account or work email.</p></div><div class="sheet-foot"><span>The take-away</span><span>7 / 51</span></div></article><article class="sheet" id="first-page"><div class="sheet-top"><span><b>Stop 1 of 5</b> · Warm-up done</span><span class="stopline" aria-hidden="true"><i class=on></i><i></i><i></i><i></i><i></i></span></div><div><h2>Make your first page</h2>
 <ol class="do">
 <li><strong>Install the app and sign in.</strong> In Claude, click the Code tab. In the ChatGPT app, choose Codex from the dropdown.</li>
 <li><strong>Create a free GitHub account</strong> at <a href="https://github.com/signup">github.com/signup</a>, with your own email. Your username is public. Remember how you signed up (email, Google or Apple) and always sign in the same way.</li>
 <li><strong>Give it an empty folder.</strong> Make a new folder called <code>hello-hackday</code> on your Desktop and open it in your tool.</li>
 <li><strong>Ask for your page.</strong> Paste this in. It may ask a question or two, or just make the page: either is fine. If it asks, answer in your own words, or say “you decide”.<div class="prompt"><p id="prompt-1">I’d like you to create a webpage that simply says hello world.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-1">Copy</button></p></div></li>
 <li><strong>See it.</strong> Ask “Please open the page in my browser”, or double-click the file ending in <code>.html</code>. The address starts with <code>file://</code>, which means it’s only on your computer.</li>
-</ol></div><div class="sheet-foot"><span>The take-away</span><span>8 / 24</span></div></article></section>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>8 / 51</span></div></article></section>
 <section class="chapter" id="connect-github"><article class="sheet" id="connect"><div class="sheet-top"><span><b>Stop 2 of 5</b> · GitHub connected</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i></i><i></i><i></i></span></div><div><h2>Connect your tool to GitHub</h2>
 <p class="intro">This lets your tool put your work on GitHub with one request. You won’t type a password, and your tool won’t open a browser. GitHub gives you a short one-time code, and you type it in yourself.</p>
 <ol class="do">
@@ -212,7 +231,7 @@
 Don’t create a repository or publish anything today.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-2">Copy</button></p></div></li>
 <li><strong>Type the code.</strong> It looks like <code>ABCD-1234</code>. Go to <a href="https://github.com/login/device">github.com/login/device</a> on any device where you’re signed in, type it, press Continue, then Authorize. It works for about 15 minutes. Then tell your tool “done”.</li>
 <li><strong>You’re finished when it tells you your GitHub username.</strong> It’s fine to approve git and gh, and installing them if it asks. Using Codex? Say yes when it asks to use the internet.</li>
-</ol></div><div class="sheet-foot"><span>The take-away</span><span>9 / 24</span></div></article></section>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>9 / 51</span></div></article></section>
 <section class="chapter" id="publish"><article class="sheet" id="loop"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>The loop you’ll use all day</h2>
 <p class="intro">Everything from here is the same four moves. You’ll go round them twice with your hello-world page, then all day with your real project.</p>
 <ol class="route four" aria-label="The loop">
@@ -227,7 +246,7 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 <div class="box"><h3>Commit</h3><p>A save point you can go back to.</p></div>
 <div class="box"><h3>Push</h3><p>Send your saved changes up to GitHub.</p></div>
 <div class="box"><h3>GitHub Pages</h3><p>Turns your repository into a website with a real address.</p></div>
-</div></div><div class="sheet-foot"><span>The take-away</span><span>10 / 24</span></div></article><article class="sheet" id="publish-page"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>Put your page online</h2>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>10 / 51</span></div></article><article class="sheet" id="publish-page"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>Put your page online</h2>
 <p class="intro">Your page and its file become public on GitHub. Anyone with the address can see them. That’s fine for a sample sentence and not for anything else.</p>
 <p>Open your <code>hello-hackday</code> folder in your tool. Prefer your own words? Say you want to put this page on GitHub and make it a website, one step at a time. Or paste this.</p>
 <div class="prompt"><p id="prompt-3" style="white-space:pre-line">I’d like to publish this page on the web with GitHub Pages. It only contains fictional sample content. Please go one step at a time and explain each step in plain language.
@@ -235,21 +254,21 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 2. Check I’m signed in to GitHub with gh auth status. If I’m not, run gh auth login --hostname github.com --git-protocol https --web in the background and show me the one-time code. Don’t open a browser or use any browser tools: I’ll type the code myself at github.com/login/device. Never ask me for a password or token, and never store one.
 3. Create a new PUBLIC repository called hello-hackday in my own GitHub account from this folder, commit the page and push it.
 4. Turn on GitHub Pages for that repository, publishing from the main branch and the root folder.
-5. Tell me my web address (it looks like https://USERNAME.github.io/hello-hackday/), check whether it is live yet, and tell me clearly if I need to wait.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-3">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>11 / 24</span></div></article><article class="sheet" id="open-it"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>Check it’s really there</h2>
+5. Tell me my web address (it looks like https://USERNAME.github.io/hello-hackday/), check whether it is live yet, and tell me clearly if I need to wait.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-3">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>11 / 51</span></div></article><article class="sheet" id="open-it"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>Check it’s really there</h2>
 <p class="intro">Once your AI says it’s pushed, don’t take its word for it. Open GitHub and look.</p>
 <ol class="do">
 <li><strong>Read each request.</strong> It’s fine to approve git and gh (GitHub’s own tool) for your <code>hello-hackday</code> folder and repository. If it asks for anything else, say no and ask for help.</li>
 <li><strong>See your file on GitHub,</strong> at <code>github.com/your-username/hello-hackday</code>. If you can see it, it’s on GitHub.</li>
 <li><strong>Open your address on your phone.</strong> It looks like <code>https://your-username.github.io/hello-hackday/</code>. Opening it on your phone proves someone else can open it too.</li>
 </ol>
-<p class="pull"><strong>A 404 page usually means “not yet”.</strong> GitHub can take up to 10 minutes the first time. Still missing after 15? Screenshot it and ask your AI to check that GitHub Pages is on for <code>hello-hackday</code>.</p></div><div class="sheet-foot"><span>The take-away</span><span>12 / 24</span></div></article><article class="sheet" id="change-it"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>Change it and publish again</h2>
+<p class="pull"><strong>A 404 page usually means “not yet”.</strong> GitHub can take up to 10 minutes the first time. Still missing after 15? Screenshot it and ask your AI to check that GitHub Pages is on for <code>hello-hackday</code>.</p></div><div class="sheet-foot"><span>The take-away</span><span>12 / 51</span></div></article><article class="sheet" id="change-it"><div class="sheet-top"><span><b>Stop 3 of 5</b> · Hello world pushed</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i></i><i></i></span></div><div><h2>Change it and publish again</h2>
 <p class="intro">This is the moment it clicks: you changed something, checked it, and it’s live for anyone.</p>
 <ol class="do">
 <li><strong>Ask for one change.</strong> Reload the page on your own computer to check it.<div class="prompt"><p id="prompt-4">Please add a smiley to my page and make it look a bit friendlier.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-4">Copy</button></p></div></li>
 <li><strong>Ask it to publish the change.</strong></li>
 <li><strong>Refresh the live address.</strong> Give it a minute. Still seeing the old version? Do a hard refresh: <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>R</kbd> on Windows, <kbd>⌘ Cmd</kbd> <kbd>Shift</kbd> <kbd>R</kbd> on a Mac.</li>
 </ol>
-<p class="pull"><strong>That’s the whole day in miniature:</strong> connected, created, published, shared, changed, published again. Keep <code>hello-hackday</code> as your practice repository. Your real project gets a fresh start.</p></div><div class="sheet-foot"><span>The take-away</span><span>13 / 24</span></div></article></section>
+<p class="pull"><strong>That’s the whole day in miniature:</strong> connected, created, published, shared, changed, published again. Keep <code>hello-hackday</code> as your practice repository. Your real project gets a fresh start.</p></div><div class="sheet-foot"><span>The take-away</span><span>13 / 51</span></div></article></section>
 <section class="chapter" id="plan"><article class="sheet" id="pick-idea"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Pick something small</h2>
 <p class="intro">Choose a theme or bring your own idea. Every theme can be a simple website, small enough to finish in a day, and AI features inside your product are optional.</p>
 <div class="boxes two">
@@ -258,7 +277,7 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 <div class="box"><h3>Mortgage journey</h3><p>A guided journey for a first-time buyer at a clearly made-up bank.</p></div>
 <div class="box"><h3>Your own idea</h3><p>One user, one job and no more than three essential things it must do.</p></div>
 </div>
-<p class="pull"><strong>The briefs are on the site.</strong> See the <a href="../themes.html">project themes</a>, including two advanced routes for anyone who wants a challenge. Expect to work more on your own on those.</p></div><div class="sheet-foot"><span>The take-away</span><span>14 / 24</span></div></article><article class="sheet" id="start-fresh"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Start fresh</h2>
+<p class="pull"><strong>The briefs are on the site.</strong> See the <a href="../themes.html">project themes</a>, including two advanced routes for anyone who wants a challenge. Expect to work more on your own on those.</p></div><div class="sheet-foot"><span>The take-away</span><span>14 / 51</span></div></article><article class="sheet" id="start-fresh"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Start fresh</h2>
 <p class="intro">Your warm-up was a rehearsal. Leave it as it is, so your practice page stays safe and your real project stays tidy.</p>
 <div class="boxes">
 <div class="box"><h3>New folder</h3><p>Somewhere easy to find, named after your project.</p></div>
@@ -267,18 +286,18 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 </div>
 <p>In Claude or Codex, open the new folder and paste this. Builders such as Lovable connect to GitHub in their own way, so follow their steps.</p>
 <div class="prompt"><p id="prompt-5">I’m starting a new product project in this empty folder. It will only hold fictional or public sample content. Please guide me one step at a time, in plain language, to create a new public GitHub repository for it in my own account and connect this folder to it. Ask before installing anything, and never ask me for a password or token.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-5">Copy</button></p></div>
-<p class="pull"><strong>Working in a pair?</strong> Both of you need to be able to open and edit the project. On GitHub, the owner can invite a partner from the repository’s Settings → Collaborators. Swap the keyboard every 25–30 minutes.</p></div><div class="sheet-foot"><span>The take-away</span><span>15 / 24</span></div></article><article class="sheet" id="question"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Question your idea</h2>
+<p class="pull"><strong>Working in a pair?</strong> Both of you need to be able to open and edit the project. On GitHub, the owner can invite a partner from the repository’s Settings → Collaborators. Swap the keyboard every 25–30 minutes.</p></div><div class="sheet-foot"><span>The take-away</span><span>15 / 51</span></div></article><article class="sheet" id="question"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Question your idea</h2>
 <p class="intro">Before you build, think the idea through with AI. Allow about 25 minutes for this and the next two steps. The goal is a small, clear plan that you understand and have agreed.</p>
 <p>Replace [idea] with a sentence about your idea and paste this in. It works with any assistant, and you don’t need to install anything. This part takes about 10 minutes.</p>
 <div class="prompt"><p id="prompt-6">Help me think through this product before we build it. My idea is [idea]. Start with the intended user, their situation and the problem. Ask a few focused questions at a time; wait for my answers before asking questions that depend on them. Challenge vague claims and suggest alternatives, but let me make the decisions. Cover the main user journey, what makes the idea useful, assumptions we cannot yet prove, accessibility, the smallest useful release, what to leave out, and how we will test success. Keep the conversation within about ten minutes; record unresolved questions as assumptions instead of inventing answers. Then propose a concise PRD and ask me to review and agree it before building. Do not generate the implementation yet.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-6">Copy</button></p></div>
-<p class="pull"><strong>Answer in your own words.</strong> If it challenges you, that’s the point. Push back when you disagree, and say “I don’t know yet” rather than inventing an answer. Unknowns become assumptions to test.</p></div><div class="sheet-foot"><span>The take-away</span><span>16 / 24</span></div></article><article class="sheet" id="scope"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Choose the journey and scope</h2>
+<p class="pull"><strong>Answer in your own words.</strong> If it challenges you, that’s the point. Push back when you disagree, and say “I don’t know yet” rather than inventing an answer. Unknowns become assumptions to test.</p></div><div class="sheet-foot"><span>The take-away</span><span>16 / 51</span></div></article><article class="sheet" id="scope"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Choose the journey and scope</h2>
 <p class="intro">About 5 minutes. A small plan you can finish beats a big one you can’t.</p>
 <div class="boxes">
 <div class="box"><h3>One user</h3><p>One real-sounding person and the problem they have.</p></div>
 <div class="box"><h3>One complete task</h3><p>Something they can do from start to finish.</p></div>
 <div class="box"><h3>Three features at most</h3><p>Only the essential ones. Decide what you’re leaving out, and say why.</p></div>
 </div>
-<p class="pull"><strong>Set the limits if it hasn’t asked.</strong> Tell it: “I need to publish today using [tool/host], with £0 additional service costs unless I explicitly choose otherwise. Use fictional data where needed.”</p></div><div class="sheet-foot"><span>The take-away</span><span>17 / 24</span></div></article><article class="sheet" id="write-prd"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Draft, challenge and save your PRD</h2>
+<p class="pull"><strong>Set the limits if it hasn’t asked.</strong> Tell it: “I need to publish today using [tool/host], with £0 additional service costs unless I explicitly choose otherwise. Use fictional data where needed.”</p></div><div class="sheet-foot"><span>The take-away</span><span>17 / 51</span></div></article><article class="sheet" id="write-prd"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Draft, challenge and save your PRD</h2>
 <p class="intro">A PRD is a short product plan. Let the AI draft it, then read it properly and fix anything that isn’t what you meant. Allow about 10 minutes, and aim for one or two pages.</p>
 <div class="split">
 <div>
@@ -303,14 +322,14 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 </ul>
 </div>
 </div>
-<p class="pull"><strong>Save it as <code>PRD.md</code></strong> in your new project’s GitHub repository, not the warm-up one. A list of features with no clear user need is a sign to go back a step.</p></div><div class="sheet-foot"><span>The take-away</span><span>18 / 24</span></div></article><article class="sheet" id="share-prd"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Share your PRD</h2>
+<p class="pull"><strong>Save it as <code>PRD.md</code></strong> in your new project’s GitHub repository, not the warm-up one. A list of features with no clear user need is a sign to go back a step.</p></div><div class="sheet-foot"><span>The take-away</span><span>18 / 51</span></div></article><article class="sheet" id="share-prd"><div class="sheet-top"><span><b>Stop 4 of 5</b> · PRD shared</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i></i></span></div><div><h2>Share your PRD</h2>
 <p class="intro">On the day, you send your PRD, your app and your product page to the organiser before the demos. It takes two minutes, and it puts your product on the big screen.</p>
 <ol class="do">
 <li><strong>Open <a href="../share.html">Share your PRD</a></strong> and add your name and your project’s name. Working in a pair? Put both names.</li>
 <li><strong>Add your addresses:</strong> your app, and your product page if you’ve made one. Not live yet? Leave them blank and send it again later.</li>
 <li><strong>Upload your PRD or link to it.</strong> Is it still in a chat? Ask your AI: “Give me the PRD as a Markdown file I can download.”</li>
 </ol>
-<p class="pull"><strong>Your PRD is never published.</strong> Sharing is open only around the event. After that, keep <code>PRD.md</code> in your repository: it’s the best way to pick up where you left off.</p></div><div class="sheet-foot"><span>The take-away</span><span>19 / 24</span></div></article></section>
+<p class="pull"><strong>Your PRD is never published.</strong> Sharing is open only around the event. After that, keep <code>PRD.md</code> in your repository: it’s the best way to pick up where you left off.</p></div><div class="sheet-foot"><span>The take-away</span><span>19 / 51</span></div></article></section>
 <section class="chapter" id="app-live"><article class="sheet" id="build"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Build in small slices</h2>
 <p class="intro">Get one piece working, check it against your PRD, then move on. Aim to get a first version online early, then improve it.</p>
 <div class="prompt"><p id="prompt-7">Read the agreed PRD. Propose the smallest first slice we can build and publish now. Explain the files or services you need and any cost before adding dependencies. Implement in small steps, help me preview it and give me concrete checks after each step. Check each slice against the PRD and tell me if anything we learn should change it. Keep a working version before major changes. If a feature needs a backend, do not imply static hosting will run it. Use my chosen publishing route and help me publish early.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-7">Copy</button></p></div>
@@ -318,20 +337,20 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 <div class="box"><h3>Update the plan</h3><p>When building or testing teaches you something, change the PRD. That’s good design, not failure.</p></div>
 <div class="box"><h3>Polish isn’t proof</h3><p>A good-looking result doesn’t show people need it. Testing tells you what to improve next.</p></div>
 <div class="box"><h3>Stop adding features</h3><p>Leave time to fix what testing finds and to publish again.</p></div>
-</div></div><div class="sheet-foot"><span>The take-away</span><span>20 / 24</span></div></article><article class="sheet" id="test"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Test it with someone else</h2>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>20 / 51</span></div></article><article class="sheet" id="test"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Test it with someone else</h2>
 <p class="intro">Someone outside your pair tries the main task. It’s the quickest way to find out what you can’t see for yourself.</p>
 <ol class="do">
 <li><strong>Don’t coach.</strong> Give them the address and ask them to attempt the main task.</li>
 <li><strong>Watch where they hesitate,</strong> and write down one thing you found.</li>
 <li><strong>Tell your AI what happened.</strong> Fill in [observation] and paste this.<div class="prompt"><p id="prompt-8">Here is what happened when someone tested my published product: [observation]. Compare it with the PRD acceptance checks. Suggest the smallest useful improvement, explain the trade-off and help me implement and verify it. Do not expand the scope unnecessarily.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-8">Copy</button></p></div></li>
 <li><strong>Publish again</strong> and check the address on another device.</li>
-</ol></div><div class="sheet-foot"><span>The take-away</span><span>21 / 24</span></div></article><article class="sheet" id="product-page"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Make a product page</h2>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>21 / 51</span></div></article><article class="sheet" id="product-page"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Make a product page</h2>
 <p class="intro">One simple web page about your product, on its own address, with a button to the real thing. It’s the link you send when someone asks what you built. Allow about 15 minutes, after you’ve fixed the app.</p>
 <ol class="do">
 <li><strong>Ask your AI.</strong> Give it your PRD (attach the file, or point it at <code>PRD.md</code>), and put your app’s address in place of [address].<div class="prompt"><p id="prompt-9">Make a simple, single web page about the product in my PRD. It is separate from the app itself. Include the product’s name, who it’s for, the problem it solves, what it does in three short points, and a clear button that opens the live app at [address]. Use only what’s in the PRD: don’t invent features, numbers, people or quotes. Keep it to one page that works well on a phone. Then help me publish it on its own address, one step at a time.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-9">Copy</button></p></div></li>
 <li><strong>Publish it on its own address,</strong> the same way you published your hello-world page.</li>
 <li><strong>Check it on another device,</strong> and check the button opens your app.</li>
-</ol></div><div class="sheet-foot"><span>The take-away</span><span>22 / 24</span></div></article><article class="sheet" id="finish-line"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>The finish line</h2>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>22 / 51</span></div></article><article class="sheet" id="finish-line"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>The finish line</h2>
 <p class="intro">Six things to have by the end of the day. Check them before the demos.</p>
 <ul class="points two">
 <li>A live web address that someone else can open on their own device.</li>
@@ -341,7 +360,7 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 <li>You know how to change it and publish it again.</li>
 <li>You’ve chosen one next improvement.</li>
 </ul>
-<p class="pull"><strong>What doesn’t count.</strong> A screenshot, a preview on your own computer or a link to a builder’s editor isn’t a published product: other people need to be able to open the live address. If it still isn’t live by the end, say so honestly and write down what’s left to fix. That’s a useful result too.</p></div><div class="sheet-foot"><span>The take-away</span><span>23 / 24</span></div></article><article class="sheet" id="demo"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Show what you made</h2>
+<p class="pull"><strong>What doesn’t count.</strong> A screenshot, a preview on your own computer or a link to a builder’s editor isn’t a published product: other people need to be able to open the live address. If it still isn’t live by the end, say so honestly and write down what’s left to fix. That’s a useful result too.</p></div><div class="sheet-foot"><span>The take-away</span><span>23 / 51</span></div></article><article class="sheet" id="demo"><div class="sheet-top"><span><b>Stop 5 of 5</b> · App live</span><span class="stopline" aria-hidden="true"><i class=on></i><i class=on></i><i class=on></i><i class=on></i><i class=on></i></span></div><div><h2>Show what you made</h2>
 <p class="intro">About three minutes, in front of everyone. No slides needed: show the real thing.</p>
 <ol class="do">
 <li><strong>Who it’s for</strong> and the problem it solves.</li>
@@ -350,7 +369,244 @@ Don’t create a repository or publish anything today.</p><p class="copy-row"><b
 <li><strong>One thing you learned.</strong></li>
 <li><strong>The next improvement</strong> you’d make.</li>
 </ol>
-<p class="pull"><strong>Before you show it,</strong> open the published address outside your builder and on another device, and run your PRD’s checks. Note anything still incomplete. Working in a pair? Share the time, and each explain your own contribution.</p></div><div class="sheet-foot"><span>The take-away</span><span>24 / 24</span></div></article></section>
+<p class="pull"><strong>Before you show it,</strong> open the published address outside your builder and on another device, and run your PRD’s checks. Note anything still incomplete. Working in a pair? Share the time, and each explain your own contribution.</p></div><div class="sheet-foot"><span>The take-away</span><span>24 / 51</span></div></article></section>
+<section class="chapter" id="other-routes"><article class="sheet" id="route-phone"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>On a phone or tablet</h2>
+<p class="intro">You can do the whole day on a phone or tablet. Typing is harder, but it’s a fun way to find out how little you need a computer. Use your own device and personal accounts, not a work phone.</p>
+<ol class="do">
+<li><strong>Install the Claude app</strong> from the <a href="https://apps.apple.com/app/claude-by-anthropic/id6473753684">App Store</a> or <a href="https://play.google.com/store/apps/details?id=com.anthropic.claude">Google Play</a>. It works on the free plan, and a paid plan gives you more room.</li>
+<li><strong>Ask for the page</strong> in a new chat, then tap the preview and try the button.<div class="prompt"><p id="prompt-10">Please make a single-page website as an artifact, with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when tapped. Use sample text only. Make it look good on a phone.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-10">Copy</button></p></div></li>
+<li><strong>Change it with your voice.</strong> Tap the microphone on your keyboard and say what you’d like.</li>
+<li><strong>Publish it.</strong> With the artifact open, look for Publish or Share and copy the link. Can’t find it? Open <a href="https://claude.ai">claude.ai</a> in your phone’s browser and publish from there.</li>
+<li><strong>Check someone else can open it.</strong></li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>25 / 51</span></div></article><article class="sheet" id="route-phone-day"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>Plan, build and publish in one app</h2>
+<p class="intro">You follow the same planning as everyone else and skip the GitHub steps, which are for laptops.</p>
+<ol class="do">
+<li><strong>Question your idea.</strong> Start a new chat and paste in the planning prompt. On a paid plan, create a project first so your PRD and chats stay together.</li>
+<li><strong>Keep your PRD.</strong> Ask: “Put the agreed PRD in a Markdown document.” Save a copy as <code>PRD.md</code> in your Files app.</li>
+<li><strong>Build in small slices.</strong> Ask Claude to build the first slice from the PRD as a single-page artifact, check it, then ask for the next.</li>
+<li><strong>Publish, and publish again.</strong> After changes, publish again and open the link to check it shows the latest version.</li>
+</ol>
+<div class="boxes">
+<div class="box"><h3>Talk instead of type</h3><p>Use the microphone for long answers.</p></div>
+<div class="box"><h3>Let the AI ask</h3><p>Say “ask me one question at a time” so your answers can be short.</p></div>
+<div class="box"><h3>Power up</h3><p>Bring a charger and a power bank. Building all day drains a battery.</p></div>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>26 / 51</span></div></article><article class="sheet" id="route-laptop"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>On an LBG laptop</h2>
+<p class="intro">If your LBG laptop has a Figma Make licence, you can take part on it. You plan with Microsoft Copilot, and build and publish in Figma Make.</p>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>You’re on an LBG laptop, so LBG’s normal rules for this machine and its tools apply. Use fictional or public sample content only, even though you’re at work: no customer, colleague or internal information in prompts, files or anything you publish. <a href="../stay-safe.html#lbg-laptop">More on staying safe</a>.</p></div>
+<div class="boxes two">
+<div class="box"><h3>It shares inside LBG only</h3><p>Anything you publish opens only for colleagues signed in to LBG’s Figma.</p></div>
+<div class="box"><h3>Your work stays with LBG</h3><p>Your project lives in LBG’s Figma account, so you can’t take it home.</p></div>
+<div class="box"><h3>No GitHub, no installs</h3><p>Everything happens in Figma and Copilot.</p></div>
+<div class="box"><h3>AI credits</h3><p>Figma Make uses credits from your licence. How many you have for a full day is <span class="tbc">To be confirmed</span></p></div>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>27 / 51</span></div></article><article class="sheet" id="route-laptop-warmup"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>Warm up in Figma Make</h2>
+<p class="intro">About 15 minutes (an estimate). These steps follow Figma’s documentation and haven’t yet been tried by us on an LBG laptop, so button names may differ slightly.</p>
+<ol class="do">
+<li><strong>Open Figma Make.</strong> Open Figma, signed in with your work account as usual, and create a new Make file. Can’t see Make? Your licence may not include it, so message Phil on Teams.</li>
+<li><strong>Ask for the page,</strong> then click the button in the preview to check it works.<div class="prompt"><p id="prompt-11">Create a single-page website with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when clicked. Use sample text only. No sign-in, database or other services.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-11">Copy</button></p></div></li>
+<li><strong>Publish it inside LBG.</strong> Click Publish. If Figma asks who can see it, choose your organisation (LBG only), then copy the address.</li>
+<li><strong>Check someone else can open it.</strong> Send the address to a colleague on Teams. They may need to be signed in to Figma.</li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>28 / 51</span></div></article><article class="sheet" id="route-laptop-day"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>Plan in Copilot, build in Make</h2>
+<p class="intro">You follow the same planning as everyone else. Only the tools change.</p>
+<ol class="do">
+<li><strong>Question your idea with Copilot.</strong> Paste in the planning prompt, answer in your own words and push back when you disagree.</li>
+<li><strong>Save your PRD.</strong> Ask Copilot for it, then paste it into Notepad. Choose Save as, set the type to All files, and save it as <code>PRD.md</code> in your OneDrive. Word is fine too.<div class="prompt"><p id="prompt-12">Please write the agreed PRD in Markdown, inside a single code block, so I can copy it into a file.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-12">Copy</button></p></div></li>
+<li><strong>Hand it to Figma Make.</strong> Start a new Make file and paste in your PRD with this on top.<div class="prompt"><p id="prompt-13">Here is the PRD for what we’re building. Read it, then tell me the first small slice you’d build and wait for my go-ahead before you start.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-13">Copy</button></p></div></li>
+<li><strong>Build in small slices.</strong> When you learn something, update <code>PRD.md</code> and tell Make what changed.</li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>29 / 51</span></div></article><article class="sheet" id="route-lovable"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>In the browser with Lovable</h2>
+<p class="intro">Build in your browser and publish with one button. These steps follow Lovable’s documentation (checked 7 October 2026) and haven’t yet been tried by us. Check the limits before you sign up.</p>
+<ol class="do">
+<li><strong>Sign up at <a href="https://lovable.dev">lovable.dev</a></strong> with your personal email. Its documentation lists a Free plan with 5 build credits a day, up to 30 a month. If you’re asked for a card, stop.</li>
+<li><strong>Ask for the page,</strong> then try the button in the preview.<div class="prompt"><p id="prompt-14">Create a single-page website with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when clicked. Use sample text only. No sign-in, database or other services.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-14">Copy</button></p></div></li>
+<li><strong>Publish.</strong> Click Publish at the top right, accept the suggested address and click Publish again. On Free and Pro plans, anyone with the link can open it.</li>
+<li><strong>Change it and publish again.</strong> Changes don’t go live until you click Publish and Publish changes.</li>
+<li><strong>Save it to GitHub.</strong> Open Project settings → Git → GitHub and let Lovable create the repository. It’s private by default. Don’t delete it, or the link stops working.</li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>30 / 51</span></div></article><article class="sheet" id="route-diy"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>By hand: make the page</h2>
+<p class="intro">No installs and no payment, and you do every step yourself. About 30–40 minutes the first time (an estimate). No AI to hand? The <a href="../hello-world-github.html">do-it-yourself route</a> on the site has a ready-made page to use instead.</p>
+<ol class="do">
+<li><strong>Ask any AI assistant for the page.</strong> Copy just the part from <code>&lt;!DOCTYPE html&gt;</code> to <code>&lt;/html&gt;</code>.<div class="prompt"><p id="prompt-15">Write one complete HTML file for a tiny web page. It needs a heading that says &quot;Hello, world&quot;, one friendly sentence, and a button that changes the sentence when clicked. Put everything in that single file, with no external libraries. Use sample text only, with no personal or work information. Reply with the code only.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-15">Copy</button></p></div></li>
+<li><strong>Save it as <code>index.html</code> on your Desktop.</strong> On a Mac, use TextEdit: choose Format → Make Plain Text before you paste, and pick Use .html if asked. On Windows, use Notepad: set “Save as type” to All files.</li>
+<li><strong>Open it in your browser.</strong> Double-click the file. See code instead of a page? It was saved with the wrong type, so check step 2.</li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>31 / 51</span></div></article><article class="sheet" id="route-diy-publish"><div class="sheet-top"><b>Other ways to take part</b></div><div><h2>By hand: publish on GitHub</h2>
+<p class="intro">Your page and its file will be public on GitHub. That’s fine for a sample sentence and not for anything else.</p>
+<ol class="do">
+<li><strong>Create a repository</strong> at <a href="https://github.com/new">github.com/new</a>. Name it <code>hello-hackday</code>, choose Public and press Create repository.</li>
+<li><strong>Upload your page.</strong> Click “uploading an existing file”, drag in <code>index.html</code> and press Commit changes.</li>
+<li><strong>Turn on publishing.</strong> Open Settings, then Pages. Set Source to Deploy from a branch, the branch to <code>main</code> and the folder to <code>/ (root)</code>, then press Save.</li>
+<li><strong>Wait, then open your address.</strong> It looks like <code>https://your-username.github.io/hello-hackday/</code> and can take up to 10 minutes.</li>
+<li><strong>Change a sentence.</strong> Click <code>index.html</code>, then the pencil icon. Edit it and press Commit changes. Wait a minute or two, then reload your address.</li>
+</ol></div><div class="sheet-foot"><span>The take-away</span><span>32 / 51</span></div></article></section>
+<section class="chapter" id="after"><article class="sheet" id="keep-going"><div class="sheet-top"><b>After the day</b></div><div><h2>Keep what you built</h2>
+<p class="intro">Your project belongs to you. Before the day fades, write down how to get back to it, so you can open it again in a month’s time.</p>
+<p>Paste this into the chat where you built it. Then save the README to GitHub.</p>
+<div class="prompt"><p id="prompt-16">Based on the actual project, draft a short README with its purpose, live URL, source/editable-project location, exact steps to reopen, run, edit and publish, known limitations and next three improvements. Include required services and any ongoing costs. Do not include credentials. Distinguish verified instructions from anything still untested. Help me verify the instructions and save the result to GitHub.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-16">Copy</button></p></div>
+<ul class="points two">
+<li><strong>Keep your accounts.</strong> Use your own personal accounts, and make sure you keep access to your work.</li>
+<li><strong>Keep your repository.</strong> A published address can stop working if you delete what’s behind it.</li>
+</ul></div><div class="sheet-foot"><span>The take-away</span><span>33 / 51</span></div></article><article class="sheet" id="pick-up"><div class="sheet-top"><b>After the day</b></div><div><h2>Pick it up again later</h2>
+<p class="intro">Coming back after a break? Your AI won’t remember the day, but your PRD and README will catch it up.</p>
+<ol class="do">
+<li><strong>Open your project’s folder</strong> in your tool, or the project in your builder, and start a new chat.</li>
+<li><strong>Catch it up.</strong> Paste this in.<div class="prompt"><p id="prompt-17">Read PRD.md and the README in this project, then tell me in plain words where we got to, what's still incomplete and the next improvement I noted. Suggest the smallest next step, and wait for my go-ahead before changing anything.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-17">Copy</button></p></div></li>
+<li><strong>Make one change,</strong> check it yourself, then publish again.</li>
+<li><strong>Update the plan.</strong> When you learn something, change the PRD.</li>
+</ol>
+<p class="pull"><strong>Keep testing with people.</strong> Ask someone to try the main task without coaching, then use the feedback prompt on what you find.</p></div><div class="sheet-foot"><span>The take-away</span><span>34 / 51</span></div></article><article class="sheet" id="going-further"><div class="sheet-top"><b>After the day</b></div><div><h2>Trying something more ambitious</h2>
+<p class="intro">Databases and outside services are welcome, as long as they stay free of real data. Expect more setup and troubleshooting.</p>
+<div class="boxes two">
+<div class="box"><h3>One new thing at a time</h3><p>Choose a database or an API, not both.</p></div>
+<div class="box"><h3>Keep keys secret</h3><p>Store an API key in your host’s secret settings. Never paste it into a prompt, a repository file or code that runs in the browser.</p></div>
+<div class="box"><h3>Check costs and limits first</h3><p>A free API doesn’t mean free hosting or instant access. Any spending is your choice.</p></div>
+<div class="box"><h3>Have a fallback</h3><p>If setup stalls, sample data keeps your product working. Label it clearly as sample data.</p></div>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>35 / 51</span></div></article><article class="sheet" id="what-travels"><div class="sheet-top"><b>After the day</b></div><div><h2>What travels with you</h2>
+<p class="intro">The tools you tried may not be available on your work machine. What travels with you is how you work: you can carry these habits into your design practice.</p>
+<ul class="points two">
+<li><strong>Frame the problem.</strong> Start with one user and what they need.</li>
+<li><strong>Question assumptions.</strong> Let the AI challenge you, and write down what you don’t know yet.</li>
+<li><strong>Direct the AI.</strong> You make the decisions, and you stay responsible for them.</li>
+<li><strong>Test the idea.</strong> Watch someone else use it.</li>
+<li><strong>Improve it.</strong> Change the plan when you learn something.</li>
+</ul>
+<p class="pull"><strong>Before you go:</strong> <a href="../feedback.html">tell us how the day went</a>, and look out for the <a href="../summary.html">event summary</a>.</p></div><div class="sheet-foot"><span>The take-away</span><span>36 / 51</span></div></article></section>
+<section class="chapter" id="prompts"><article class="sheet" id="p-start"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Prompts: warm-up and GitHub</h2>
+<h3>Ask for your first page</h3>
+<div class="prompt"><p id="prompt-18">I’d like you to create a webpage that simply says hello world.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-18">Copy</button></p></div>
+<h3 class="gap">Connect your tool to GitHub</h3>
+<div class="prompt"><p id="prompt-19" style="white-space:pre-line">Please connect this computer to my GitHub account, ready for the day. Go one step at a time and explain each step in plain language.
+1. Check that Git and the GitHub CLI (gh) are installed. If either is missing, tell me what you need to install and ask before you do it.
+2. Run gh auth login --hostname github.com --git-protocol https --web in the background, then show me the one-time code clearly. Don’t open a browser or use any browser tools: I’ll type the code myself at github.com/login/device. Never ask me for a password or token.
+3. When I say done, run gh auth setup-git and gh auth status, and tell me my GitHub username.
+Don’t create a repository or publish anything today.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-19">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>37 / 51</span></div></article><article class="sheet" id="p-publish"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Prompts: publishing</h2>
+<h3>Put your page online</h3>
+<div class="prompt"><p id="prompt-20" style="white-space:pre-line">I’d like to publish this page on the web with GitHub Pages. It only contains fictional sample content. Please go one step at a time and explain each step in plain language.
+1. Check that Git and the GitHub CLI (gh) are installed. If either is missing, tell me what you need to install and ask before you do it.
+2. Check I’m signed in to GitHub with gh auth status. If I’m not, run gh auth login --hostname github.com --git-protocol https --web in the background and show me the one-time code. Don’t open a browser or use any browser tools: I’ll type the code myself at github.com/login/device. Never ask me for a password or token, and never store one.
+3. Create a new PUBLIC repository called hello-hackday in my own GitHub account from this folder, commit the page and push it.
+4. Turn on GitHub Pages for that repository, publishing from the main branch and the root folder.
+5. Tell me my web address (it looks like https://USERNAME.github.io/hello-hackday/), check whether it is live yet, and tell me clearly if I need to wait.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-20">Copy</button></p></div>
+<h3 class="gap">Change how it looks</h3>
+<div class="prompt"><p id="prompt-21">Please add a smiley to my page and make it look a bit friendlier.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-21">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>38 / 51</span></div></article><article class="sheet" id="p-plan"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Prompts: planning</h2>
+<h3>Start a new project on GitHub</h3>
+<div class="prompt"><p id="prompt-22">I’m starting a new product project in this empty folder. It will only hold fictional or public sample content. Please guide me one step at a time, in plain language, to create a new public GitHub repository for it in my own account and connect this folder to it. Ask before installing anything, and never ask me for a password or token.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-22">Copy</button></p></div>
+<h3 class="gap">Question the idea and draft the PRD</h3>
+<div class="prompt"><p id="prompt-23">Help me think through this product before we build it. My idea is [idea]. Start with the intended user, their situation and the problem. Ask a few focused questions at a time; wait for my answers before asking questions that depend on them. Challenge vague claims and suggest alternatives, but let me make the decisions. Cover the main user journey, what makes the idea useful, assumptions we cannot yet prove, accessibility, the smallest useful release, what to leave out, and how we will test success. Keep the conversation within about ten minutes; record unresolved questions as assumptions instead of inventing answers. Then propose a concise PRD and ask me to review and agree it before building. Do not generate the implementation yet.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-23">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>39 / 51</span></div></article><article class="sheet" id="p-build"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Prompts: building and testing</h2>
+<h3>Build the smallest publishable version</h3>
+<div class="prompt"><p id="prompt-24">Read the agreed PRD. Propose the smallest first slice we can build and publish now. Explain the files or services you need and any cost before adding dependencies. Implement in small steps, help me preview it and give me concrete checks after each step. Check each slice against the PRD and tell me if anything we learn should change it. Keep a working version before major changes. If a feature needs a backend, do not imply static hosting will run it. Use my chosen publishing route and help me publish early.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-24">Copy</button></p></div>
+<h3 class="gap">Use real feedback</h3>
+<div class="prompt"><p id="prompt-25">Here is what happened when someone tested my published product: [observation]. Compare it with the PRD acceptance checks. Suggest the smallest useful improvement, explain the trade-off and help me implement and verify it. Do not expand the scope unnecessarily.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-25">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>40 / 51</span></div></article><article class="sheet" id="p-finish"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Prompts: finishing and carrying on</h2>
+<h3>Make a product page</h3>
+<div class="prompt"><p id="prompt-26">Make a simple, single web page about the product in my PRD. It is separate from the app itself. Include the product’s name, who it’s for, the problem it solves, what it does in three short points, and a clear button that opens the live app at [address]. Use only what’s in the PRD: don’t invent features, numbers, people or quotes. Keep it to one page that works well on a phone. Then help me publish it on its own address, one step at a time.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-26">Copy</button></p></div>
+<h3 class="gap">Write a README</h3>
+<div class="prompt"><p id="prompt-27">Based on the actual project, draft a short README with its purpose, live URL, source/editable-project location, exact steps to reopen, run, edit and publish, known limitations and next three improvements. Include required services and any ongoing costs. Do not include credentials. Distinguish verified instructions from anything still untested. Help me verify the instructions and save the result to GitHub.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-27">Copy</button></p></div>
+<h3 class="gap">Pick it up again later</h3>
+<div class="prompt"><p id="prompt-28">Read PRD.md and the README in this project, then tell me in plain words where we got to, what's still incomplete and the next improvement I noted. Suggest the smallest next step, and wait for my go-ahead before changing anything.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-28">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>41 / 51</span></div></article><article class="sheet" id="p-routes"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Prompts: other routes</h2>
+<h3>A page in Lovable or Figma Make</h3>
+<div class="prompt"><p id="prompt-29">Create a single-page website with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when clicked. Use sample text only. No sign-in, database or other services.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-29">Copy</button></p></div>
+<h3 class="gap">A page on a phone</h3>
+<div class="prompt"><p id="prompt-30">Please make a single-page website as an artifact, with a heading that says "Hello, world", one friendly sentence, and a button that changes the sentence when tapped. Use sample text only. Make it look good on a phone.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-30">Copy</button></p></div>
+<h3 class="gap">A page by hand</h3>
+<div class="prompt"><p id="prompt-31">Write one complete HTML file for a tiny web page. It needs a heading that says &quot;Hello, world&quot;, one friendly sentence, and a button that changes the sentence when clicked. Put everything in that single file, with no external libraries. Use sample text only, with no personal or work information. Reply with the code only.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-31">Copy</button></p></div>
+<h3 class="gap">Get your PRD out of Copilot</h3>
+<div class="prompt"><p id="prompt-32">Please write the agreed PRD in Markdown, inside a single code block, so I can copy it into a file.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-32">Copy</button></p></div>
+<h3 class="gap">Hand your PRD to Figma Make</h3>
+<div class="prompt"><p id="prompt-33">Here is the PRD for what we’re building. Read it, then tell me the first small slice you’d build and wait for my go-ahead before you start.</p><p class="copy-row"><button type="button" class="copy" data-copy="prompt-33">Copy</button></p></div></div><div class="sheet-foot"><span>The take-away</span><span>42 / 51</span></div></article><article class="sheet" id="p-phrases"><div class="sheet-top"><b>Every prompt</b></div><div><h2>Short phrases worth keeping</h2>
+<p class="intro">You don’t need special words, but these do a lot of work.</p>
+<ul class="points two">
+<li>“I’m a designer. Explain things in plain words.”</li>
+<li>“Ask me one question at a time.”</li>
+<li>“What were the options? Why this one?”</li>
+<li>“That’s not what I meant.”</li>
+<li>“I don’t know yet.”</li>
+<li>“You decide.”</li>
+<li>“What’s going on here?” (with a screenshot)</li>
+<li>“Please open the page in my browser.”</li>
+<li>“Give me the PRD as a Markdown file I can download.”</li>
+<li>“Don’t ask for a password or token. Use the one-time code instead.”</li>
+</ul></div><div class="sheet-foot"><span>The take-away</span><span>43 / 51</span></div></article></section>
+<section class="chapter" id="stuck"><article class="sheet" id="stuck-first"><div class="sheet-top"><b>If something goes wrong</b></div><div><h2>When you’re stuck</h2>
+<p class="intro">Everyone gets stuck. It’s part of working this way, and you don’t need to sit with it on your own.</p>
+<ol class="do">
+<li><strong>Screenshot, paste, ask.</strong> Your AI is the first helper you go to. Crop to the bit that matters.</li>
+<li><strong>Going round in circles?</strong> Start a fresh chat and explain where you’ve got to.</li>
+<li><strong>Stuck for about ten minutes?</strong> Ask a helper, or message Phil Bonhard on LBG Microsoft Teams. Say which step you’re on and what you can see.</li>
+</ol>
+<p class="pull"><strong>Stop and ask first</strong> if a screen unexpectedly asks for payment, a card or an upgrade, or if you’re unsure whether something is safe to use.</p></div><div class="sheet-foot"><span>The take-away</span><span>44 / 51</span></div></article><article class="sheet" id="stuck-github"><div class="sheet-top"><b>If something goes wrong</b></div><div><h2>If connecting or publishing goes wrong</h2>
+<dl class="ifs">
+<div><dt>It asks for a password or token</dt><dd>Say no. Say “Don’t ask for a password or token. Use the one-time code instead.”</dd></div>
+<div><dt>A browser tab opens anyway</dt><dd>Close it, and type the code at <a href="https://github.com/login/device">github.com/login/device</a> where you’re already signed in.</dd></div>
+<div><dt>You can’t sign in to GitHub</dt><dd>Use the method you signed up with (email, Google or Apple), or the device you signed up on.</dd></div>
+<div><dt>A Mac pop-up about developer tools</dt><dd>Choose Install and wait. It can take a few minutes.</dd></div>
+<div><dt>Windows can’t install Git or the GitHub tool</dt><dd>Ask it to explain the manual download, or ask for help.</dd></div>
+<div><dt>The code ran out</dt><dd>Say “Please start the GitHub sign-in again”.</dd></div>
+<div><dt>A 404 page</dt><dd>Wait a few more minutes and refresh. Still missing after 15? Screenshot it and ask your AI what’s wrong.</dd></div>
+</dl></div><div class="sheet-foot"><span>The take-away</span><span>45 / 51</span></div></article><article class="sheet" id="stuck-tools"><div class="sheet-top"><b>If something goes wrong</b></div><div><h2>If your AI tool gets in the way</h2>
+<dl class="ifs">
+<div><dt>It asks to do something you don’t recognise</dt><dd>Say no, and ask for help.</dd></div>
+<div><dt>It suggests extra features</dt><dd>Say “not now”, and tell it the one thing you want.</dd></div>
+<div><dt>You’ve run out of usage</dt><dd>Stop, and don’t buy anything on the spot. Wait and try again later, and tell Phil if it stays stuck.</dd></div>
+<div><dt>You can’t sign up for something</dt><dd>Skip it and use a different route. Don’t use a work account to get round a problem.</dd></div>
+<div><dt>You still see the old version</dt><dd>Do a hard refresh. It can take up to 10 minutes.</dd></div>
+<div><dt>You have no AI tool set up</dt><dd>Use the by-hand route, which needs no tool to publish.</dd></div>
+</dl></div><div class="sheet-foot"><span>The take-away</span><span>46 / 51</span></div></article></section>
+<section class="chapter" id="stay-safe"><article class="sheet" id="safe-rules"><div class="sheet-top"><b>Stay safe</b></div><div><h2>Keep it safe</h2>
+<div class="callout" role="note"><svg class="icon" aria-hidden="true" focusable="false"><use href="../assets/icons.svg#i-shield-check"/></svg><p><strong>Please read this first</strong>This is a personal learning exercise. Use fictional or public sample content only. Do not enter, upload or share any LBG data in AI tools, GitHub repositories, prompts, screenshots or published websites. <a href="../stay-safe.html">More on staying safe</a>.</p></div>
+<h3 class="gap">Don’t use any of these</h3>
+<ul class="points two">
+<li>Customer information</li>
+<li>Colleague information</li>
+<li>Internal documents</li>
+<li>LBG or other internal code</li>
+<li>Passwords, keys and tokens</li>
+<li>Screenshots of systems</li>
+<li>Confidential business information</li>
+</ul>
+<p class="pull">Stay with fictional or public sample content. The mortgage theme uses a clearly made-up bank, and no real banking connection or customer data is ever needed.</p></div><div class="sheet-foot"><span>The take-away</span><span>47 / 51</span></div></article><article class="sheet" id="safe-know"><div class="sheet-top"><b>Stay safe</b></div><div><h2>Five things worth knowing</h2>
+<ol class="do">
+<li>Published websites may be visible to anyone who has, or guesses, the address.</li>
+<li>Public GitHub repositories expose their files to everyone, including earlier versions.</li>
+<li>AI tools handle data according to their own terms, your account and your settings. This event doesn’t claim any tool is approved by LBG and can’t guarantee confidentiality.</li>
+<li>Never paste a password, API key or token into a prompt, a repository or the code of a web page.</li>
+<li>Use your own accounts and make sure you keep access to your work after the day.</li>
+</ol>
+<p class="pull"><strong>If you’re not sure, ask before you share.</strong> Message Phil Bonhard on LBG Microsoft Teams. If you realise you’ve shared something you shouldn’t have, stop and tell Phil straight away, and you’ll get help with the next step.</p></div><div class="sheet-foot"><span>The take-away</span><span>48 / 51</span></div></article><article class="sheet" id="safe-more"><div class="sheet-top"><b>Stay safe</b></div><div><h2>A little more detail</h2>
+<div class="boxes two">
+<div class="box"><h3>Personal accounts</h3><p>A personal account keeps your work yours after the event, and keeps work identities out of public places. Usernames and published addresses are visible to others.</p></div>
+<div class="box"><h3>Screenshots</h3><p>They can capture names, tabs, notifications and other windows. Share only a screenshot of your own sample product, and crop out everything else.</p></div>
+<div class="box"><h3>Private repositories</h3><p>GitHub allows them on a free account, but free publishing with GitHub Pages needs a public one, and a page published from a private repository is still public.</p></div>
+<div class="box"><h3>Letting a tool do the work</h3><p>Claude and Codex can create files, run commands and use your GitHub account. Read each permission request and say no to anything you don’t understand.</p></div>
+</div></div><div class="sheet-foot"><span>The take-away</span><span>49 / 51</span></div></article></section>
+<section class="chapter" id="links"><article class="sheet" id="links-site"><div class="sheet-top"><b>Every link</b></div><div><h2>On the event site</h2>
+<p class="intro">The site asks for the event password. Dates and places there are for the current event.</p>
+<ul class="links">
+<li><a href="../get-ready.html"><b>Get ready</b><span>The checklist for before the day</span></a></li>
+<li><a href="../hello-world.html"><b>Hello-world warm-up</b><span>Step-by-step for Claude and Codex</span></a></li>
+<li><a href="../hello-world-publish.html"><b>Make it yours, then publish</b><span>The publishing steps</span></a></li>
+<li><a href="../themes.html"><b>Project themes</b><span>The briefs and advanced routes</span></a></li>
+<li><a href="../plan.html"><b>Plan your product</b><span>The full planning exercise</span></a></li>
+<li><a href="../event.html"><b>The day</b><span>Agenda, finish line and demos</span></a></li>
+<li><a href="../route-phone.html"><b>Phone or tablet route</b><span>The whole day on a small screen</span></a></li>
+<li><a href="../route-work-laptop.html"><b>LBG laptop route</b><span>Copilot and Figma Make</span></a></li>
+<li><a href="../stay-safe.html"><b>Stay safe</b><span>The safety rules</span></a></li>
+<li><a href="../help.html"><b>Get help</b><span>Who to ask and common fixes</span></a></li>
+<li><a href="../resources.html"><b>Resources</b><span>Official guides and slides</span></a></li>
+<li><a href="intro.html"><b>You lead, the AI builds</b><span>Slides from the opening talk</span></a></li>
+</ul></div><div class="sheet-foot"><span>The take-away</span><span>50 / 51</span></div></article><article class="sheet" id="links-official"><div class="sheet-top"><b>Every link</b></div><div><h2>Official guides</h2>
+<p class="intro">These open the provider’s own site. Plans can change, so check before you sign up. We link to documentation, not products, and don’t claim any tool is approved or endorsed.</p>
+<ul class="links">
+<li><a href="https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github"><b>GitHub: creating an account</b></a></li>
+<li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site"><b>GitHub Pages: create a site</b></a></li>
+<li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"><b>GitHub Pages: what it is</b></a></li>
+<li><a href="https://cli.github.com/"><b>GitHub CLI</b></a></li>
+<li><a href="https://code.claude.com/docs/en/desktop-quickstart"><b>Claude desktop app: get started</b></a></li>
+<li><a href="https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-or-max-plan"><b>Claude Code: plans that include it</b></a></li>
+<li><a href="https://learn.chatgpt.com/docs/quickstart"><b>Codex: get started</b></a></li>
+<li><a href="https://learn.chatgpt.com/docs/agent-approvals-security"><b>Codex: approvals and security</b></a></li>
+<li><a href="https://learn.chatgpt.com/docs/pricing"><b>Codex: plans and usage limits</b></a></li>
+<li><a href="https://docs.lovable.dev/features/publish"><b>Lovable: publishing</b></a></li>
+<li><a href="https://docs.lovable.dev/integrations/github"><b>Lovable: GitHub sync</b></a></li>
+<li><a href="https://docs.lovable.dev/introduction/credits-and-usage"><b>Lovable: credits and usage</b></a></li>
+<li><a href="https://docs.replit.com/billing/plans/starter-plan"><b>Replit: Starter plan</b></a></li>
+</ul>
+<p class="pull">The planning prompt is adapted from Matt Pocock’s <a href="https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md">grill-me skill</a>. Installing it is optional.</p></div><div class="sheet-foot"><span>The take-away</span><span>51 / 51</span></div></article></section>
 </div>
 </div>
 </main>

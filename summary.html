@@ -86,6 +86,12 @@
 <div id="thanks"></div>
 </section>
 
+<section class="block" aria-labelledby="keep-h">
+<h2 id="keep-h">The <em>take-away</em></h2>
+<p>Every step, prompt and link from the day, to keep. Read it on the web or download the PDF.</p>
+<p><a class="btn small ghost" id="takeaway-link" href="talks/takeaway.html">Open The take-away <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#i-arrow-right"/></svg></a></p>
+</section>
+
 <section class="block" aria-labelledby="how-h">
 <h2 id="how-h" class="sum-small-h">How this was worked out</h2>
 <ul class="muted sum-how">
@@ -311,6 +317,7 @@
   // The reel, played right here. Same choice as reel.html: the organiser's upload (GET /summary's reel.video) or the
   // one made in Claude Code (assets/reels/<event>.mp4). reel.html stays as its own page, to send on its own.
   var SITE = PREVIEW ? 'https://hackday.bonhard.ai/' : '';  // the preview runs on the control's address
+  $('takeaway-link').href = SITE + 'talks/takeaway.html';
   function renderReel() {
     var id = data.event.id, page = SITE + 'reel.html?event=' + encodeURIComponent(id), made = SITE + 'assets/reels/' + encodeURIComponent(id) + '.mp4';
     var src = data.reel && data.reel.video ? API + data.reel.video : null;
